@@ -16,12 +16,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PowerShell/SChannelDsc.git"
+    "url": "git+https://github.com/Microsoft/SChannelDsc.git"
   },
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/PowerShell/SChannelDsc/issues"
+    "url": "https://github.com/Microsoft/SChannelDsc/issues"
   },
-  "homepage": "https://github.com/PowerShell/SChannelDsc#readme"
+  "homepage": "https://github.com/Microsoft/SChannelDsc#readme"
 }

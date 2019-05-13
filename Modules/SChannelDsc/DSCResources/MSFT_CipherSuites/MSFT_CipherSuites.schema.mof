@@ -2,7 +2,8 @@
 [ClassVersion("1.0.0.0"), FriendlyName("CipherSuites")]
 class MSFT_CipherSuites : OMI_BaseResource
 {
+    [Key, ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write] String CipherSuitesOrder[];
-    [Key, ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
 };
 

@@ -4,7 +4,7 @@ Import-Module -Name "$PSScriptRoot\..\Helper.psm1"
 # Localized messages
 data LocalizedData
 {
-    # culture="en-US"
+    # culture='en-US'
     ConvertFrom-StringData -StringData @'
         ProtocolNotCompliant           = Protocol {0} not compliant.
         ProtocolCompliant              = Protocol {0} compliant.
@@ -24,25 +24,25 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Diffie-Hellman","ECDH","PKCS")]
+        [ValidateSet('Diffie-Hellman','ECDH','PKCS')]
         [System.String]
         $KeyExchangeAlgoritm,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet('Present','Absent')]
         [System.String]
-        $Ensure = "Present"
+        $Ensure = 'Present'
     )
     $RootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms'
-    $Key = $RootKey + "\" + $KeyExchangeAlgoritm
+    $Key = $RootKey + '\' + $KeyExchangeAlgoritm
 
-    if (Test-SchannelItem -itemKey $Key -enable $true)
+    if ((Test-SChannelItem -ItemKey $Key -Enable $true) -eq $true)
     {
-        $Result = "Present"
+        $Result = 'Present'
     }
     else
     {
-        $Result = "Absent"
+        $Result = 'Absent'
     }
 
     $returnValue = @{
@@ -59,29 +59,29 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Diffie-Hellman","ECDH","PKCS")]
+        [ValidateSet('Diffie-Hellman','ECDH','PKCS')]
         [System.String]
         $KeyExchangeAlgoritm,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet('Present','Absent')]
         [System.String]
-        $Ensure = "Present"
+        $Ensure = 'Present'
     )
 
     $RootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms'
-    $Key = $RootKey + "\" + $KeyExchangeAlgoritm
+    $Key = $RootKey + '\' + $KeyExchangeAlgoritm
 
 
-    if ($Ensure -eq "Present")
+    if ($Ensure -eq 'Present')
     {
         Write-Verbose -Message ($LocalizedData.ItemEnable -f 'KeyExchangeAlgoritm', $KeyExchangeAlgoritm)
-        Switch-SchannelItem -itemKey $Key -enable $true
+        Switch-SChannelItem -ItemKey $Key -Enable $true
     }
     else
     {
         Write-Verbose -Message ($LocalizedData.ItemDisable -f 'KeyExchangeAlgoritm', $KeyExchangeAlgoritm)
-        Switch-SchannelItem -itemKey $Key -enable $false
+        Switch-SChannelItem -ItemKey $Key -Enable $false
     }
 }
 
@@ -92,28 +92,30 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Diffie-Hellman","ECDH","PKCS")]
+        [ValidateSet('Diffie-Hellman','ECDH','PKCS')]
         [System.String]
         $KeyExchangeAlgoritm,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet('Present','Absent')]
         [System.String]
-        $Ensure = "Present"
+        $Ensure = 'Present'
     )
+
     $RootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms'
-    $Key = $RootKey + "\" + $KeyExchangeAlgoritm
+    $Key = $RootKey + '\' + $KeyExchangeAlgoritm
     $currentKEA = Get-TargetResource @PSBoundParameters
     $Compliant = $false
 
-    $ErrorActionPreference = "SilentlyContinue"
+    $ErrorActionPreference = 'SilentlyContinue'
     Write-Verbose -Message ($LocalizedData.ItemTest -f 'KeyExchangeAlgoritm', $Cipher)
-    if ($currentKEA.Ensure -eq $Ensure -and (Get-ItemProperty -Path $Key -Name Enabled))
+    if ($currentKEA.Ensure -eq $Ensure -and `
+        (Get-ItemProperty -Path $Key -Name Enabled) -eq $true)
     {
         $Compliant = $true
     }
 
-    if ($Compliant)
+    if ($Compliant -eq $true)
     {
         Write-Verbose -Message ($LocalizedData.ItemCompliant -f 'KeyExchangeAlgoritm', $KeyExchangeAlgoritm)
     }
@@ -121,6 +123,7 @@ function Test-TargetResource
     {
         Write-Verbose -Message ($LocalizedData.ItemNotCompliant -f 'KeyExchangeAlgoritm', $KeyExchangeAlgoritm)
     }
+
     return $Compliant
 }
 

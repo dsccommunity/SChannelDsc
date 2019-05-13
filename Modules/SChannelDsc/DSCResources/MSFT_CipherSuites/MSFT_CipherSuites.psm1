@@ -21,11 +21,16 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("Yes")]
+        [System.String]
+        $IsSingleInstance,
+
         [Parameter()]
         [System.String[]]
         $CipherSuitesOrder,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [ValidateSet("Present","Absent")]
         [System.String]
         $Ensure = "Present"
@@ -34,7 +39,7 @@ function Get-TargetResource
     $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002'
     $item = Get-ItemProperty -Path $itemKey -ErrorAction SilentlyContinue
 
-    if ($item)
+    if ($null -ne $item)
     {
         $Ensure = 'Present'
         $Order = (Get-ItemPropertyValue -Path $itemKey -Name Functions -ErrorAction SilentlyContinue).Split(',')
@@ -57,19 +62,24 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("Yes")]
+        [System.String]
+        $IsSingleInstance,
+
         [Parameter()]
         [System.String[]]
         $CipherSuitesOrder,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [ValidateSet("Present","Absent")]
         [System.String]
         $Ensure = "Present"
     )
 
-    if ($Ensure -eq "Present")
+    if ($Ensure -eq 'Present')
     {
-        Write-Verbose -Message ($LocalizedData.ItemEnable -f "CipherSuites" , $Ensure)
+        Write-Verbose -Message ($LocalizedData.ItemEnable -f 'CipherSuites' , $Ensure)
         $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002'
         $cipherSuitesAsString = [string]::join(',', $cipherSuitesOrder)
         New-Item $itemKey -Force
@@ -77,7 +87,7 @@ function Set-TargetResource
     }
     else
     {
-        Write-Verbose -Message ($LocalizedData.ItemDisable -f "CipherSuites" , $Ensure)
+        Write-Verbose -Message ($LocalizedData.ItemDisable -f 'CipherSuites' , $Ensure)
         $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\'
         Remove-Item $itemKey -Force
     }
@@ -89,22 +99,27 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("Yes")]
+        [System.String]
+        $IsSingleInstance,
+
         [Parameter()]
         [System.String[]]
         $CipherSuitesOrder,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [ValidateSet("Present","Absent")]
         [System.String]
         $Ensure = "Present"
     )
 
     $cipherSuites = Get-TargetResource @PSBoundParameters
-    if ($CipherSuitesOrder)
+    if ($null -ne $CipherSuitesOrder)
     {
         $cipherSuitesAsString = [string]::join(',', $cipherSuitesOrder)
     }
-    if ($cipherSuites.CipherSuitesOrder)
+    if ($null -ne $cipherSuites.CipherSuitesOrder)
     {
         $currentSuitesOrderAsString = [string]::join(',', $cipherSuites.CipherSuitesOrder)
     }
@@ -124,7 +139,7 @@ function Test-TargetResource
         $Compliant = $true
     }
 
-    if ($Compliant)
+    if ($Compliant -eq $true)
     {
         Write-Verbose -Message ($LocalizedData.ItemCompliant -f "CipherSuitesOrder" , $Ensure)
     }

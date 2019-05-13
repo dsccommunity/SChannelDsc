@@ -24,30 +24,30 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("AES 128/128","AES 256/256","DES 56/56","NULL","RC2 128/128","RC2 40/128","RC2 56/128","RC4 128/128","RC4 40/128","RC4 56/128","RC4 64/128","Triple DES 168")]
+        [ValidateSet('AES 128/128','AES 256/256','DES 56/56','NULL','RC2 128/128','RC2 40/128','RC2 56/128','RC4 128/128','RC4 40/128','RC4 56/128','RC4 64/128','Triple DES 168')]
         [System.String]
         $Cipher,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet('Present','Absent')]
         [System.String]
-        $Ensure = "Present"
+        $Ensure = 'Present'
     )
 
     $RootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers'
-    $Key = $RootKey + "\" + $cipher
-    if (Test-SchannelItem -itemKey $Key -enable $true)
+    $Key = $RootKey + '\' + $cipher
+    if ((Test-SChannelItem -itemKey $Key -enable $true) -eq $true)
     {
-        $Result = "Present"
+        $Result = 'Present'
     }
     else
     {
-        $Result = "Absent"
+        $Result = 'Absent'
     }
 
     $returnValue = @{
-    Cipher = [System.String]$Cipher
-    Ensure = [System.String]$Result
+        Cipher = [System.String]$Cipher
+        Ensure = [System.String]$Result
     }
 
     $returnValue
@@ -59,28 +59,28 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("AES 128/128","AES 256/256","DES 56/56","NULL","RC2 128/128","RC2 40/128","RC2 56/128","RC4 128/128","RC4 40/128","RC4 56/128","RC4 64/128","Triple DES 168")]
+        [ValidateSet('AES 128/128','AES 256/256','DES 56/56','NULL','RC2 128/128','RC2 40/128','RC2 56/128','RC4 128/128','RC4 40/128','RC4 56/128','RC4 64/128','Triple DES 168')]
         [System.String]
         $Cipher,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet('Present','Absent')]
         [System.String]
-        $Ensure = "Present"
+        $Ensure = 'Present'
     )
 
     $RootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers'
-    $Key = $RootKey + "\" + $cipher
+    $Key = $RootKey + '\' + $cipher
 
-    if ($Ensure -eq "Present")
+    if ($Ensure -eq 'Present')
     {
         Write-Verbose -Message ($LocalizedData.ItemEnable -f 'Cipher', $Cipher)
-        Switch-SchannelItem -itemKey $Key -enable $true
+        Switch-SChannelItem -itemKey $Key -enable $true
     }
     else
     {
         Write-Verbose -Message ($LocalizedData.ItemDisable -f 'Cipher', $Cipher)
-        Switch-SchannelItem -itemKey $Key -enable $false
+        Switch-SChannelItem -itemKey $Key -enable $false
     }
 }
 
@@ -91,29 +91,30 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("AES 128/128","AES 256/256","DES 56/56","NULL","RC2 128/128","RC2 40/128","RC2 56/128","RC4 128/128","RC4 40/128","RC4 56/128","RC4 64/128","Triple DES 168")]
+        [ValidateSet('AES 128/128','AES 256/256','DES 56/56','NULL','RC2 128/128','RC2 40/128','RC2 56/128','RC4 128/128','RC4 40/128','RC4 56/128','RC4 64/128','Triple DES 168')]
         [System.String]
         $Cipher,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet('Present','Absent')]
         [System.String]
-        $Ensure = "Present"
+        $Ensure = 'Present'
     )
 
     $RootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers'
-    $Key = $RootKey + "\" + $cipher
+    $Key = $RootKey + '\' + $cipher
     $currentCipher = Get-TargetResource @PSBoundParameters
     $Compliant = $false
 
-    $ErrorActionPreference = "SilentlyContinue"
+    $ErrorActionPreference = 'SilentlyContinue'
     Write-Verbose -Message ($LocalizedData.ItemTest -f 'Cipher', $Cipher)
-    if ($currentCipher.Ensure -eq $Ensure -and (Get-ItemProperty -Path $Key -Name Enabled))
+    if ($currentCipher.Ensure -eq $Ensure -and `
+        (Get-ItemProperty -Path $Key -Name Enabled))
     {
         $Compliant = $true
     }
 
-    if ($Compliant)
+    if ($Compliant -eq $true)
     {
         Write-Verbose -Message ($LocalizedData.ItemCompliant -f 'Cipher', $Cipher)
     }

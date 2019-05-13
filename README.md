@@ -1,14 +1,79 @@
+# SChannelDsc
 
-# Contributing
+The SChannelDsc PowerShell module provides DSC resources that can be used to
+manage SChannel settings. It is based of the [cSchannel](https://github.com/bdanse/cSchannel)
+resource created by Bart Danse.
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.microsoft.com.
+Please leave comments, feature requests, and bug reports in the issues tab for
+this module.
 
-When you submit a pull request, a CLA-bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., label, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+If you would like to modify SharePointDsc module, please feel free. Please
+refer to the [Contribution Guidelines](https://github.com/Microsoft/SChannelDsc/wiki/Contributing%20to%20SChannelDSC)
+for information about style guides, testing and patterns for contributing
+to DSC resources.
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
+or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any
+additional questions or comments.
+
+## Branches
+
+### master
+
+[![Build status](https://ci.appveyor.com/api/projects/status/aj6ce04iy5j4qcd4/branch/master?svg=true)](https://ci.appveyor.com/project/Microsoft/SChannelDsc/branch/master)
+[![codecov](https://codecov.io/gh/Microsoft/SChannelDsc/branch/master/graph/badge.svg)](https://codecov.io/gh/Microsoft/SChannelDsc/branch/master)
+
+This is the branch containing the latest release -
+no contributions should be made directly to this branch.
+
+### dev
+
+[![Build status](https://ci.appveyor.com/api/projects/status/aj6ce04iy5j4qcd4/branch/dev?svg=true)](https://ci.appveyor.com/project/Microsoft/SChannelDsc/branch/dev)
+[![codecov](https://codecov.io/gh/Microsoft/SChannelDsc/branch/dev/graph/badge.svg)](https://codecov.io/gh/Microsoft/SChannelDsc/branch/dev)
+
+This is the development branch to which contributions should be proposed by
+contributors as pull requests. This development branch will periodically be
+merged to the master branch, and be released to the
+[PowerShell Gallery](https://www.powershellgallery.com/).
+
+## Installation
+
+To manually install the module, download the source code and unzip the contents
+of the \Modules\SChannelDsc directory to the
+$env:ProgramFiles\WindowsPowerShell\Modules folder
+
+To install from the PowerShell gallery using PowerShellGet (in PowerShell 5.0)
+run the following command:
+
+    Find-Module -Name SChannelDsc -Repository PSGallery | Install-Module
+
+To confirm installation, run the below command and ensure you see the
+SharePoint DSC resoures available:
+
+    Get-DscResource -Module SChannelDsc
+
+## Requirements
+
+The minimum PowerShell version required is 4.0, which ships in Windows 8.1
+or Windows Server 2012R2 (or higher versions). The preferred version is
+PowerShell 5.0 or higher, which ships with Windows 10 or Windows Server 2016.
+This is discussed [on the SChannelDsc wiki](https://github.com/Microsoft/SChannelDsc/wiki/Remote%20sessions%20and%20the%20InstallAccount%20variable),
+but generally PowerShell 5 will run the SChannel DSC resources faster and
+with improved verbose level logging.
+
+## Documentation and examples
+
+For a full list of resources in SChannelDsc and examples on their use, check
+out the [SChannelDsc wiki](https://github.com/Microsoft/SChannelDsc/wiki).
+You can also review the "examples" directory in the SChannelDsc module for
+some general use scenarios for all of the resources that are in the module.
+
+## Changelog
+
+A full list of changes in each version can be found in the
+[change log](CHANGELOG.md)
+
+## Project Throughput
+
+[![Throughput Graph](https://graphs.waffle.io/Microsoft/SChannelDsc/throughput.svg)](https://waffle.io/Microsoft/SChannelDsc/metrics/throughput)

@@ -2,7 +2,7 @@
     Thanks for submitting a Pull Request (PR) to this project.
     Your contribution to this project is greatly appreciated!
 
-    Please make sure you have read the [Contribution Guidelines](https://github.com/PowerShell/SChannelDsc/wiki/Contributing%20to%20SChannelDsc).
+    Please make sure you have read the [Contribution Guidelines](https://github.com/Microsoft/SChannelDsc/wiki/Contributing%20to%20SChannelDsc).
 
     Please prefix the PR title with the resource name,
     e.g. 'ResourceName: My short description'.
