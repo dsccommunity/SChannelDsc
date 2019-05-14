@@ -3,10 +3,10 @@ param(
 )
 
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\UnitTestHelper.psm1" `
-                                -Resolve)
+                               -ChildPath "..\UnitTestHelper.psm1" `
+                               -Resolve)
 
-$Global:SCDscHelper = New-SPDscUnitTestHelper -DscResource "Cipher"
+$Global:SCDscHelper = New-SCDscUnitTestHelper -DscResource "Cipher"
 
 Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:SCDscHelper.ModuleName -ScriptBlock {
@@ -21,6 +21,10 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Cipher = "AES 128/128"
                 Ensure = "Present"
+            }
+
+            Mock -CommandName Test-SChannelItem -MockWith {
+                return $true
             }
 
             It "Should return present from the Get method" {
@@ -38,22 +42,72 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
                 Ensure = "Absent"
             }
 
+            Mock -CommandName Test-SChannelItem -MockWith {
+                return $true
+            }
+
+            Mock -CommandName Switch-SChannelItem -MockWith { }
+
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
-            It "Should return true from the Test method" {
+            It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should Be $false
             }
 
             It "Should disable the cipher in the set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled New-Item #????
+                Assert-MockCalled Switch-SChannelItem
             }
         }
 
-        # Cipher isn't enabled and should be
-        # Cipher isn't enabled and shouldn't be
+        Context -Name "When the cipher isn't enabled and should be" -Fixture {
+            $testParams = @{
+                Cipher = "AES 128/128"
+                Ensure = "Present"
+            }
+
+            Mock -CommandName Test-SChannelItem -MockWith {
+                return $false
+            }
+
+            Mock -CommandName Switch-SChannelItem -MockWith { }
+
+            It "Should return absent from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
+            }
+
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
+            }
+
+            It "Should disable the cipher in the set method" {
+                Set-TargetResource @testParams
+                Assert-MockCalled Switch-SChannelItem
+            }
+        }
+
+        Context -Name "When the cipher isn't enabled and shouldn't be" -Fixture {
+            $testParams = @{
+                Cipher = "AES 128/128"
+                Ensure = "Absent"
+            }
+
+            Mock -CommandName Test-SChannelItem -MockWith {
+                return $false
+            }
+
+            Mock -CommandName Switch-SChannelItem -MockWith { }
+
+            It "Should return absent from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $true
+            }
+        }
     }
 }
 

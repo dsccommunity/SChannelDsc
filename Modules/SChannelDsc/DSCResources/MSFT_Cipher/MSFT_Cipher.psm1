@@ -1,6 +1,3 @@
-# Load the Helper Module
-Import-Module -Name "$PSScriptRoot\..\Helper.psm1"
-
 # Localized messages
 data LocalizedData
 {
@@ -108,8 +105,7 @@ function Test-TargetResource
 
     $ErrorActionPreference = 'SilentlyContinue'
     Write-Verbose -Message ($LocalizedData.ItemTest -f 'Cipher', $Cipher)
-    if ($currentCipher.Ensure -eq $Ensure -and `
-        (Get-ItemProperty -Path $Key -Name Enabled))
+    if ($currentCipher.Ensure -eq $Ensure)
     {
         $Compliant = $true
     }
