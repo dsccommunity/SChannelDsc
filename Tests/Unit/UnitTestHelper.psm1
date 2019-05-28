@@ -29,7 +29,8 @@ function New-SCDscUnitTestHelper
     if ($PSBoundParameters.ContainsKey("SubModulePath") -eq $true)
     {
         $describeHeader = "Sub-module '$SubModulePath'"
-        $moduleToLoad = Join-Path -Path $moduleRoot -ChildPath $SubModulePath
+        $modulesPath = Join-Path -Path $moduleRoot -ChildPath 'Modules'
+        $moduleToLoad = Join-Path -Path $modulesPath -ChildPath $SubModulePath
         $moduleName = (Get-Item -Path $moduleToLoad).BaseName
     }
 
@@ -52,8 +53,6 @@ function New-SCDscUnitTestHelper
     {
         $initScript += @"
             # Additional Mocks
-            #Mock Invoke-Command {
-            #}
 "@
     }
 

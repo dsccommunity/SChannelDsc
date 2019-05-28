@@ -98,8 +98,6 @@ function Test-TargetResource
         $Ensure = 'Present'
     )
 
-    $RootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers'
-    $Key = $RootKey + '\' + $cipher
     $currentCipher = Get-TargetResource @PSBoundParameters
     $Compliant = $false
 

@@ -1,6 +1,3 @@
-# Load the Helper Module
-Import-Module -Name "$PSScriptRoot\..\Helper.psm1"
-
 # Localized messages
 data LocalizedData
 {
@@ -100,15 +97,13 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present'
     )
-    $RootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes'
-    $Key = $RootKey + '\' + $Hash
+
     $currentHash = Get-TargetResource @PSBoundParameters
     $Compliant = $false
 
     $ErrorActionPreference = 'SilentlyContinue'
-    Write-Verbose -Message ($LocalizedData.ItemTest -f 'Cipher', $Cipher)
-    if ($currentHash.Ensure -eq $Ensure -and `
-        (Get-ItemProperty -Path $Key -Name Enabled))
+    Write-Verbose -Message ($LocalizedData.ItemTest -f 'Hash', $Hash)
+    if ($currentHash.Ensure -eq $Ensure)
     {
         $Compliant = $true
     }

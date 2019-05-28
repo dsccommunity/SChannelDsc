@@ -20,11 +20,11 @@ function Switch-SChannelProtocol
         $Enable
     )
 
-    $protocalRootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols'
-    $protocalKey = $protocalRootKey + '\' + $Protocol + '\' + $Type
-    if ((Test-Path -Path $protocalKey) -eq $false)
+    $protocolRootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols'
+    $protocolKey = $protocolRootKey + '\' + $Protocol + '\' + $Type
+    if ((Test-Path -Path $protocolKey) -eq $false)
     {
-        New-Item -Path $protocalKey -Force | Out-Null
+        New-Item -Path $protocolKey -Force | Out-Null
     }
 
     switch ($Enable)
@@ -33,13 +33,13 @@ function Switch-SChannelProtocol
         $false { $value = '0' }
     }
 
-    New-ItemProperty -Path $protocalKey `
+    New-ItemProperty -Path $protocolKey `
                      -Name 'Enabled' `
                      -Value $value `
                      -PropertyType Dword `
                      -Force | Out-Null
 
-    New-ItemProperty -Path $protocalKey `
+    New-ItemProperty -Path $protocolKey `
                      -Name 'DisabledByDefault' `
                      -Value ([int](-not $Enable)) `
                      -PropertyType Dword `

@@ -1,6 +1,3 @@
-# Load the Helper Module
-Import-Module -Name "$PSScriptRoot\..\Helper.psm1"
-
 # Localized messages
 data LocalizedData
 {
@@ -63,13 +60,12 @@ function Get-TargetResource
     }
 
     $returnValue = @{
-    Protocol = [System.String]$Protocol
-    includeClientSide = [System.Boolean]$clientside
-    Ensure = [System.String]$Ensure
+        Protocol = [System.String]$Protocol
+        includeClientSide = [System.Boolean]$clientside
+        Ensure = [System.String]$Ensure
     }
 
     $returnValue
-
 }
 
 
@@ -96,11 +92,11 @@ function Set-TargetResource
     if ($includeClientSide -eq $true)
     {
         Write-Verbose -Message ($LocalizedData.SetClientProtocol -f $Protocol, $Ensure)
-        Switch-SchannelProtocol -protocol $Protocol -type Client -enable ($Ensure -eq "Present")
+        Switch-SChannelProtocol -protocol $Protocol -type Client -enable ($Ensure -eq "Present")
     }
 
-    Write-Verbose -Message ($LocalizedData.SetServerProtocol -f $this.Protocol, $this.Ensure)
-    Switch-SchannelProtocol -protocol $Protocol -type Server -enable ($Ensure -eq "Present")
+    Write-Verbose -Message ($LocalizedData.SetServerProtocol -f $Protocol, $Ensure)
+    Switch-SChannelProtocol -protocol $Protocol -type Server -enable ($Ensure -eq "Present")
 }
 
 function Test-TargetResource
@@ -133,18 +129,28 @@ function Test-TargetResource
     $RootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols'
     $Key = $RootKey + "\" + $Protocol
 
-    if ($currentProtocol.Ensure -eq $Ensure -and $currentProtocol.includeClientSide -eq $includeClientSide -and (Test-Path -Path $Key))
+    if ($currentProtocol.Ensure -eq $Ensure)
     {
-        $Compliant = $true
+        if ($PSBoundParameters.ContainsKey("includeClientSide") -eq $true)
+        {
+            if ($currentProtocol.includeClientSide -eq $includeClientSide)
+            {
+                $Compliant = $true
+            }
+        }
+        else
+        {
+            $Compliant = $true
+        }
     }
 
-    if ($Compliant)
+    if ($Compliant -eq $true)
     {
         Write-Verbose -Message ($LocalizedData.ProtocolCompliant -f $Protocol, $Ensure)
     }
     else
     {
-        Write-Verbose -Message ($LocalizedData.ProtocolNotCompliant -f $Protocol, $this.Ensure)
+        Write-Verbose -Message ($LocalizedData.ProtocolNotCompliant -f $Protocol, $Ensure)
     }
 
     return $Compliant

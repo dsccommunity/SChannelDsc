@@ -1,6 +1,3 @@
-# Load the Helper Module
-Import-Module -Name "$PSScriptRoot\..\Helper.psm1"
-
 # Localized messages
 data LocalizedData
 {
@@ -37,12 +34,13 @@ function Get-TargetResource
     )
 
     $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002'
-    $item = Get-ItemProperty -Path $itemKey -ErrorAction SilentlyContinue
+    $item = Get-ItemProperty -Path $itemKey -Name 'Functions' -ErrorAction SilentlyContinue
 
+    $order = $null
     if ($null -ne $item)
     {
         $Ensure = 'Present'
-        $Order = (Get-ItemPropertyValue -Path $itemKey -Name Functions -ErrorAction SilentlyContinue).Split(',')
+        $order = (Get-ItemPropertyValue -Path $itemKey -Name 'Functions' -ErrorAction SilentlyContinue).Split(',')
     }
     else
     {
@@ -50,7 +48,7 @@ function Get-TargetResource
     }
 
     $returnValue = @{
-        CipherSuitesOrder = [System.String[]]$Order
+        CipherSuitesOrder = [System.String[]]$order
         Ensure = [System.String]$Ensure
     }
 
@@ -77,10 +75,11 @@ function Set-TargetResource
         $Ensure = "Present"
     )
 
+    $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002'
+
     if ($Ensure -eq 'Present')
     {
         Write-Verbose -Message ($LocalizedData.ItemEnable -f 'CipherSuites' , $Ensure)
-        $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002'
         $cipherSuitesAsString = [string]::join(',', $cipherSuitesOrder)
         New-Item $itemKey -Force
         New-ItemProperty -Path $itemKey -Name 'Functions' -Value $cipherSuitesAsString -PropertyType 'String' -Force | Out-Null
@@ -88,8 +87,7 @@ function Set-TargetResource
     else
     {
         Write-Verbose -Message ($LocalizedData.ItemDisable -f 'CipherSuites' , $Ensure)
-        $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\'
-        Remove-Item $itemKey -Force
+        Remove-ItemProperty -Path $itemKey -Name 'Functions' -Force
     }
 }
 
@@ -122,6 +120,10 @@ function Test-TargetResource
     if ($null -ne $cipherSuites.CipherSuitesOrder)
     {
         $currentSuitesOrderAsString = [string]::join(',', $cipherSuites.CipherSuitesOrder)
+    }
+    else
+    {
+        $currentSuitesOrderAsString = $null
     }
 
     $Compliant = $false

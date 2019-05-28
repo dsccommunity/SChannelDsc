@@ -1,6 +1,3 @@
-# Load the Helper Module
-Import-Module -Name "$PSScriptRoot\..\Helper.psm1"
-
 # Localized messages
 data LocalizedData
 {
@@ -26,7 +23,7 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [ValidateSet('Diffie-Hellman','ECDH','PKCS')]
         [System.String]
-        $KeyExchangeAlgoritm,
+        $KeyExchangeAlgorithm,
 
         [Parameter()]
         [ValidateSet('Present','Absent')]
@@ -34,7 +31,7 @@ function Get-TargetResource
         $Ensure = 'Present'
     )
     $RootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms'
-    $Key = $RootKey + '\' + $KeyExchangeAlgoritm
+    $Key = $RootKey + '\' + $KeyExchangeAlgorithm
 
     if ((Test-SChannelItem -ItemKey $Key -Enable $true) -eq $true)
     {
@@ -46,7 +43,7 @@ function Get-TargetResource
     }
 
     $returnValue = @{
-        KeyExchangeAlgoritm = [System.String]$KeyExchangeAlgoritm
+        KeyExchangeAlgorithm = [System.String]$KeyExchangeAlgorithm
         Ensure = [System.String]$Result
     }
 
@@ -61,7 +58,7 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [ValidateSet('Diffie-Hellman','ECDH','PKCS')]
         [System.String]
-        $KeyExchangeAlgoritm,
+        $KeyExchangeAlgorithm,
 
         [Parameter()]
         [ValidateSet('Present','Absent')]
@@ -70,17 +67,17 @@ function Set-TargetResource
     )
 
     $RootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms'
-    $Key = $RootKey + '\' + $KeyExchangeAlgoritm
+    $Key = $RootKey + '\' + $KeyExchangeAlgorithm
 
 
     if ($Ensure -eq 'Present')
     {
-        Write-Verbose -Message ($LocalizedData.ItemEnable -f 'KeyExchangeAlgoritm', $KeyExchangeAlgoritm)
+        Write-Verbose -Message ($LocalizedData.ItemEnable -f 'KeyExchangeAlgorithm', $KeyExchangeAlgorithm)
         Switch-SChannelItem -ItemKey $Key -Enable $true
     }
     else
     {
-        Write-Verbose -Message ($LocalizedData.ItemDisable -f 'KeyExchangeAlgoritm', $KeyExchangeAlgoritm)
+        Write-Verbose -Message ($LocalizedData.ItemDisable -f 'KeyExchangeAlgorithm', $KeyExchangeAlgorithm)
         Switch-SChannelItem -ItemKey $Key -Enable $false
     }
 }
@@ -94,7 +91,7 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [ValidateSet('Diffie-Hellman','ECDH','PKCS')]
         [System.String]
-        $KeyExchangeAlgoritm,
+        $KeyExchangeAlgorithm,
 
         [Parameter()]
         [ValidateSet('Present','Absent')]
@@ -102,26 +99,23 @@ function Test-TargetResource
         $Ensure = 'Present'
     )
 
-    $RootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms'
-    $Key = $RootKey + '\' + $KeyExchangeAlgoritm
     $currentKEA = Get-TargetResource @PSBoundParameters
     $Compliant = $false
 
     $ErrorActionPreference = 'SilentlyContinue'
-    Write-Verbose -Message ($LocalizedData.ItemTest -f 'KeyExchangeAlgoritm', $Cipher)
-    if ($currentKEA.Ensure -eq $Ensure -and `
-        (Get-ItemProperty -Path $Key -Name Enabled) -eq $true)
+    Write-Verbose -Message ($LocalizedData.ItemTest -f 'KeyExchangeAlgorithm', $KeyExchangeAlgorithm)
+    if ($currentKEA.Ensure -eq $Ensure)
     {
         $Compliant = $true
     }
 
     if ($Compliant -eq $true)
     {
-        Write-Verbose -Message ($LocalizedData.ItemCompliant -f 'KeyExchangeAlgoritm', $KeyExchangeAlgoritm)
+        Write-Verbose -Message ($LocalizedData.ItemCompliant -f 'KeyExchangeAlgorithm', $KeyExchangeAlgorithm)
     }
     else
     {
-        Write-Verbose -Message ($LocalizedData.ItemNotCompliant -f 'KeyExchangeAlgoritm', $KeyExchangeAlgoritm)
+        Write-Verbose -Message ($LocalizedData.ItemNotCompliant -f 'KeyExchangeAlgorithm', $KeyExchangeAlgorithm)
     }
 
     return $Compliant
