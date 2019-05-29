@@ -1,5 +1,5 @@
 
-[ClassVersion("1.0.0.0"), FriendlyName("MSFT_KeyExchangeAlgorithm")]
+[ClassVersion("1.0.0.0"), FriendlyName("KeyExchangeAlgorithm")]
 class MSFT_KeyExchangeAlgorithm : OMI_BaseResource
 {
     [Key, ValueMap{"Diffie-Hellman","ECDH","PKCS"}, Values{"Diffie-Hellman","ECDH","PKCS"}] String KeyExchangeAlgorithm;

@@ -31,6 +31,8 @@ function Get-TargetResource
         $Ensure = 'Present'
     )
 
+    Write-Verbose -Message "Getting configuration for hash $Hash"
+
     $RootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes'
     $Key = $RootKey + '\' + $Hash
     if ((Test-SChannelItem -itemKey $Key -enable $true) -eq $true)
@@ -66,6 +68,8 @@ function Set-TargetResource
         $Ensure = 'Present'
     )
 
+    Write-Verbose -Message "Setting configuration for hash $Hash"
+
     $RootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes'
     $Key = $RootKey + '\' + $Hash
 
@@ -97,6 +101,8 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present'
     )
+
+    Write-Verbose -Message "Testing configuration for hash $Hash"
 
     $currentHash = Get-TargetResource @PSBoundParameters
     $Compliant = $false

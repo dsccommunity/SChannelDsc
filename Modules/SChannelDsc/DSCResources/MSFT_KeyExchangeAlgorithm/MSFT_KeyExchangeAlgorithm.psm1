@@ -30,6 +30,9 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present'
     )
+
+    Write-Verbose -Message "Getting configuration for key exchange algorithm $KeyExchangeAlgorithm"
+
     $RootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms'
     $Key = $RootKey + '\' + $KeyExchangeAlgorithm
 
@@ -66,6 +69,8 @@ function Set-TargetResource
         $Ensure = 'Present'
     )
 
+    Write-Verbose -Message "Setting configuration for key exchange algorithm $KeyExchangeAlgorithm"
+
     $RootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms'
     $Key = $RootKey + '\' + $KeyExchangeAlgorithm
 
@@ -98,6 +103,8 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present'
     )
+
+    Write-Verbose -Message "Testing configuration for key exchange algorithm $KeyExchangeAlgorithm"
 
     $currentKEA = Get-TargetResource @PSBoundParameters
     $Compliant = $false

@@ -1,5 +1,5 @@
 
-[ClassVersion("1.0.0.0"), FriendlyName("MSFT_Hash")]
+[ClassVersion("1.0.0.0"), FriendlyName("Hash")]
 class MSFT_Hash : OMI_BaseResource
 {
     [Key, ValueMap{"MD5","SHA","SHA256","SHA384","SHA512"}, Values{"MD5","SHA","SHA256","SHA384","SHA512"}] String Hash;

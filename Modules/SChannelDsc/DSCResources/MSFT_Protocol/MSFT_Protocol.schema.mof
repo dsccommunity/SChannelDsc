@@ -1,5 +1,5 @@
 
-[ClassVersion("1.0.0.0"), FriendlyName("MSFT_Protocol")]
+[ClassVersion("1.0.0.0"), FriendlyName("Protocol")]
 class MSFT_Protocol : OMI_BaseResource
 {
     [Key, ValueMap{"Multi-Protocol Unified Hello","PCT 1.0","SSL 2.0","SSL 3.0","TLS 1.0","TLS 1.1","TLS 1.2"}, Values{"Multi-Protocol Unified Hello","PCT 1.0","SSL 2.0","SSL 3.0","TLS 1.0","TLS 1.1","TLS 1.2"}] String Protocol;

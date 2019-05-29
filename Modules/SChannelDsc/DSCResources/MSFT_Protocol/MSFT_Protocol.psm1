@@ -34,6 +34,8 @@ function Get-TargetResource
         $Ensure = "Present"
     )
 
+    Write-Verbose -Message "Getting configuration for protocol $Protocol"
+
     $itemRoot = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols'
     $itemKey = $itemRoot + "\" + $Protocol
 
@@ -89,6 +91,8 @@ function Set-TargetResource
         $Ensure = "Present"
     )
 
+    Write-Verbose -Message "Setting configuration for protocol $Protocol"
+
     if ($includeClientSide -eq $true)
     {
         Write-Verbose -Message ($LocalizedData.SetClientProtocol -f $Protocol, $Ensure)
@@ -120,14 +124,13 @@ function Test-TargetResource
         $Ensure = "Present"
     )
 
+    Write-Verbose -Message "Testing configuration for protocol $Protocol"
+
     $currentProtocol = Get-TargetResource -Protocol $Protocol
     $Compliant = $false
 
     $ErrorActionPreference = "SilentlyContinue"
     Write-Verbose -Message ($LocalizedData.TestClientProtocol -f $Protocol, $Ensure)
-
-    $RootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols'
-    $Key = $RootKey + "\" + $Protocol
 
     if ($currentProtocol.Ensure -eq $Ensure)
     {

@@ -33,6 +33,8 @@ function Get-TargetResource
         $Ensure = "Present"
     )
 
+    Write-Verbose -Message "Getting configuration for cipher suites order"
+
     $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002'
     $item = Get-ItemProperty -Path $itemKey -Name 'Functions' -ErrorAction SilentlyContinue
 
@@ -75,6 +77,8 @@ function Set-TargetResource
         $Ensure = "Present"
     )
 
+    Write-Verbose -Message "Setting configuration for cipher suites order"
+
     $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002'
 
     if ($Ensure -eq 'Present')
@@ -111,6 +115,8 @@ function Test-TargetResource
         [System.String]
         $Ensure = "Present"
     )
+
+    Write-Verbose -Message "Testing configuration for cipher suites order"
 
     $cipherSuites = Get-TargetResource @PSBoundParameters
     if ($null -ne $CipherSuitesOrder)
