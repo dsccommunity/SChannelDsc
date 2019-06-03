@@ -14,6 +14,7 @@ about: If you have a new resource proposal that you think should be added to thi
 
     PLEASE KEEP THE HEADERS, but you may remove this comment block.
 -->
+
 ### Description
 
 ### Proposed properties

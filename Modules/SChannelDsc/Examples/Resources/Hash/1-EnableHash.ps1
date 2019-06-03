@@ -1,6 +1,6 @@
 <#
 .EXAMPLE
-    This example shows how to enable the AES 128/128 hash.
+    This example shows how to enable the MD5 hash.
 #>
 
     Configuration Example
@@ -11,9 +11,9 @@
         Import-DscResource -ModuleName SChannelDsc
 
         node localhost {
-            Cipher EnableAES128
+            Hash EnableMD5
             {
-                Cipher = "AES 128/128"
+                Cipher = "MD5"
                 Ensure = "Present"
             }
         }

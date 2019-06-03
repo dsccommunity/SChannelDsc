@@ -1,6 +1,6 @@
 <#
 .EXAMPLE
-    This example shows how to enable the AES 128/128 hash.
+    This example shows how to disable the AES 128/128 hash.
 #>
 
     Configuration Example
@@ -11,10 +11,10 @@
         Import-DscResource -ModuleName SChannelDsc
 
         node localhost {
-            Cipher EnableAES128
+            Cipher DisableAES128
             {
                 Cipher = "AES 128/128"
-                Ensure = "Present"
+                Ensure = "Absent"
             }
         }
     }

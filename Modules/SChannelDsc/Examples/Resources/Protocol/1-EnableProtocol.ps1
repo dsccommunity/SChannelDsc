@@ -1,6 +1,6 @@
 <#
 .EXAMPLE
-    This example shows how to enable the AES 128/128 hash.
+    This example shows how to enable the SSL v3.0 protocol.
 #>
 
     Configuration Example
@@ -11,10 +11,10 @@
         Import-DscResource -ModuleName SChannelDsc
 
         node localhost {
-            Cipher EnableAES128
+            Protocol EnableSSLv3
             {
-                Cipher = "AES 128/128"
-                Ensure = "Present"
+                Protocol = "SSL 3.0"
+                Ensure   = "Present"
             }
         }
     }
