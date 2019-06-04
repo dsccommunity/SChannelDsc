@@ -104,12 +104,14 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing configuration for cipher $Cipher"
 
-    $currentCipher = Get-TargetResource @PSBoundParameters
+    $CurrentValues = Get-TargetResource @PSBoundParameters
     $Compliant = $false
 
+    Write-Verbose -Message "Current Values: $(Convert-SPDscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-SPDscHashtableToString -Hashtable $PSBoundParameters)"
+
     $ErrorActionPreference = 'SilentlyContinue'
-    Write-Verbose -Message ($LocalizedData.ItemTest -f 'Cipher', $Cipher)
-    if ($currentCipher.Ensure -eq $Ensure)
+    if ($CurrentValues.Ensure -eq $Ensure)
     {
         $Compliant = $true
     }
