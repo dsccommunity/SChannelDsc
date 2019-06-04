@@ -15,6 +15,16 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
         # Mocks for all contexts
 
         # Test contexts
+        Context -Name "Test method Convert-SCDscHashtableToString" -Fixture {
+            $testParams = @{
+                Name = "Test"
+                Members = @("user1","user2")
+            }
+            It "Should convert hashtable to string" {
+                Convert-SCDscHashtableToString -Hashtable $testParams | Should Be "Members=(user1,user2); Name=Test"
+            }
+        }
+
         Context -Name "Test method Switch-SChannelProtocol" -Fixture {
             Mock -CommandName Test-Path -MockWith { return $true }
 

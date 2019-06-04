@@ -104,12 +104,14 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing configuration for hash $Hash"
 
-    $currentHash = Get-TargetResource @PSBoundParameters
+    $CurrentValues = Get-TargetResource @PSBoundParameters
     $Compliant = $false
 
+    Write-Verbose -Message "Current Values: $(Convert-SCDscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-SCDscHashtableToString -Hashtable $PSBoundParameters)"
+
     $ErrorActionPreference = 'SilentlyContinue'
-    Write-Verbose -Message ($LocalizedData.ItemTest -f 'Hash', $Hash)
-    if ($currentHash.Ensure -eq $Ensure)
+    if ($CurrentValues.Ensure -eq $Ensure)
     {
         $Compliant = $true
     }

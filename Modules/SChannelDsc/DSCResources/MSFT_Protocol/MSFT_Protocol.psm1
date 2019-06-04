@@ -26,7 +26,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $includeClientSide,
+        $IncludeClientSide,
 
         [Parameter()]
         [ValidateSet("Present","Absent")]
@@ -62,9 +62,9 @@ function Get-TargetResource
     }
 
     $returnValue = @{
-        Protocol = [System.String]$Protocol
-        includeClientSide = [System.Boolean]$clientside
-        Ensure = [System.String]$Ensure
+        Protocol          = [System.String]$Protocol
+        IncludeClientSide = [System.Boolean]$clientside
+        Ensure            = [System.String]$Ensure
     }
 
     $returnValue
@@ -83,7 +83,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $includeClientSide,
+        $IncludeClientSide,
 
         [Parameter()]
         [ValidateSet("Present","Absent")]
@@ -93,7 +93,7 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for protocol $Protocol"
 
-    if ($includeClientSide -eq $true)
+    if ($IncludeClientSide -eq $true)
     {
         Write-Verbose -Message ($LocalizedData.SetClientProtocol -f $Protocol, $Ensure)
         Switch-SChannelProtocol -protocol $Protocol -type Client -enable ($Ensure -eq "Present")
@@ -116,7 +116,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $includeClientSide,
+        $IncludeClientSide,
 
         [Parameter()]
         [ValidateSet("Present","Absent")]
@@ -126,17 +126,19 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing configuration for protocol $Protocol"
 
-    $currentProtocol = Get-TargetResource -Protocol $Protocol
+    $CurrentValues = Get-TargetResource -Protocol $Protocol
     $Compliant = $false
 
-    $ErrorActionPreference = "SilentlyContinue"
-    Write-Verbose -Message ($LocalizedData.TestClientProtocol -f $Protocol, $Ensure)
+    Write-Verbose -Message "Current Values: $(Convert-SCDscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-SCDscHashtableToString -Hashtable $PSBoundParameters)"
 
-    if ($currentProtocol.Ensure -eq $Ensure)
+    $ErrorActionPreference = "SilentlyContinue"
+
+    if ($CurrentValues.Ensure -eq $Ensure)
     {
-        if ($PSBoundParameters.ContainsKey("includeClientSide") -eq $true)
+        if ($PSBoundParameters.ContainsKey("IncludeClientSide") -eq $true)
         {
-            if ($currentProtocol.includeClientSide -eq $includeClientSide)
+            if ($CurrentValues.IncludeClientSide -eq $IncludeClientSide)
             {
                 $Compliant = $true
             }

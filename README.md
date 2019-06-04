@@ -74,11 +74,7 @@ some general use scenarios for all of the resources that are in the module.
 A full list of changes in each version can be found in the
 [change log](CHANGELOG.md)
 
-## Project Throughput
-
-[![Throughput Graph](https://graphs.waffle.io/Microsoft/SChannelDsc/throughput.svg)](https://waffle.io/Microsoft/SChannelDsc/metrics/throughput)
-
----------------------- START OF THIRD PARTY NOTICES ----------------------
+\---------------------- START OF THIRD PARTY NOTICES ----------------------
 This file incorporates material from the projects listed below (Third Party IP).
 [cSchannel](https://github.com/bdanse/cSchannel)
 Copyright (c) Bart Danse
@@ -105,4 +101,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-----------------------END OF THIRD PARTY NOTICES----------------------
+\----------------------END OF THIRD PARTY NOTICES----------------------
