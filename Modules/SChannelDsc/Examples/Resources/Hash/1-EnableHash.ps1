@@ -13,7 +13,7 @@
         node localhost {
             Hash EnableMD5
             {
-                Cipher = "MD5"
+                Hash   = "MD5"
                 Ensure = "Present"
             }
         }

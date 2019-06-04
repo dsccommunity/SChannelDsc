@@ -13,7 +13,7 @@ Configuration Example
     node localhost {
         Hash DisableMD5
         {
-            Cipher = "MD5"
+            Hash   = "MD5"
             Ensure = "Absent"
         }
     }
