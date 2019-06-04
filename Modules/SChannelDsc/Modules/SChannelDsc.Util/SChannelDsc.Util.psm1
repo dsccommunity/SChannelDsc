@@ -15,7 +15,7 @@ function Convert-SCDscHashtableToString
         }
         elseif ($pair.Value -is [System.Collections.Hashtable])
         {
-            $str = "$($pair.Key)={$(Convert-SPDscHashtableToString -Hashtable $pair.Value)}"
+            $str = "$($pair.Key)={$(Convert-SCDscHashtableToString -Hashtable $pair.Value)}"
         }
         else
         {
