@@ -3,14 +3,11 @@ data LocalizedData
 {
     # culture='en-US'
     ConvertFrom-StringData -StringData @'
-        ProtocolNotCompliant           = Protocol {0} not compliant.
-        ProtocolCompliant              = Protocol {0} compliant.
         ItemTest                       = Testing {0} {1}
         ItemEnable                     = Enabling {0} {1}
         ItemDisable                    = Disabling {0} {1}
         ItemNotCompliant               = {0} {1} not compliant.
         ItemCompliant                  = {0} {1} compliant.
-
 '@
 }
 
@@ -26,28 +23,20 @@ function Get-TargetResource
         $KeyExchangeAlgorithm,
 
         [Parameter()]
-        [ValidateSet('Present','Absent')]
+        [ValidateSet('Enabled','Disabled','Default')]
         [System.String]
-        $Ensure = 'Present'
+        $State = 'Default'
     )
 
     Write-Verbose -Message "Getting configuration for key exchange algorithm $KeyExchangeAlgorithm"
 
-    $RootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms'
-    $Key = $RootKey + '\' + $KeyExchangeAlgorithm
-
-    if ((Test-SChannelItem -ItemKey $Key -Enable $true) -eq $true)
-    {
-        $Result = 'Present'
-    }
-    else
-    {
-        $Result = 'Absent'
-    }
+    $rootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms'
+    $key = $rootKey + '\' + $KeyExchangeAlgorithm
+    $result = Get-SChannelItem -ItemKey $key
 
     $returnValue = @{
-        KeyExchangeAlgorithm = [System.String]$KeyExchangeAlgorithm
-        Ensure = [System.String]$Result
+        KeyExchangeAlgorithm  = $KeyExchangeAlgorithm
+        State                 = $result
     }
 
     $returnValue
@@ -64,26 +53,30 @@ function Set-TargetResource
         $KeyExchangeAlgorithm,
 
         [Parameter()]
-        [ValidateSet('Present','Absent')]
+        [ValidateSet('Enabled','Disabled','Default')]
         [System.String]
-        $Ensure = 'Present'
+        $State = 'Default'
     )
 
     Write-Verbose -Message "Setting configuration for key exchange algorithm $KeyExchangeAlgorithm"
 
-    $RootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms'
-    $Key = $RootKey + '\' + $KeyExchangeAlgorithm
+    $rootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms'
+    $key = $rootKey + '\' + $KeyExchangeAlgorithm
 
-
-    if ($Ensure -eq 'Present')
+    switch ($State)
     {
-        Write-Verbose -Message ($LocalizedData.ItemEnable -f 'KeyExchangeAlgorithm', $KeyExchangeAlgorithm)
-        Switch-SChannelItem -ItemKey $Key -Enable $true
-    }
-    else
-    {
-        Write-Verbose -Message ($LocalizedData.ItemDisable -f 'KeyExchangeAlgorithm', $KeyExchangeAlgorithm)
-        Switch-SChannelItem -ItemKey $Key -Enable $false
+        'Default'  {
+            Write-Verbose -Message ($LocalizedData.ItemDefault -f 'KeyExchangeAlgorithm', $KeyExchangeAlgorithm)
+            Set-SChannelItem -ItemKey $key -State $State
+        }
+        'Disabled' {
+            Write-Verbose -Message ($LocalizedData.ItemDisable -f 'KeyExchangeAlgorithm', $KeyExchangeAlgorithm)
+            Set-SChannelItem -ItemKey $key -State $State
+        }
+        'Enabled'  {
+            Write-Verbose -Message ($LocalizedData.ItemEnable -f 'KeyExchangeAlgorithm', $KeyExchangeAlgorithm)
+            Set-SChannelItem -ItemKey $key -State $State
+        }
     }
 }
 
@@ -99,9 +92,9 @@ function Test-TargetResource
         $KeyExchangeAlgorithm,
 
         [Parameter()]
-        [ValidateSet('Present','Absent')]
+        [ValidateSet('Enabled','Disabled','Default')]
         [System.String]
-        $Ensure = 'Present'
+        $State = 'Default'
     )
 
     Write-Verbose -Message "Testing configuration for key exchange algorithm $KeyExchangeAlgorithm"
@@ -113,7 +106,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-SCDscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ErrorActionPreference = 'SilentlyContinue'
-    if ($CurrentValues.Ensure -eq $Ensure)
+    if ($CurrentValues.State -eq $State)
     {
         $Compliant = $true
     }

@@ -3,6 +3,6 @@
 class MSFT_Hash : OMI_BaseResource
 {
     [Key, ValueMap{"MD5","SHA","SHA256","SHA384","SHA512"}, Values{"MD5","SHA","SHA256","SHA384","SHA512"}] String Hash;
-    [Write, ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, ValueMap{"Enabled","Disabled","Default"}, Values{"Enabled","Disabled","Default"}] String State;
 };
 

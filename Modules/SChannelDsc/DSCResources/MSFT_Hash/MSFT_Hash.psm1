@@ -3,14 +3,12 @@ data LocalizedData
 {
     # culture='en-US'
     ConvertFrom-StringData -StringData @'
-        ProtocolNotCompliant           = Protocol {0} not compliant.
-        ProtocolCompliant              = Protocol {0} compliant.
         ItemTest                       = Testing {0} {1}
         ItemEnable                     = Enabling {0} {1}
         ItemDisable                    = Disabling {0} {1}
+        ItemDefault                    = Defaulting {0} {1}
         ItemNotCompliant               = {0} {1} not compliant.
         ItemCompliant                  = {0} {1} compliant.
-
 '@
 }
 
@@ -26,27 +24,20 @@ function Get-TargetResource
         $Hash,
 
         [Parameter()]
-        [ValidateSet('Present','Absent')]
+        [ValidateSet('Enabled','Disabled','Default')]
         [System.String]
-        $Ensure = 'Present'
+        $State = 'Default'
     )
 
     Write-Verbose -Message "Getting configuration for hash $Hash"
 
-    $RootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes'
-    $Key = $RootKey + '\' + $Hash
-    if ((Test-SChannelItem -itemKey $Key -enable $true) -eq $true)
-    {
-        $Result = 'Present'
-    }
-    else
-    {
-        $Result = 'Absent'
-    }
+    $rootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes'
+    $key = $rootKey + '\' + $Hash
+    $result = Get-SChannelItem -ItemKey $key
 
     $returnValue = @{
-        Hash = [System.String]$Hash
-        Ensure = [System.String]$Result
+        Hash  = $Hash
+        State = $result
     }
 
     $returnValue
@@ -63,25 +54,30 @@ function Set-TargetResource
         $Hash,
 
         [Parameter()]
-        [ValidateSet('Present','Absent')]
+        [ValidateSet('Enabled','Disabled','Default')]
         [System.String]
-        $Ensure = 'Present'
+        $State = 'Default'
     )
 
     Write-Verbose -Message "Setting configuration for hash $Hash"
 
-    $RootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes'
-    $Key = $RootKey + '\' + $Hash
+    $rootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes'
+    $key = $rootKey + '\' + $Hash
 
-    if ($Ensure -eq 'Present')
+    switch ($State)
     {
-        Write-Verbose -Message ($LocalizedData.ItemEnable -f 'Hash', $Hash)
-        Switch-SChannelItem -itemKey $Key -enable $true
-    }
-    else
-    {
-        Write-Verbose -Message ($LocalizedData.ItemDisable -f 'Hash', $Hash)
-        Switch-SChannelItem -itemKey $Key -enable $false
+        'Default'  {
+            Write-Verbose -Message ($LocalizedData.ItemDefault -f 'Hash', $Hash)
+            Set-SChannelItem -ItemKey $key -State $State
+        }
+        'Disabled' {
+            Write-Verbose -Message ($LocalizedData.ItemDisable -f 'Hash', $Hash)
+            Set-SChannelItem -ItemKey $key -State $State
+        }
+        'Enabled'  {
+            Write-Verbose -Message ($LocalizedData.ItemEnable -f 'Hash', $Hash)
+            Set-SChannelItem -ItemKey $key -State $State
+        }
     }
 }
 
@@ -97,9 +93,9 @@ function Test-TargetResource
         $Hash,
 
         [Parameter()]
-        [ValidateSet('Present','Absent')]
+        [ValidateSet('Enabled','Disabled','Default')]
         [System.String]
-        $Ensure = 'Present'
+        $State = 'Default'
     )
 
     Write-Verbose -Message "Testing configuration for hash $Hash"
@@ -111,7 +107,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-SCDscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ErrorActionPreference = 'SilentlyContinue'
-    if ($CurrentValues.Ensure -eq $Ensure)
+    if ($CurrentValues.State -eq $State)
     {
         $Compliant = $true
     }

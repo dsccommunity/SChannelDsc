@@ -3,6 +3,6 @@
 class MSFT_Cipher : OMI_BaseResource
 {
     [Key, ValueMap{"AES 128/128","AES 256/256","DES 56/56","NULL","RC2 128/128","RC2 40/128","RC2 56/128","RC4 128/128","RC4 40/128","RC4 56/128","RC4 64/128","Triple DES 168"}, Values{"AES 128/128","AES 256/256","DES 56/56","NULL","RC2 128/128","RC2 40/128","RC2 56/128","RC4 128/128","RC4 40/128","RC4 56/128","RC4 64/128","Triple DES 168"}] String Cipher;
-    [Write, ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, ValueMap{"Enabled","Disabled","Default"}, Values{"Enabled","Disabled","Default"}] String State;
 };
 

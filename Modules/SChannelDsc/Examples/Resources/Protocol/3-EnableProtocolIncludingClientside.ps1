@@ -16,7 +16,7 @@
             {
                 Protocol          = "SSL 3.0"
                 IncludeClientSide = $true
-                Ensure            = "Present"
+                State             = "Enabled"
             }
         }
     }

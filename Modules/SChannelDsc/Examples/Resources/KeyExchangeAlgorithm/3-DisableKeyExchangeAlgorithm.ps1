@@ -1,6 +1,6 @@
 <#
 .EXAMPLE
-    This example shows how to enable the ECDH key exchange algorithm.
+    This example shows how to disable the ECDH key exchange algorithm.
 #>
 
 Configuration Example
@@ -11,10 +11,10 @@ Configuration Example
     Import-DscResource -ModuleName SChannelDsc
 
     node localhost {
-        KeyExchangeAlgorithm EnableECDH
+        KeyExchangeAlgorithm DisableECDH
         {
             KeyExchangeAlgorithm = "ECDH"
-            State                = "Enabled"
+            State                = "Default"
         }
     }
 }

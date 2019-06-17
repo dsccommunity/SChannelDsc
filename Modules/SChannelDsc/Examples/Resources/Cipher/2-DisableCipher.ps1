@@ -14,7 +14,7 @@
             Cipher DisableAES128
             {
                 Cipher = "AES 128/128"
-                Ensure = "Absent"
+                State  = "Disabled"
             }
         }
     }

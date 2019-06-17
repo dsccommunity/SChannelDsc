@@ -14,7 +14,7 @@ Configuration Example
         Hash DisableMD5
         {
             Hash  = "MD5"
-            State = "Disabled"
+            State = "Default"
         }
     }
 }

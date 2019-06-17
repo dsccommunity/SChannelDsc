@@ -2,7 +2,7 @@ function Convert-SCDscHashtableToString
 {
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
         $Hashtable
     )
@@ -30,123 +30,76 @@ function Convert-SCDscHashtableToString
 
 #https://www.hass.de/content/setup-your-iis-ssl-perfect-forward-secrecy-and-tls-12
 #https://support.microsoft.com/en-us/kb/245030
-
-function Switch-SChannelProtocol
+function Get-SChannelItem
 {
     param
     (
-        [Parameter()]
-        [ValidateSet('Multi-Protocol Unified Hello','PCT 1.0','SSL 2.0','SSL 3.0','TLS 1.0','TLS 1.1','TLS 1.2')]
-        [System.String]
-        $Protocol,
-
-        [Parameter()]
-        [ValidateSet('Server','Client')]
-        [System.String]
-        $Type,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enable
-    )
-
-    $protocolRootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols'
-    $protocolKey = $protocolRootKey + '\' + $Protocol + '\' + $Type
-    if ((Test-Path -Path $protocolKey) -eq $false)
-    {
-        New-Item -Path $protocolKey -Force | Out-Null
-    }
-
-    switch ($Enable)
-    {
-        $true  { $value = '0xffffffff' }
-        $false { $value = '0' }
-    }
-
-    New-ItemProperty -Path $protocolKey `
-                     -Name 'Enabled' `
-                     -Value $value `
-                     -PropertyType Dword `
-                     -Force | Out-Null
-
-    New-ItemProperty -Path $protocolKey `
-                     -Name 'DisabledByDefault' `
-                     -Value ([int](-not $Enable)) `
-                     -PropertyType Dword `
-                     -Force | Out-Null
-}
-
-function Test-SChannelItem
-{
-    param
-    (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $ItemKey,
 
         [Parameter()]
-        [System.Boolean]
-        $Enable
+        [System.String]
+        $ItemValue = 'Enabled'
     )
 
-    switch ($Enable)
+    $value = Get-ItemProperty -Path $ItemKey -Name $ItemValue -ErrorAction SilentlyContinue
+    switch ($value)
     {
-        $true  { $value = '4294967295' }
-        $false { $value = '0' }
+        $null { return 'Default' }
+        0     { return 'Disabled' }
+        1     { return 'Enabled' }
+        0xffffffff { return 'Enabled' }
     }
-
-    $result = $false
-    $ErrorActionPreference = 'SilentlyContinue'
-    if ($null -ne (Get-ItemProperty -Path $ItemKey -Name Enabled))
-    {
-        if ((Get-ItemPropertyValue -Path $ItemKey -Name Enabled) -eq $value)
-        {
-            $result = $true
-        }
-    }
-
-    return $result
 }
 
-function Switch-SChannelItem
+function Set-SChannelItem
 {
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $ItemKey,
 
         [Parameter()]
-        [System.Boolean]
-        $Enable
+        [System.String]
+        $ItemValue = 'Enabled',
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Enabled','Disabled','Default')]
+        [System.String]
+        $State
     )
 
-    if ((Test-Path -Path $ItemKey) -eq $false)
+    switch ($State)
     {
-        if ($ItemKey -match '\\SecurityProviders\\SCHANNEL\\Ciphers')
-        {
-            $itemKeyArray = $ItemKey.Split('\')
-            $rootKey = [string]::Join('\', $itemKeyArray[0..4])
-            $subKey = $itemKeyArray[5]
-            $keyCreate = $itemKeyArray[6]
-            [void](Get-Item $rootKey).openSubKey($subKey, $true).CreateSubKey($keyCreate)
+        'Default'  {
+            if (Test-Path -Path $ItemKey)
+            {
+                Remove-Item -Path $ItemKey -Force
+            }
         }
-        else
-        {
-            New-Item -Path $ItemKey -Force | Out-Null
+        'Disabled' {
+            if ((Test-Path -Path $ItemKey) -eq $false)
+            {
+                New-Item -Path $ItemKey -Force | Out-Null
+            }
+            New-ItemProperty -Path $ItemKey `
+                             -Name $ItemValue `
+                             -Value '0x0' `
+                             -PropertyType Dword `
+                             -Force | Out-Null
+        }
+        'Enabled'  {
+            if ((Test-Path -Path $ItemKey) -eq $false)
+            {
+                New-Item -Path $ItemKey -Force | Out-Null
+            }
+            New-ItemProperty -Path $ItemKey `
+                             -Name $ItemValue `
+                             -Value '0xffffffff' `
+                             -PropertyType Dword `
+                             -Force | Out-Null
         }
     }
-
-    switch ($Enable)
-    {
-        $true  { $value = '0xffffffff' }
-        $false { $value = '0' }
-    }
-
-    New-ItemProperty -Path $itemKey `
-                     -Name 'Enabled' `
-                     -Value $value `
-                     -PropertyType Dword `
-                     -Force | Out-Null
-    #New-ItemProperty -Path $itemKey -Name 'DisabledByDefault' -Value ([int](-not $enable)) -PropertyType Dword -Force | Out-Null
 }

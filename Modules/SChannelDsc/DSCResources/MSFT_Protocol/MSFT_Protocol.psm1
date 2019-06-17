@@ -3,13 +3,12 @@ data LocalizedData
 {
     # culture="en-US"
     ConvertFrom-StringData -StringData @'
-        ProtocolSetServer              = Setting Server side protocol [{0}] enable {1}.
-        ProtocolSetClient              = Setting Client side protocol [{0}] enable {1}.
-        ProtocolTestServer             = Testing Server side protocol [{0}] enable {1}.
-        ProtocolTestClient             = Testing Client side protocol [{0}] enable {1}.
-        ProtocolNotCompliant           = Protocol {0} not compliant.
-        ProtocolCompliant              = Protocol {0} compliant.
-
+        ItemTest                       = Testing {0} {1}
+        ItemEnable                     = Enabling {0} {1}
+        ItemDisable                    = Disabling {0} {1}
+        ItemDefault                    = Defaulting {0} {1}
+        ItemNotCompliant               = {0} {1} not compliant.
+        ItemCompliant                  = {0} {1} compliant.
 '@
 }
 
@@ -29,9 +28,9 @@ function Get-TargetResource
         $IncludeClientSide,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet('Enabled','Disabled','Default')]
         [System.String]
-        $Ensure = "Present"
+        $State = 'Default'
     )
 
     Write-Verbose -Message "Getting configuration for protocol $Protocol"
@@ -39,32 +38,38 @@ function Get-TargetResource
     $itemRoot = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols'
     $itemKey = $itemRoot + "\" + $Protocol
 
-    $sItem = Get-Item -Path ($itemKey + '\Server')  -ErrorAction SilentlyContinue
-    if (($sItem | Get-ItemProperty).Enabled -eq 4294967295 -and `
-        ($sItem | Get-ItemProperty).DisabledByDefault -eq 0)
+    $serverItemKey = $itemKey + '\Server'
+    $serverEnabledResult = Get-SChannelItem -ItemKey $serverItemKey
+    $serverDisabledByDefaultResult = Get-SChannelItem -ItemKey $serverItemKey `
+                                                      -ItemValue 'DisabledByDefault'
+
+    $serverResult = $null
+    if ($serverEnabledResult -eq $serverDisabledByDefaultResult)
     {
-        $Ensure = "Present"
-    }
-    else
-    {
-        $Ensure = "Absent"
+        $serverResult = $serverEnabledResult
     }
 
-    $cItem = Get-Item -Path ($itemKey + '\Client')  -ErrorAction SilentlyContinue
-    if (($cItem | Get-ItemProperty).Enabled -eq ($sItem | Get-ItemProperty).Enabled -and `
-        ($cItem | Get-ItemProperty).DisabledByDefault -eq ($sItem | Get-ItemProperty).DisabledByDefault)
+    $clientItemKey = $itemKey + '\Client'
+    $clientEnabledResult = Get-SChannelItem -ItemKey $clientItemKey
+    $clientDisabledByDefaultResult = Get-SChannelItem -ItemKey $clientItemKey `
+                                                      -ItemValue 'DisabledByDefault'
+
+    $clientResult = $null
+    if ($clientEnabledResult -eq $clientDisabledByDefaultResult)
     {
-         $clientside = $true
+        $clientResult = $clientEnabledResult
     }
-    else
+
+    $clientside = $true
+    if ($serverResult -eq $clientResult)
     {
-        $clientside = $false
+        $clientside = $true
     }
 
     $returnValue = @{
-        Protocol          = [System.String]$Protocol
-        IncludeClientSide = [System.Boolean]$clientside
-        Ensure            = [System.String]$Ensure
+        Protocol          = $Protocol
+        IncludeClientSide = $clientside
+        State             = $serverResult
     }
 
     $returnValue
@@ -86,21 +91,54 @@ function Set-TargetResource
         $IncludeClientSide,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet('Enabled','Disabled','Default')]
         [System.String]
-        $Ensure = "Present"
+        $State = 'Default'
     )
 
     Write-Verbose -Message "Setting configuration for protocol $Protocol"
 
+    $itemRoot = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols'
+    $itemKey = $itemRoot + "\" + $Protocol
+
     if ($IncludeClientSide -eq $true)
     {
-        Write-Verbose -Message ($LocalizedData.SetClientProtocol -f $Protocol, $Ensure)
-        Switch-SChannelProtocol -protocol $Protocol -type Client -enable ($Ensure -eq "Present")
+        Write-Verbose -Message ($LocalizedData.SetClientProtocol -f $Protocol, $State)
+        $clientItemKey = $itemKey + '\Client'
+
+        switch ($State)
+        {
+            'Default'  {
+                Write-Verbose -Message ($LocalizedData.ItemDefault -f 'Protocol', $Protocol)
+            }
+            'Disabled' {
+                Write-Verbose -Message ($LocalizedData.ItemDisable -f 'Protocol', $Protocol)
+            }
+            'Enabled'  {
+                Write-Verbose -Message ($LocalizedData.ItemEnable -f 'Protocol', $Protocol)
+            }
+        }
+        Set-SChannelItem -ItemKey $clientItemKey -State $State -ItemValue 'Enabled'
+        Set-SChannelItem -ItemKey $clientItemKey -State $State -ItemValue 'DisabledByDefault'
     }
 
-    Write-Verbose -Message ($LocalizedData.SetServerProtocol -f $Protocol, $Ensure)
-    Switch-SChannelProtocol -protocol $Protocol -type Server -enable ($Ensure -eq "Present")
+    Write-Verbose -Message ($LocalizedData.SetServerProtocol -f $Protocol, $State)
+    $serverItemKey = $itemKey + '\Server'
+
+    switch ($State)
+    {
+        'Default'  {
+            Write-Verbose -Message ($LocalizedData.ItemDefault -f 'Protocol', $Protocol)
+        }
+        'Disabled' {
+            Write-Verbose -Message ($LocalizedData.ItemDisable -f 'Protocol', $Protocol)
+        }
+        'Enabled'  {
+            Write-Verbose -Message ($LocalizedData.ItemEnable -f 'Protocol', $Protocol)
+        }
+    }
+    Set-SChannelItem -ItemKey $serverItemKey -State $State -ItemValue 'Enabled'
+    Set-SChannelItem -ItemKey $serverItemKey -State $State -ItemValue 'DisabledByDefault'
 }
 
 function Test-TargetResource
@@ -119,9 +157,9 @@ function Test-TargetResource
         $IncludeClientSide,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet('Enabled','Disabled','Default')]
         [System.String]
-        $Ensure = "Present"
+        $State = 'Default'
     )
 
     Write-Verbose -Message "Testing configuration for protocol $Protocol"
@@ -134,7 +172,7 @@ function Test-TargetResource
 
     $ErrorActionPreference = "SilentlyContinue"
 
-    if ($CurrentValues.Ensure -eq $Ensure)
+    if ($CurrentValues.State -eq $State)
     {
         if ($PSBoundParameters.ContainsKey("IncludeClientSide") -eq $true)
         {
@@ -151,11 +189,11 @@ function Test-TargetResource
 
     if ($Compliant -eq $true)
     {
-        Write-Verbose -Message ($LocalizedData.ProtocolCompliant -f $Protocol, $Ensure)
+        Write-Verbose -Message ($LocalizedData.ItemCompliant -f 'Protocol', $Protocol)
     }
     else
     {
-        Write-Verbose -Message ($LocalizedData.ProtocolNotCompliant -f $Protocol, $Ensure)
+        Write-Verbose -Message ($LocalizedData.ItemNotCompliant -f 'Protocl', $Protocol)
     }
 
     return $Compliant

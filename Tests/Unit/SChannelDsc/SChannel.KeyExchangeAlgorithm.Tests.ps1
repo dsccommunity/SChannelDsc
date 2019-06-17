@@ -20,15 +20,15 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
         Context -Name "When the key exchange algorithm is enabled and should be" -Fixture {
             $testParams = @{
                 KeyExchangeAlgorithm = "Diffie-Hellman"
-                Ensure = "Present"
+                State = "Enabled"
             }
 
-            Mock -CommandName Test-SChannelItem -MockWith {
-                return $true
+            Mock -CommandName Get-SChannelItem -MockWith {
+                return 'Enabled'
             }
 
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+                (Get-TargetResource @testParams).State | Should Be "Enabled"
             }
 
             It "Should return true from the Test method" {
@@ -39,17 +39,17 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
         Context -Name "When the key exchange algorithm is enabled and shouldn't be" -Fixture {
             $testParams = @{
                 KeyExchangeAlgorithm = "Diffie-Hellman"
-                Ensure = "Absent"
+                State = "Disabled"
             }
 
-            Mock -CommandName Test-SChannelItem -MockWith {
-                return $true
+            Mock -CommandName Get-SChannelItem -MockWith {
+                return 'Enabled'
             }
 
-            Mock -CommandName Switch-SChannelItem -MockWith { }
+            Mock -CommandName Set-SChannelItem -MockWith { }
 
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+                (Get-TargetResource @testParams).State | Should Be "Enabled"
             }
 
             It "Should return false from the Test method" {
@@ -58,24 +58,69 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
 
             It "Should disable the key exchange algorithm in the set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled Switch-SChannelItem
+                Assert-MockCalled Set-SChannelItem
+            }
+        }
+
+        Context -Name "When the key exchange algorithm is default and should be" -Fixture {
+            $testParams = @{
+                KeyExchangeAlgorithm = "Diffie-Hellman"
+                State  = "Default"
+            }
+
+            Mock -CommandName Get-SChannelItem -MockWith {
+                return 'Default'
+            }
+
+            It "Should return Enabled from the Get method" {
+                (Get-TargetResource @testParams).State | Should Be "Default"
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $true
+            }
+        }
+
+        Context -Name "When the key exchange algorithm should be default, but isn't" -Fixture {
+            $testParams = @{
+                KeyExchangeAlgorithm = "Diffie-Hellman"
+                State  = "Default"
+            }
+
+            Mock -CommandName Get-SChannelItem -MockWith {
+                return 'Disabled'
+            }
+
+            Mock -CommandName Set-SChannelItem -MockWith { }
+
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).State | Should Be "Disabled"
+            }
+
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
+            }
+
+            It "Should disable the cipher in the set method" {
+                Set-TargetResource @testParams
+                Assert-MockCalled Set-SChannelItem
             }
         }
 
         Context -Name "When the key exchange algorithm isn't enabled and should be" -Fixture {
             $testParams = @{
                 KeyExchangeAlgorithm = "Diffie-Hellman"
-                Ensure = "Present"
+                State = "Enabled"
             }
 
-            Mock -CommandName Test-SChannelItem -MockWith {
-                return $false
+            Mock -CommandName Get-SChannelItem -MockWith {
+                return 'Disabled'
             }
 
-            Mock -CommandName Switch-SChannelItem -MockWith { }
+            Mock -CommandName Set-SChannelItem -MockWith { }
 
             It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
+                (Get-TargetResource @testParams).State | Should Be "Disabled"
             }
 
             It "Should return false from the Test method" {
@@ -84,24 +129,22 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
 
             It "Should disable the key exchange algorithm in the set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled Switch-SChannelItem
+                Assert-MockCalled Set-SChannelItem
             }
         }
 
         Context -Name "When the key exchange algorithm isn't enabled and shouldn't be" -Fixture {
             $testParams = @{
                 KeyExchangeAlgorithm = "Diffie-Hellman"
-                Ensure = "Absent"
+                State = "Disabled"
             }
 
-            Mock -CommandName Test-SChannelItem -MockWith {
-                return $false
+            Mock -CommandName Get-SChannelItem -MockWith {
+                return 'Disabled'
             }
-
-            Mock -CommandName Switch-SChannelItem -MockWith { }
 
             It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
+                (Get-TargetResource @testParams).State | Should Be "Disabled"
             }
 
             It "Should return true from the Test method" {
