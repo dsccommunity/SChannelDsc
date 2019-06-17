@@ -3,6 +3,6 @@
 class MSFT_KeyExchangeAlgorithm : OMI_BaseResource
 {
     [Key, ValueMap{"Diffie-Hellman","ECDH","PKCS"}, Values{"Diffie-Hellman","ECDH","PKCS"}] String KeyExchangeAlgorithm;
-    [Write, ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, ValueMap{"Enabled","Disabled","Default"}, Values{"Enabled","Disabled","Default"}] String State;
 };
 

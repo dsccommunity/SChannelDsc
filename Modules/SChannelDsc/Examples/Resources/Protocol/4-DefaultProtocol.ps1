@@ -14,7 +14,7 @@ Configuration Example
         Protocol DisableSSLv3
         {
             Protocol = "SSL 3.0"
-            State    = "Disabled"
+            State    = "Default"
         }
     }
 }

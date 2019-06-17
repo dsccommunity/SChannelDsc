@@ -14,7 +14,7 @@
             Protocol EnableSSLv3
             {
                 Protocol = "SSL 3.0"
-                Ensure   = "Present"
+                State    = "Enabled"
             }
         }
     }

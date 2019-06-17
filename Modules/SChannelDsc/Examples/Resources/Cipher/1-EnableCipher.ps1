@@ -14,7 +14,7 @@
             Cipher EnableAES128
             {
                 Cipher = "AES 128/128"
-                Ensure = "Present"
+                State  = "Enabled"
             }
         }
     }

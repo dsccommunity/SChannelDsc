@@ -14,7 +14,7 @@ Configuration Example
         KeyExchangeAlgorithm DisableECDH
         {
             KeyExchangeAlgorithm = "ECDH"
-            Ensure               = "Absent"
+            State                = "Disabled"
         }
     }
 }
