@@ -21,23 +21,15 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Protocol = "TLS 1.0"
                 #IncludeClientSide = $true
-                Ensure = "Present"
+                State = "Enabled"
             }
 
-            Mock -CommandName Test-Path -MockWith { return $true }
-            Mock -CommandName Get-Item -MockWith {
-                return "item"
-            }
-
-            Mock -CommandName Get-ItemProperty -MockWith {
-                return @{
-                    Enabled = 4294967295
-                    DisabledByDefault = 0
-                }
+            Mock -CommandName Get-SChannelItem -MockWith {
+                return 'Enabled'
             }
 
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+                (Get-TargetResource @testParams).State | Should Be "Enabled"
             }
 
             It "Should return true from the Test method" {
@@ -48,25 +40,17 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
         Context -Name "When the protocol is enabled and shouldn't be" -Fixture {
             $testParams = @{
                 Protocol = "TLS 1.0"
-                Ensure = "Absent"
+                State    = "Disabled"
             }
 
-            Mock -CommandName Test-Path -MockWith { return $true }
-            Mock -CommandName Get-Item -MockWith {
-                return "item"
+            Mock -CommandName Get-SChannelItem -MockWith {
+                return 'Enabled'
             }
 
-            Mock -CommandName Get-ItemProperty -MockWith {
-                return @{
-                    Enabled = 4294967295
-                    DisabledByDefault = 0
-                }
-            }
-
-            Mock -CommandName Switch-SChannelProtocol -MockWith { }
+            Mock -CommandName Set-SChannelItem -MockWith { }
 
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+                (Get-TargetResource @testParams).State | Should Be "Enabled"
             }
 
             It "Should return false from the Test method" {
@@ -75,32 +59,69 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
 
             It "Should disable the protocol in the set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled Switch-SChannelProtocol
+                Assert-MockCalled Set-SChannelItem
+            }
+        }
+
+        Context -Name "When the protocol is default and should be" -Fixture {
+            $testParams = @{
+                Protocol = "TLS 1.0"
+                State    = "Default"
+            }
+
+            Mock -CommandName Get-SChannelItem -MockWith {
+                return 'Default'
+            }
+
+            It "Should return Enabled from the Get method" {
+                (Get-TargetResource @testParams).State | Should Be "Default"
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $true
+            }
+        }
+
+        Context -Name "When the protocol should be default, but isn't" -Fixture {
+            $testParams = @{
+                Protocol = "TLS 1.0"
+                State    = "Default"
+            }
+
+            Mock -CommandName Get-SChannelItem -MockWith {
+                return 'Disabled'
+            }
+
+            Mock -CommandName Set-SChannelItem -MockWith { }
+
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).State | Should Be "Disabled"
+            }
+
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
+            }
+
+            It "Should disable the cipher in the set method" {
+                Set-TargetResource @testParams
+                Assert-MockCalled Set-SChannelItem
             }
         }
 
         Context -Name "When the protocol isn't enabled and should be" -Fixture {
             $testParams = @{
                 Protocol = "TLS 1.0"
-                Ensure = "Present"
+                State    = "Enabled"
             }
 
-            Mock -CommandName Test-Path -MockWith { return $true }
-            Mock -CommandName Get-Item -MockWith {
-                return "item"
+            Mock -CommandName Get-SChannelItem -MockWith {
+                return 'Disabled'
             }
 
-            Mock -CommandName Get-ItemProperty -MockWith {
-                return @{
-                    Enabled = 0
-                    DisabledByDefault = 1
-                }
-            }
-
-            Mock -CommandName Switch-SChannelProtocol -MockWith { }
+            Mock -CommandName Set-SChannelItem -MockWith { }
 
             It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
+                (Get-TargetResource @testParams).State | Should Be "Disabled"
             }
 
             It "Should return false from the Test method" {
@@ -109,30 +130,22 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
 
             It "Should disable the protocol in the set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled Switch-SChannelProtocol
+                Assert-MockCalled Set-SChannelItem
             }
         }
 
         Context -Name "When the protocol isn't enabled and shouldn't be" -Fixture {
             $testParams = @{
                 Protocol = "TLS 1.0"
-                Ensure = "Absent"
+                State    = "Disabled"
             }
 
-            Mock -CommandName Test-Path -MockWith { return $true }
-            Mock -CommandName Get-Item -MockWith {
-                return "item"
-            }
-
-            Mock -CommandName Get-ItemProperty -MockWith {
-                return @{
-                    Enabled = 0
-                    DisabledByDefault = 1
-                }
+            Mock -CommandName Get-SChannelItem -MockWith {
+                return 'Disabled'
             }
 
             It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
+                (Get-TargetResource @testParams).State | Should Be "Disabled"
             }
 
             It "Should return true from the Test method" {
