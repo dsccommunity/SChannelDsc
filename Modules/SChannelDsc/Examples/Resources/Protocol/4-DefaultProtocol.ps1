@@ -1,6 +1,6 @@
 <#
 .EXAMPLE
-    This example shows how to disable the SSL v3.0 protocol.
+    This example shows how to reset the SSL v3.0 protocol to the OS default.
 #>
 
 Configuration Example

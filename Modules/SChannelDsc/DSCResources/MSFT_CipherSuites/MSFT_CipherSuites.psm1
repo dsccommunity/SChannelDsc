@@ -3,11 +3,11 @@ data LocalizedData
 {
     # culture="en-US"
     ConvertFrom-StringData -StringData @'
-        ItemTest                       = Testing {0} {1}
-        ItemEnable                     = Changing {0} {1}
+        ItemTest                       = Testing {0} on {1}
+        ItemEnable                     = Changing {0} to {1}
         ItemDisable                    = Removing {0} {1}
-        ItemNotCompliant               = {0} {1} not compliant.
-        ItemCompliant                  = {0} {1} compliant.
+        ItemNotCompliant               = {0} is {1} not compliant.
+        ItemCompliant                  = {0} is {1} compliant.
 
 '@
 }

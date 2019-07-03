@@ -1,6 +1,6 @@
 <#
 .EXAMPLE
-    This example shows how to disable the AES 128/128 hash.
+    This example shows how to reset the AES 128/128 cipher to the OS default.
 #>
 
     Configuration Example

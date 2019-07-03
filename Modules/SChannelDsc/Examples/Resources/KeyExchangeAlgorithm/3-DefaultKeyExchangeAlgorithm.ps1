@@ -1,6 +1,6 @@
 <#
 .EXAMPLE
-    This example shows how to disable the ECDH key exchange algorithm.
+    This example shows how to reset the ECDH key exchange algorithm to the OS default.
 #>
 
 Configuration Example
