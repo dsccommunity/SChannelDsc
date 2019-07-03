@@ -74,6 +74,7 @@ some general use scenarios for all of the resources that are in the module.
 A full list of changes in each version can be found in the
 [change log](CHANGELOG.md)
 
+
 \---------------------- START OF THIRD PARTY NOTICES ----------------------
 
 This file incorporates material from the projects listed below (Third Party IP).
