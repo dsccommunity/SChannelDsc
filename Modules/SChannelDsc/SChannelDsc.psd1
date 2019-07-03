@@ -27,7 +27,7 @@ CompanyName = 'Microsoft Corporation'
 Copyright = '(c) 2019 Microsoft Corporation. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'This DSC module is used to manage Secure Channel configurations.'
+Description = 'This DSC module is used to manage Secure Channel (SChannel) configurations.'
 
 # Minimum version of the Windows PowerShell engine required by this module
 PowerShellVersion = '4.0'
