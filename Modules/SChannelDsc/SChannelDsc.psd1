@@ -27,7 +27,7 @@ CompanyName = 'Microsoft Corporation'
 Copyright = '(c) 2019 Microsoft Corporation. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'This DSC module is used to manage all SChannel configurations.'
+Description = 'This DSC module is used to manage Secure Channel configurations.'
 
 # Minimum version of the Windows PowerShell engine required by this module
 PowerShellVersion = '4.0'
@@ -92,7 +92,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @('DesiredStateConfiguration', 'DSC', 'DSCResource', 'SChannel')
+        Tags = @('DesiredStateConfiguration', 'DSC', 'DSCResource', 'SChannel', 'Secure Channel')
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/Microsoft/SChannelDsc/blob/master/LICENSE'
@@ -104,7 +104,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        # ReleaseNotes = ''
+        ReleaseNotes = 'First release of SChannelDsc'
 
     } # End of PSData hashtable
 
