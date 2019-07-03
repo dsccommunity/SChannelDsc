@@ -99,12 +99,11 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration for protocol $Protocol"
 
     $itemRoot = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols'
-    $itemKey = $itemRoot + "\" + $Protocol
 
     if ($IncludeClientSide -eq $true)
     {
         Write-Verbose -Message ($LocalizedData.SetClientProtocol -f $Protocol, $State)
-        $clientItemKey = $itemKey + '\Client'
+        $clientItemKey = $Protocol + '\Client'
 
         switch ($State)
         {
@@ -118,12 +117,12 @@ function Set-TargetResource
                 Write-Verbose -Message ($LocalizedData.ItemEnable -f 'Protocol', $Protocol)
             }
         }
-        Set-SChannelItem -ItemKey $clientItemKey -State $State -ItemValue 'Enabled'
-        Set-SChannelItem -ItemKey $clientItemKey -State $State -ItemValue 'DisabledByDefault'
+        Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $clientItemKey -State $State -ItemValue 'Enabled'
+        Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $clientItemKey -State $State -ItemValue 'DisabledByDefault'
     }
 
     Write-Verbose -Message ($LocalizedData.SetServerProtocol -f $Protocol, $State)
-    $serverItemKey = $itemKey + '\Server'
+    $serverItemKey = $Protocol + '\Server'
 
     switch ($State)
     {
@@ -137,8 +136,8 @@ function Set-TargetResource
             Write-Verbose -Message ($LocalizedData.ItemEnable -f 'Protocol', $Protocol)
         }
     }
-    Set-SChannelItem -ItemKey $serverItemKey -State $State -ItemValue 'Enabled'
-    Set-SChannelItem -ItemKey $serverItemKey -State $State -ItemValue 'DisabledByDefault'
+    Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $serverItemKey -State $State -ItemValue 'Enabled'
+    Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $serverItemKey -State $State -ItemValue 'DisabledByDefault'
 }
 
 function Test-TargetResource
@@ -193,7 +192,7 @@ function Test-TargetResource
     }
     else
     {
-        Write-Verbose -Message ($LocalizedData.ItemNotCompliant -f 'Protocl', $Protocol)
+        Write-Verbose -Message ($LocalizedData.ItemNotCompliant -f 'Protocol', $Protocol)
     }
 
     return $Compliant

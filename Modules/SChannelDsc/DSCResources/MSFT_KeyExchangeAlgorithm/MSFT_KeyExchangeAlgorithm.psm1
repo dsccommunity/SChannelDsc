@@ -61,23 +61,20 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration for key exchange algorithm $KeyExchangeAlgorithm"
 
     $rootKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms'
-    $key = $rootKey + '\' + $KeyExchangeAlgorithm
 
     switch ($State)
     {
         'Default'  {
             Write-Verbose -Message ($LocalizedData.ItemDefault -f 'KeyExchangeAlgorithm', $KeyExchangeAlgorithm)
-            Set-SChannelItem -ItemKey $key -State $State
         }
         'Disabled' {
             Write-Verbose -Message ($LocalizedData.ItemDisable -f 'KeyExchangeAlgorithm', $KeyExchangeAlgorithm)
-            Set-SChannelItem -ItemKey $key -State $State
         }
         'Enabled'  {
             Write-Verbose -Message ($LocalizedData.ItemEnable -f 'KeyExchangeAlgorithm', $KeyExchangeAlgorithm)
-            Set-SChannelItem -ItemKey $key -State $State
         }
     }
+    Set-SChannelItem -ItemKey $rootKey -ItemSubKey $KeyExchangeAlgorithm -State $State
 }
 
 function Test-TargetResource

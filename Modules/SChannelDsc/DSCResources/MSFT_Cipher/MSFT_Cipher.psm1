@@ -62,23 +62,20 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration for cipher $Cipher"
 
     $rootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers'
-    $key = $rootKey + '\' + $Cipher
 
     switch ($State)
     {
         'Default'  {
             Write-Verbose -Message ($LocalizedData.ItemDefault -f 'Cipher', $Cipher)
-            Set-SChannelItem -ItemKey $key -State $State
         }
         'Disabled' {
             Write-Verbose -Message ($LocalizedData.ItemDisable -f 'Cipher', $Cipher)
-            Set-SChannelItem -ItemKey $key -State $State
         }
         'Enabled'  {
             Write-Verbose -Message ($LocalizedData.ItemEnable -f 'Cipher', $Cipher)
-            Set-SChannelItem -ItemKey $key -State $State
         }
     }
+    Set-SChannelItem -ItemKey $rootKey -ItemSubKey $Cipher -State $State
 }
 
 function Test-TargetResource

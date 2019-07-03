@@ -62,23 +62,20 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration for hash $Hash"
 
     $rootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes'
-    $key = $rootKey + '\' + $Hash
 
     switch ($State)
     {
         'Default'  {
             Write-Verbose -Message ($LocalizedData.ItemDefault -f 'Hash', $Hash)
-            Set-SChannelItem -ItemKey $key -State $State
         }
         'Disabled' {
             Write-Verbose -Message ($LocalizedData.ItemDisable -f 'Hash', $Hash)
-            Set-SChannelItem -ItemKey $key -State $State
         }
         'Enabled'  {
             Write-Verbose -Message ($LocalizedData.ItemEnable -f 'Hash', $Hash)
-            Set-SChannelItem -ItemKey $key -State $State
         }
     }
+    Set-SChannelItem -ItemKey $rootKey -ItemSubKey $Hash -State $State
 }
 
 function Test-TargetResource

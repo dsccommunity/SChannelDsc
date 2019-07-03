@@ -1,0 +1,12 @@
+
+[ClassVersion("1.0.0.0"), FriendlyName("SChannelSettings")]
+class MSFT_SChannelSettings : OMI_BaseResource
+{
+    [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'"), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("Specifies the state of TLS 1.2 for the .Net Framework 3.5 and 4.0 (not required for v4.6 and above)"), ValueMap{"Enabled","Disabled","Default"}, Values{"Enabled","Disabled","Default"}] String TLS12State;
+    [Write, Description("Minimum client key size for the Diffie-Hellman key exchange algorithm")] Uint32 DiffieHellmanMinClientKeySize;
+    [Write, Description("Minimum server key size for the Diffie-Hellman key exchange algorithm")] Uint32 DiffieHellmanMinServerKeySize;
+    [Write, Description("Specifies if the FIPS Algorithm Policy is enabled")] Boolean EnableFIPSAlgorithmPolicy;
+
+};
+

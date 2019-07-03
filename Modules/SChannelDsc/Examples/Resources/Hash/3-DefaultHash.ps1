@@ -1,6 +1,6 @@
 <#
 .EXAMPLE
-    This example shows how to disable the MD5 hash.
+    This example shows how to reset the MD5 hash to the OS default.
 #>
 
 Configuration Example
