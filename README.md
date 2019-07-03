@@ -75,6 +75,7 @@ A full list of changes in each version can be found in the
 [change log](CHANGELOG.md)
 
 \---------------------- START OF THIRD PARTY NOTICES ----------------------
+
 This file incorporates material from the projects listed below (Third Party IP).
 [cSchannel](https://github.com/bdanse/cSchannel)
 Copyright (c) Bart Danse
