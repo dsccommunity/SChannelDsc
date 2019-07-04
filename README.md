@@ -43,15 +43,19 @@ To manually install the module, download the source code and unzip the contents
 of the \Modules\SChannelDsc directory to the
 $env:ProgramFiles\WindowsPowerShell\Modules folder
 
-To install from the PowerShell gallery using PowerShellGet (in PowerShell 5.0)
+To install from the [PowerShell Gallery](https://www.powershellgallery.com/packages/SChannelDsc) using PowerShellGet (in PowerShell 5.0)
 run the following command:
 
-    Find-Module -Name SChannelDsc -Repository PSGallery | Install-Module
+```PowerShell
+Find-Module -Name SChannelDsc -Repository PSGallery | Install-Module
+```
 
 To confirm installation, run the below command and ensure you see the
 SharePoint DSC resoures available:
 
-    Get-DscResource -Module SChannelDsc
+```PowerShell
+Get-DscResource -Module SChannelDsc
+```
 
 ## Requirements
 
