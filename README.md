@@ -7,7 +7,7 @@ resource created by Bart Danse.
 Please leave comments, feature requests, and bug reports in the issues tab for
 this module.
 
-If you would like to modify SharePointDsc module, please feel free. Please
+If you would like to modify SChannelDsc module, please feel free. Please
 refer to the [Contribution Guidelines](https://github.com/Microsoft/SChannelDsc/wiki/Contributing%20to%20SChannelDSC)
 for information about style guides, testing and patterns for contributing
 to DSC resources.
