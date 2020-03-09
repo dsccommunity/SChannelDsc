@@ -43,9 +43,9 @@ function Get-TargetResource
     $serverDisabledByDefaultResult = Get-SChannelItem -ItemKey $serverItemKey `
                                                       -ItemValue 'DisabledByDefault'
 
-    $serverResult = $null
-    if ($serverEnabledResult -eq $serverDisabledByDefaultResult)
-    {
+    if(($serverEnabledResult -eq 'Enabled' -and $serverDisabledByDefaultResult -eq 'Disabled') -or
+       ($serverEnabledResult -eq 'Disabled' -and $serverDisabledByDefaultResult -eq 'Enabled' ) -or
+       ($serverEnabledResult -eq 'Default' -and $serverDisabledByDefaultResult -eq 'Default' ))  {
         $serverResult = $serverEnabledResult
     }
 
@@ -53,10 +53,9 @@ function Get-TargetResource
     $clientEnabledResult = Get-SChannelItem -ItemKey $clientItemKey
     $clientDisabledByDefaultResult = Get-SChannelItem -ItemKey $clientItemKey `
                                                       -ItemValue 'DisabledByDefault'
-
-    $clientResult = $null
-    if ($clientEnabledResult -eq $clientDisabledByDefaultResult)
-    {
+    if(($clientEnabledResult -eq 'Enabled' -and $clientDisabledByDefaultResult -eq 'Disabled') -or
+       ($clientEnabledResult -eq 'Disabled' -and $clientDisabledByDefaultResult -eq 'Enabled' ) -or
+       ($clientEnabledResult -eq 'Default' -and $clientDisabledByDefaultResult -eq 'Default' )) {
         $clientResult = $clientEnabledResult
     }
 
