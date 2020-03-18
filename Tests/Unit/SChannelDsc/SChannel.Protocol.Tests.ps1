@@ -127,7 +127,7 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
         Context -Name "When the protocol isn't enabled and should be" -Fixture {
             $testParams = @{
                 Protocol = "TLS 1.0"
-                State    = "Disabled"
+                State    = "Enabled"
             }
 
             Mock -CommandName Get-SChannelItem -MockWith {
@@ -145,7 +145,7 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $true
+                Test-TargetResource @testParams | Should Be $false
             }
 
             It "Should disable the protocol in the set method" {
@@ -157,7 +157,7 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
         Context -Name "When the protocol isn't enabled and shouldn't be" -Fixture {
             $testParams = @{
                 Protocol = "TLS 1.0"
-                State    = "Enabled"
+                State    = "Disabled"
             }
 
             Mock -CommandName Get-SChannelItem -MockWith {
@@ -173,7 +173,7 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should Be $false
+                Test-TargetResource @testParams | Should Be $true
             }
         }
     }
