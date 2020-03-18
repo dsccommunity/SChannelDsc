@@ -28,6 +28,10 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
                 return 'Enabled'
             }
 
+            Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemValue -eq 'DisabledByDefault' }  -MockWith {
+                return 'Disabled'
+            }
+
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).State | Should Be "Enabled"
             }
@@ -45,6 +49,10 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-SChannelItem -MockWith {
                 return 'Enabled'
+            }
+
+            Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemValue -eq 'DisabledByDefault' }  -MockWith {
+                return 'Disabled'
             }
 
             Mock -CommandName Set-SChannelItem -MockWith { }
@@ -73,6 +81,10 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
                 return 'Default'
             }
 
+            Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemValue -eq 'DisabledByDefault' }  -MockWith {
+                return 'Default'
+            }
+
             It "Should return Enabled from the Get method" {
                 (Get-TargetResource @testParams).State | Should Be "Default"
             }
@@ -90,6 +102,10 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-SChannelItem -MockWith {
                 return 'Disabled'
+            }
+
+            Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemValue -eq 'DisabledByDefault' }  -MockWith {
+                return 'Enabled'
             }
 
             Mock -CommandName Set-SChannelItem -MockWith { }
@@ -118,6 +134,10 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
                 return 'Disabled'
             }
 
+            Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemValue -eq 'DisabledByDefault' }  -MockWith {
+                return 'Enabled'
+            }
+
             Mock -CommandName Set-SChannelItem -MockWith { }
 
             It "Should return absent from the Get method" {
@@ -144,7 +164,11 @@ Describe -Name $Global:SCDscHelper.DescribeHeader -Fixture {
                 return 'Disabled'
             }
 
-            It "Should return absent from the Get method" {
+            Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemValue -eq 'DisabledByDefault' }  -MockWith {
+                return 'Enabled'
+            }
+
+            It "Should disabled from the Get method" {
                 (Get-TargetResource @testParams).State | Should Be "Disabled"
             }
 
