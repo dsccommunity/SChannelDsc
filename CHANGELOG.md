@@ -1,6 +1,12 @@
 # Change log for SChannelDsc
 
-## Unreleased
+## 1.1
+
+* SChannelDsc
+  * Updated Readme to correct faulty module name
+* Protocol
+  * Corrected incorrect detection if DisabledByDefault was configured
+
+## 1.0
 
 * Initial public release of SChannelDsc
-* Get-TargetResource: Fixed Get-TargetResource logic
