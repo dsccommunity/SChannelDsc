@@ -12,7 +12,7 @@
 # RootModule = ''
 
 # Version number of this module.
-ModuleVersion = '1.0.0.0'
+ModuleVersion = '1.1.0.0'
 
 # ID used to uniquely identify this module
 GUID = '89d16b99-7c8c-4abf-bd96-33d0702f2ae2'
@@ -24,7 +24,7 @@ Author = 'Microsoft Corporation'
 CompanyName = 'Microsoft Corporation'
 
 # Copyright statement for this module
-Copyright = '(c) 2019 Microsoft Corporation. All rights reserved.'
+Copyright = '(c) 2020 Microsoft Corporation. All rights reserved.'
 
 # Description of the functionality provided by this module
 Description = 'This DSC module is used to manage Secure Channel (SChannel) configurations.'
@@ -104,7 +104,12 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'First release of SChannelDsc'
+        ReleaseNotes = '
+        * SChannelDsc
+          * Updated Readme to correct faulty module name
+        * Protocol
+          * Corrected incorrect detection if DisabledByDefault was configured
+        '
 
     } # End of PSData hashtable
 
