@@ -92,7 +92,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @('DesiredStateConfiguration', 'DSC', 'DSCResource', 'SChannel', 'Secure Channel')
+        Tags = @('DesiredStateConfiguration', 'DSC', 'DSCResource', 'SChannel', 'SecureChannel')
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/Microsoft/SChannelDsc/blob/master/LICENSE'
