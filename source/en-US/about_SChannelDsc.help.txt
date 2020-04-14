@@ -1,0 +1,25 @@
+TOPIC
+    about_SChannelDsc
+
+SHORT DESCRIPTION
+    DSC resources for deployment and configuration of Secure Channel settings in Windows operating systems.
+
+LONG DESCRIPTION
+    This module contains DSC resources for deployment and configuration of Secure Channel settings in Windows operating systems.
+
+EXAMPLES
+    PS C:\> Get-DscResource -Module SChannelDsc
+
+NOTE:
+    Thank you to the DSC Community contributors who contributed to this module by
+    writing code, sharing opinions, and provided feedback.
+
+TROUBLESHOOTING NOTE:
+    Go to the Github repository for read about issues, submit a new issue, and read
+    about new releases. https://github.com/dsccommunity/SChannelDsc
+
+SEE ALSO
+    - https://github.com/dsccommunity/SChannelDsc
+
+KEYWORDS
+    DSC, DscResource, SChannel, Secure Channel
