@@ -1,8 +1,8 @@
 ## SChannelDsc
 
-[![Build Status](https://dev.azure.com/dsccommunity/SChannelDsc/_apis/build/status/dsccommunity.SChannelDsc?branchName=master)](https://dev.azure.com/dsccommunity/SChannelDsc/_build/latest?definitionId={definitionId}&branchName=master)
-![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/dsccommunity/SChannelDsc/{definitionId}/master)
-[![Azure DevOps tests](https://img.shields.io/azure-devops/tests/dsccommunity/SChannelDsc/{definitionId}/master)](https://dsccommunity.visualstudio.com/SChannelDsc/_test/analytics?definitionId={definitionId}&contextType=build)
+[![Build Status](https://dev.azure.com/dsccommunity/SChannelDsc/_apis/build/status/dsccommunity.SChannelDsc?branchName=master)](https://dev.azure.com/dsccommunity/SChannelDsc/_build/latest?definitionId=32&branchName=master)
+![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/dsccommunity/SChannelDsc/32/master)
+[![Azure DevOps tests](https://img.shields.io/azure-devops/tests/dsccommunity/SChannelDsc/32/master)](https://dsccommunity.visualstudio.com/SChannelDsc/_test/analytics?definitionId=32&contextType=build)
 [![PowerShell Gallery (with prereleases)](https://img.shields.io/powershellgallery/vpre/SChannelDsc?label=SChannelDsc%20Preview)](https://www.powershellgallery.com/packages/SChannelDsc/)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/v/SChannelDsc?label=SChannelDsc)](https://www.powershellgallery.com/packages/SChannelDsc/)
 
@@ -34,15 +34,15 @@ To manually install the module, download the source code and unzip the contents
 of the \Modules\SChannelDsc directory to the
 $env:ProgramFiles\WindowsPowerShell\Modules folder
 
-To install from the [PowerShell Gallery](https://www.powershellgallery.com/packages/SChannelDsc) using PowerShellGet (in PowerShell 5.0)
-run the following command:
+To install from the [PowerShell Gallery](https://www.powershellgallery.com/packages/SChannelDsc)
+using PowerShellGet (in PowerShell 5.0) run the following command:
 
 ```PowerShell
 Find-Module -Name SChannelDsc -Repository PSGallery | Install-Module
 ```
 
 To confirm installation, run the below command and ensure you see the
-SharePoint DSC resoures available:
+SChannel DSC resoures available:
 
 ```PowerShell
 Get-DscResource -Module SChannelDsc
