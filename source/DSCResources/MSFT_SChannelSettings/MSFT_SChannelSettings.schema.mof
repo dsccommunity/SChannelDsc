@@ -6,6 +6,6 @@ class MSFT_SChannelSettings : OMI_BaseResource
     [Write, Description("Specifies the state of TLS 1.2 for the .Net Framework 3.5 and 4.0 (not required for v4.6 and above)"), ValueMap{"Enabled","Disabled","Default"}, Values{"Enabled","Disabled","Default"}] String TLS12State;
     [Write, Description("Minimum client key size for the Diffie-Hellman key exchange algorithm"), ValueMap{"1024","2048","3072","4096"}, Values{"1024","2048","3072","4096"}] Uint32 DiffieHellmanMinClientKeySize;
     [Write, Description("Minimum server key size for the Diffie-Hellman key exchange algorithm"), ValueMap{"1024","2048","3072","4096"}, Values{"1024","2048","3072","4096"}] Uint32 DiffieHellmanMinServerKeySize;
-    [Write, Description("Supported Kerberos Encryption Types"), ValueMap{"DES_CBC_CRC", "DES_CBC_MD5", "RC4_HMAC_MD5", "AES128_HMAC_SHA1", "AES256_HMAC_SHA1"}, Values{"DES_CBC_CRC", "DES_CBC_MD5", "RC4_HMAC_MD5", "AES128_HMAC_SHA1", "AES256_HMAC_SHA1"}] String[] KerberosSupportedEncryptionType;
+    [Write, Description("Supported Kerberos Encryption Types"), ValueMap{"DES-CBC-CRC","DES-CBC-MD5","RC4-HMAC-MD5","AES128-HMAC-SHA1","AES256-HMAC-SHA1"}, Values{"DES-CBC-CRC","DES-CBC-MD5","RC4-HMAC-MD5","AES128-HMAC-SHA1","AES256-HMAC-SHA1"}] String KerberosSupportedEncryptionType[];
     [Write, Description("Specifies if the FIPS Algorithm Policy is enabled")] Boolean EnableFIPSAlgorithmPolicy;
 };
