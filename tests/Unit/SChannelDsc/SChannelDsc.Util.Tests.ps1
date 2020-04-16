@@ -29,9 +29,27 @@ InModuleScope $script:subModuleName {
         $testParams = @{
             Name = "Test"
             Members = @("user1","user2")
+            Parameter = @{ Name = "Test" }
         }
         It "Should convert hashtable to string" {
-            Convert-SCDscHashtableToString -Hashtable $testParams | Should Be "Members=(user1,user2); Name=Test"
+            Convert-SCDscHashtableToString -Hashtable $testParams | Should Be "Members=(user1,user2); Name=Test; Parameter={Name=Test}"
+        }
+    }
+
+    Context -Name "Test method Convert-SCDscArrayToString" -Fixture {
+        $testParams = @(
+            @{ Name = "Test" }
+        )
+        It "Should convert array to string" {
+            Convert-SCDscArrayToString -Array $testParams | Should Be "({Name=Test})"
+        }
+    }
+
+    Context -Name "Test method Convert-SCDscCIMInstanceToString" -Fixture {
+        $testParams = (Get-CimInstance -ClassName Win32_Environment)[0]
+
+        It "Should convert ciminstance to string" {
+            Convert-SCDscCIMInstanceToString -CimInstance $testParams | Should Not BeNullOrEmpty
         }
     }
 
@@ -114,6 +132,76 @@ InModuleScope $script:subModuleName {
         }
     }
 
+    Context -Name "Test method Compare-PSCustomObjectArrays" -Fixture {
+        It "Collections are different. Should return two objects that are different." {
+            $Desired = @()
+            $Current = @()
+
+            $obj1 = [PSCustomObject]@{
+                Item1 = "Test1"
+                Item2 = 1
+            }
+
+            $obj2 = [PSCustomObject]@{
+                Item1 = "Test2"
+                Item2 = 2
+            }
+
+            $Current += $obj1
+            $Current += $obj2
+
+            $obj3 = [PSCustomObject]@{
+                Item1 = "Test1"
+                Item2 = 2
+            }
+
+            $obj4 = [PSCustomObject]@{
+                Item1 = "Test3"
+                Item2 = 3
+            }
+
+            $Desired += $obj3
+            $Desired += $obj4
+
+            $result = Compare-PSCustomObjectArrays -DesiredValues $Desired -CurrentValues $Current
+            $result.Count | Should Be 2
+        }
+
+        It "Both collections are equal. Should return null from the method" {
+            $Desired = @()
+            $Current = @()
+
+            $obj1 = [PSCustomObject]@{
+                Item1 = "Test1"
+                Item2 = 1
+            }
+
+            $obj2 = [PSCustomObject]@{
+                Item1 = "Test2"
+                Item2 = 2
+            }
+
+            $Current += $obj1
+            $Current += $obj2
+
+            $obj3 = [PSCustomObject]@{
+                Item1 = "Test1"
+                Item2 = 1
+            }
+
+            $obj4 = [PSCustomObject]@{
+                Item1 = "Test2"
+                Item2 = 2
+            }
+
+            $Desired += $obj3
+            $Desired += $obj4
+
+            $result = Compare-PSCustomObjectArrays -DesiredValues $Desired -CurrentValues $Current
+            $result | Should BeNullOrEmpty
+        }
+    }
+
     Context -Name "Test method Test-SCDscObjectHasProperty" -Fixture {
         $testParams = [PsCustomObject]@{
             Name = "Test"
@@ -131,66 +219,84 @@ InModuleScope $script:subModuleName {
 
     Context -Name "Test method Test-SCDscParameterState" -Fixture {
         $currentValues = @{
-            String  = "Test"
-            Array   = @("user1","user2")
-            Int     = 1
-            Boolean = $true
+            String      = "Test"
+            Array       = @("user1","user2")
+            Hashtable   = @{ Name = "Test"; Members = @("User1", "User2")}
+            Int         = 1
+            Boolean     = $true
         }
 
         $desiredValues = @{
-            String  = "Test"
-            Array   = @("user1","user2")
-            Int     = 1
-            Boolean = $true
+            String      = "Test"
+            Array       = @("user1","user2")
+            Hashtable   = @{ Name = "Test"; Members = @("User1", "User2")}
+            Int         = 1
+            Boolean     = $true
         }
         It "Objects are equal. Should return true from the method" {
             Test-SCDscParameterState -CurrentValues $currentValues -DesiredValues $desiredValues | Should Be $true
         }
 
         $currentValues = @{
-            String  = "Test2"
-            Array   = @("user1","user2")
-            Int     = 1
-            Boolean = $true
+            String      = "Test2"
+            Array       = @("user1","user2")
+            Hashtable   = @{ Name = "Test"; Members = @("User1", "User2")}
+            Int         = 1
+            Boolean     = $true
         }
         It "Objects are not equal on string. Should return false from the method" {
             Test-SCDscParameterState -CurrentValues $currentValues -DesiredValues $desiredValues | Should Be $false
         }
 
         $currentValues = @{
-            String  = "Test"
-            Array   = @("user1","user3")
-            Int     = 1
-            Boolean = $true
+            String      = "Test"
+            Array       = @("user1","user3")
+            Hashtable   = @{ Name = "Test"; Members = @("User1", "User2")}
+            Int         = 1
+            Boolean     = $true
         }
         It "Objects are not equal on array. Should return false from the method" {
             Test-SCDscParameterState -CurrentValues $currentValues -DesiredValues $desiredValues | Should Be $false
         }
 
         $currentValues = @{
-            String  = "Test"
-            Array   = @("user1","user2")
-            Int     = 2
-            Boolean = $true
+            String      = "Test"
+            Array       = @("user1","user2")
+            Hashtable   = @{ Name = "Test"; Members = @("User1", "User2")}
+            Int         = 2
+            Boolean     = $true
         }
         It "Objects are not equal on int. Should return false from the method" {
             Test-SCDscParameterState -CurrentValues $currentValues -DesiredValues $desiredValues | Should Be $false
         }
 
         $currentValues = @{
-            String  = "Test"
-            Array   = @("user1","user2")
-            Int     = 1
-            Boolean = $false
+            String      = "Test"
+            Array       = @("user1","user2")
+            Hashtable   = @{ Name = "Test"; Members = @("User1", "User2")}
+            Int         = 1
+            Boolean     = $false
         }
         It "Objects are not equal on boolean. Should return false from the method" {
             Test-SCDscParameterState -CurrentValues $currentValues -DesiredValues $desiredValues | Should Be $false
         }
 
         $currentValues = @{
-            String  = "Test2"
-            Array   = @("user1","user2")
-            Int     = 1
+            String      = "Test"
+            Array       = @("user1","user2")
+            Hashtable   = @{ Name = "Test2"; Members = @("User1", "User3")}
+            Int         = 1
+            Boolean     = $true
+        }
+        It "Objects are not equal on Hashtable. Should return false from the method" {
+            Test-SCDscParameterState -CurrentValues $currentValues -DesiredValues $desiredValues | Should Be $false
+        }
+
+        $currentValues = @{
+            String      = "Test2"
+            Array       = @("user1","user2")
+            Hashtable   = @{ Name = "Test"; Members = @("User1", "User2")}
+            Int         = 1
         }
         It "CurrentValues missing parameter. Should return false from the method" {
             Test-SCDscParameterState -CurrentValues $currentValues -DesiredValues $desiredValues | Should Be $false

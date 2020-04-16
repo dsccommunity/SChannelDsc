@@ -41,19 +41,20 @@ Updated author, copyright notice, and URLs.
 
     Configuration Example
     {
-        param(
-        )
+        param ()
 
         Import-DscResource -ModuleName SChannelDsc
 
-        node localhost {
+        node localhost
+        {
             SChannelSettings 'ConfigureSChannel'
             {
-                IsSingleInstance              = 'Yes'
-                TLS12State                    = 'Enabled'
-                DiffieHellmanMinClientKeySize = 4096
-                DiffieHellmanMinServerKeySize = 4096
-                EnableFIPSAlgorithmPolicy     = $false
+                IsSingleInstance                = 'Yes'
+                TLS12State                      = 'Enabled'
+                DiffieHellmanMinClientKeySize   = 4096
+                DiffieHellmanMinServerKeySize   = 4096
+                KerberosSupportedEncryptionType = @("RC4-HMAC-MD5","AES128-HMAC-SHA1","AES256-HMAC-SHA1")
+                EnableFIPSAlgorithmPolicy       = $false
             }
         }
     }

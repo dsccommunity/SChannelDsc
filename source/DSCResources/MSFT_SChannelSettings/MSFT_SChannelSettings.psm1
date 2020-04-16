@@ -32,6 +32,11 @@ function Get-TargetResource
         $DiffieHellmanMinServerKeySize,
 
         [Parameter()]
+        [ValidateSet('DES-CBC-CRC', 'DES-CBC-MD5', 'RC4-HMAC-MD5', 'AES128-HMAC-SHA1', 'AES256-HMAC-SHA1')]
+        [System.String[]]
+        $KerberosSupportedEncryptionType,
+
+        [Parameter()]
         [System.Boolean]
         $EnableFIPSAlgorithmPolicy
     )
@@ -159,6 +164,47 @@ function Get-TargetResource
     $dhMinServerKeySizeValue = Get-SChannelRegKeyValue -Key $dhMinKeySizeKey `
                                                        -Name 'ServerMinKeyBitLength'
 
+    # Kerberos Supported Encryption Type
+    Write-Verbose -Message ($script:localizedData.GetKerbEncrTypes)
+
+    $kerberosEncrTypesKey = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters'
+    $kerberosEncrTypesValue = Get-SChannelRegKeyValue -Key $kerberosEncrTypesKey `
+                                                      -Name 'SupportedEncryptionTypes'
+
+    $kerberosEncrTypes = @()
+    if ($null -ne $kerberosEncrTypesValue)
+    {
+        ## Check DES-CBC-CRC
+        if (($kerberosEncrTypesValue -band 1) -eq 1)
+        {
+            $kerberosEncrTypes += "DES-CBC-CRC"
+        }
+
+        ## Check DES-CBC-MD5
+        if (($kerberosEncrTypesValue -band 2) -eq 2)
+        {
+            $kerberosEncrTypes += "DES-CBC-MD5"
+        }
+
+        ## Check RC4-HMAC
+        if (($kerberosEncrTypesValue -band 4) -eq 4)
+        {
+            $kerberosEncrTypes += "RC4-HMAC-MD5"
+        }
+
+        ## Check AES128-CTS-HMAC-SHA1-96
+        if (($kerberosEncrTypesValue -band 8) -eq 8)
+        {
+            $kerberosEncrTypes += "AES128-HMAC-SHA1"
+        }
+
+        ## Check AES256-CTS-HMAC-SHA1-96
+        if (($kerberosEncrTypesValue -band 16) -eq 16)
+        {
+            $kerberosEncrTypes += "AES256-HMAC-SHA1"
+        }
+    }
+
     # FIPS Algorithm Policy
     Write-Verbose -Message ($script:localizedData.GetFIPS)
 
@@ -186,11 +232,12 @@ function Get-TargetResource
     }
 
     $returnValue = @{
-        IsSingleInstance              = 'Yes'
-        TLS12State                    = $currentTls12State
-        DiffieHellmanMinClientKeySize = $dhMinClientKeySizeValue
-        DiffieHellmanMinServerKeySize = $dhMinServerKeySizeValue
-        EnableFIPSAlgorithmPolicy     = $fipsValue
+        IsSingleInstance                = 'Yes'
+        TLS12State                      = $currentTls12State
+        DiffieHellmanMinClientKeySize   = $dhMinClientKeySizeValue
+        DiffieHellmanMinServerKeySize   = $dhMinServerKeySizeValue
+        KerberosSupportedEncryptionType = $kerberosEncrTypes
+        EnableFIPSAlgorithmPolicy       = $fipsValue
     }
 
     return $returnValue
@@ -220,6 +267,11 @@ function Set-TargetResource
         [ValidateSet(1024, 2048, 3072, 4096)]
         [System.UInt32]
         $DiffieHellmanMinServerKeySize,
+
+        [Parameter()]
+        [ValidateSet('DES-CBC-CRC', 'DES-CBC-MD5', 'RC4-HMAC-MD5', 'AES128-HMAC-SHA1', 'AES256-HMAC-SHA1')]
+        [System.String[]]
+        $KerberosSupportedEncryptionType,
 
         [Parameter()]
         [System.Boolean]
@@ -355,6 +407,7 @@ function Set-TargetResource
         Write-Verbose -Message ($script:localizedData.NetFramework46Detected)
     }
 
+    # Diffie Hellman Minimum Key Size
     $keaKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms'
     if ($DiffieHellmanMinClientKeySize -ne 0 -and
         $DiffieHellmanMinClientKeySize -ne $CurrentValues.DiffieHellmanMinClientKeySize)
@@ -376,10 +429,75 @@ function Set-TargetResource
                                 -Value $DiffieHellmanMinServerKeySize
     }
 
+    # Kerberos Supported Encyption Types
+    if ($PSBoundParameters.ContainsKey('KerberosSupportedEncryptionType'))
+    {
+        $kerberosEncrTypesKey = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos'
+
+        if ($KerberosSupportedEncryptionType.Count -ne 0)
+        {
+            $ketValue = 0
+            if ('DES-CBC-CRC' -in $KerberosSupportedEncryptionType)
+            {
+                $ketValue += 1
+            }
+
+            if ('DES-CBC-MD5' -in $KerberosSupportedEncryptionType)
+            {
+                $ketValue += 2
+            }
+
+            if ('RC4-HMAC-MD5' -in $KerberosSupportedEncryptionType)
+            {
+                $ketValue += 4
+            }
+
+            if ('AES128-HMAC-SHA1' -in $KerberosSupportedEncryptionType)
+            {
+                $ketValue += 8
+            }
+
+            if ('AES256-HMAC-SHA1' -in $KerberosSupportedEncryptionType)
+            {
+                $ketValue += 16
+            }
+
+            $kerberosEncrTypesValue = Get-SChannelRegKeyValue -Key "$kerberosEncrTypesKey\Parameters" `
+                                                              -Name 'SupportedEncryptionTypes'
+
+            if ($null -eq $kerberosEncrTypesValue -or ($kerberosEncrTypesValue -band $ketValue) -ne $ketValue)
+            {
+                Write-Verbose -Message ($script:localizedData.ConfigureKerbEncrTypes -f ($KerberosSupportedEncryptionType -join ", "))
+                if ($null -eq $kerberosEncrTypesValue)
+                {
+                    $newValue = $ketValue
+                }
+                else
+                {
+                    $newValue = $kerberosEncrTypesValue -bor $ketValue
+                }
+                Set-SChannelRegKeyValue -Key $kerberosEncrTypesKey `
+                                        -SubKey 'Parameters' `
+                                        -Name 'SupportedEncryptionTypes' `
+                                        -Value $newValue
+            }
+        }
+        else
+        {
+            if ($CurrentValues.KerberosSupportedEncryptionType.Count -ne 0)
+            {
+                Write-Verbose -Message ($script:localizedData.RemoveKerbEncrTypes)
+                Remove-ItemProperty -Path "$kerberosEncrTypesKey\Parameters" `
+                                    -Name 'SupportedEncryptionTypes'
+            }
+        }
+    }
+
+    # FIPS Algorithm Policy
     if ($null -ne $EnableFIPSAlgorithmPolicy -and
         $EnableFIPSAlgorithmPolicy -ne $CurrentValues.EnableFIPSAlgorithmPolicy)
     {
-        Write-Verbose -Message ($script:localizedData.ConfigureFIPS)
+        Write-Verbose -Message ($script:localizedData.ConfigureFIPS -f $EnableFIPSAlgorithmPolicy)
         $lsaKey = 'HKLM:SYSTEM\CurrentControlSet\Control\LSA'
         if ($EnableFIPSAlgorithmPolicy)
         {
@@ -425,6 +543,11 @@ function Test-TargetResource
         $DiffieHellmanMinServerKeySize,
 
         [Parameter()]
+        [ValidateSet('DES-CBC-CRC', 'DES-CBC-MD5', 'RC4-HMAC-MD5', 'AES128-HMAC-SHA1', 'AES256-HMAC-SHA1')]
+        [System.String[]]
+        $KerberosSupportedEncryptionType,
+
+        [Parameter()]
         [System.Boolean]
         $EnableFIPSAlgorithmPolicy
     )
@@ -451,7 +574,8 @@ function Test-TargetResource
                                               -ValuesToCheck @('DiffieHellmanMinClientKeySize', `
                                                                'DiffieHellmanMinServerKeySize', `
                                                                'EnableFIPSAlgorithmPolicy', `
-                                                               "TLS12State")
+                                                               'TLS12State',
+                                                               'KerberosSupportedEncryptionType')
     }
     else
     {
@@ -459,7 +583,8 @@ function Test-TargetResource
                                               -DesiredValues $PSBoundParameters `
                                               -ValuesToCheck @('DiffieHellmanMinClientKeySize', `
                                                                'DiffieHellmanMinServerKeySize', `
-                                                               'EnableFIPSAlgorithmPolicy')
+                                                               'EnableFIPSAlgorithmPolicy',
+                                                               'KerberosSupportedEncryptionType')
     }
 
     if ($compliant -eq $true)

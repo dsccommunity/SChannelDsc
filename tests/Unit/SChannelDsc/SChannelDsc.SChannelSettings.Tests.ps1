@@ -286,6 +286,57 @@ try
             }
         }
 
+        Context -Name "When the Kerberos Encryption Types not configured, but should be" -Fixture {
+            $testParams = @{
+                IsSingleInstance                = 'Yes'
+                KerberosSupportedEncryptionType = "AES128-HMAC-SHA1"
+            }
+
+            Mock -CommandName Get-SChannelRegKeyValue -MockWith {
+                return $null
+            }
+
+            Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
+
+            It "Should return an empty array from the Get method" {
+                $result = Get-TargetResource @testParams
+                $result.KerberosSupportedEncryptionType.GetType().Name | Should Be "Object[]"
+                $result.KerberosSupportedEncryptionType.Count | Should Be 0
+            }
+
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
+            }
+
+            It "Should update one registry key in the Set method" {
+                Set-TargetResource @testParams
+                Assert-MockCalled Set-SChannelRegKeyValue -Times 1
+            }
+        }
+
+        Context -Name "When the Kerberos Encryption Types are configured and should be" -Fixture {
+            $testParams = @{
+                IsSingleInstance                = 'Yes'
+                KerberosSupportedEncryptionType = @("DES-CBC-CRC","DES-CBC-MD5","RC4-HMAC-MD5","AES128-HMAC-SHA1","AES256-HMAC-SHA1")
+            }
+
+            Mock -CommandName Get-SChannelRegKeyValue -MockWith {
+                return 31
+            }
+
+            Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
+
+            It "Should return all types from the Get method" {
+                $result = Get-TargetResource @testParams
+                $result.KerberosSupportedEncryptionType.GetType().Name | Should Be "Object[]"
+                $result.KerberosSupportedEncryptionType.Count | Should Be 5
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $true
+            }
+        }
+
         Context -Name "When the FIPSPolicy is Disabled, but should be Enabled" -Fixture {
             $testParams = @{
                 IsSingleInstance          = 'Yes'
@@ -324,7 +375,6 @@ try
                 Assert-MockCalled Set-SChannelRegKeyValue -Times 1
             }
         }
-
 
         Context -Name "When the FIPSPolicy is Enabled and should be" -Fixture {
             $testParams = @{
