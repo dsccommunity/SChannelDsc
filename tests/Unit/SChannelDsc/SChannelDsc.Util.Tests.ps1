@@ -230,13 +230,16 @@ InModuleScope $script:subModuleName {
             CimInstance = $ciminstance
         }
 
+        [ciminstance[]]$ciminstance2 = @()
+        $ciminstance2 += (Get-CimInstance -ClassName Win32_Environment)
+
         $desiredValues = @{
             String      = "Test"
             Array       = @("user1","user2")
             Hashtable   = @{ Name = "Test"; Members = @("User1", "User2")}
             Int         = 1
             Boolean     = $true
-            CimInstance = $ciminstance
+            CimInstance = $ciminstance2
         }
         It "Objects are equal. Should return true from the method" {
             Test-SCDscParameterState -CurrentValues $currentValues -DesiredValues $desiredValues | Should Be $true
