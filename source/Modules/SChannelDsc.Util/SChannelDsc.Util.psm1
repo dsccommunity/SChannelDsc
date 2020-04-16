@@ -62,6 +62,80 @@ function Get-LocalizedData
     return $localizedData
 }
 
+function Compare-PSCustomObjectArrays
+{
+    [CmdletBinding()]
+    [OutputType([System.Object[]])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+        [System.Object[]]
+        $DesiredValues,
+
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+        [System.Object[]]
+        $CurrentValues
+    )
+
+    $DriftedProperties = @()
+    foreach ($DesiredEntry in $DesiredValues)
+    {
+        $Properties = $DesiredEntry.PSObject.Properties
+        $KeyProperty = $Properties.Name[0]
+
+        $EquivalentEntryInCurrent = $CurrentValues | Where-Object -FilterScript { $_.$KeyProperty -eq $DesiredEntry.$KeyProperty }
+        if ($null -eq $EquivalentEntryInCurrent)
+        {
+            $result = @{
+                Property     = $DesiredEntry
+                PropertyName = $KeyProperty
+                Desired      = $DesiredEntry.$KeyProperty
+                Current      = $null
+            }
+            $DriftedProperties += $DesiredEntry
+        }
+        else
+        {
+            foreach ($property in $Properties)
+            {
+                $propertyName = $property.Name
+
+                if ($DesiredEntry.$PropertyName -is [System.Array])
+                {
+                    $result = Compare-Object -ReferenceObject $DesiredEntry.$PropertyName -DifferenceObject $EquivalentEntryInCurrent.$PropertyName
+                    if ($null -ne $result)
+                    {
+                        $result = @{
+                            Property     = $DesiredEntry
+                            PropertyName = $PropertyName
+                            Desired      = $DesiredEntry.$PropertyName
+                            Current      = $EquivalentEntryInCurrent.$PropertyName
+                        }
+                        $DriftedProperties += $result
+                    }
+                }
+                else
+                {
+                    if ($DesiredEntry.$PropertyName -ne $EquivalentEntryInCurrent.$PropertyName)
+                    {
+                        $result = @{
+                            Property     = $DesiredEntry
+                            PropertyName = $PropertyName
+                            Desired      = $DesiredEntry.$PropertyName
+                            Current      = $EquivalentEntryInCurrent.$PropertyName
+                        }
+                        $DriftedProperties += $result
+                    }
+                }
+            }
+        }
+    }
+
+    return $DriftedProperties
+}
+
 function Convert-SCDscHashtableToString
 {
     param
@@ -384,6 +458,8 @@ function Set-SChannelRegKeyValue
 
         $path = ($Key -replace $root, "").TrimStart('\')
 
+        $null = New-Item -Path $fullSubKey -Force
+
         $regKey = (Get-Item -Path $root).OpenSubKey($path, $true)
 
         if ((Test-Path -Path $fullSubKey) -eq $false)
@@ -431,15 +507,15 @@ function Test-SCDscParameterState
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $true, Position=1)]
+        [Parameter(Mandatory = $true, Position = 1)]
         [HashTable]
         $CurrentValues,
 
-        [Parameter(Mandatory = $true, Position=2)]
+        [Parameter(Mandatory = $true, Position = 2)]
         [Object]
         $DesiredValues,
 
-        [Parameter(, Position=3)]
+        [Parameter(Position = 3)]
         [Array]
         $ValuesToCheck
     )
@@ -475,11 +551,11 @@ function Test-SCDscParameterState
             if (($CurrentValues.ContainsKey($_) -eq $false) -or `
                 ($CurrentValues.$_ -ne $DesiredValues.$_) -or `
                 (($DesiredValues.ContainsKey($_) -eq $true) -and `
-                 ($null -ne $DesiredValues.$_ -and `
-                 $DesiredValues.$_.GetType().IsArray)))
+                    ($null -ne $DesiredValues.$_ -and `
+                            $DesiredValues.$_.GetType().IsArray)))
             {
                 if ($DesiredValues.GetType().Name -eq "HashTable" -or `
-                    $DesiredValues.GetType().Name -eq "PSBoundParametersDictionary")
+                        $DesiredValues.GetType().Name -eq "PSBoundParametersDictionary")
                 {
                     $CheckDesiredValue = $DesiredValues.ContainsKey($_)
                 }
@@ -500,16 +576,44 @@ function Test-SCDscParameterState
                             Write-Verbose -Message ($script:localizedData.EmptyArray -f $fieldName)
                             $returnValue = $false
                         }
+                        elseif ($desiredType.Name -eq 'ciminstance[]')
+                        {
+                            Write-Verbose "The current property {$_} is a CimInstance[]"
+                            $AllDesiredValuesAsArray = @()
+                            foreach ($item in $DesiredValues.$_)
+                            {
+                                $currentEntry = @{ }
+                                foreach ($prop in $item.CIMInstanceProperties)
+                                {
+                                    $value = $prop.Value
+                                    if ([System.String]::IsNullOrEmpty($value))
+                                    {
+                                        $value = $null
+                                    }
+                                    $currentEntry.Add($prop.Name, $value)
+                                }
+                                $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
+                            }
+
+                            $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
+                                -DesiredValues $AllDesiredValuesAsArray
+                            if ($null -ne $arrayCompare)
+                            {
+                                $returnValue = $false
+                            }
+                        }
                         else
                         {
                             $arrayCompare = Compare-Object -ReferenceObject $CurrentValues.$fieldName `
-                                                           -DifferenceObject $DesiredValues.$fieldName
-                            if ($null -ne $arrayCompare)
+                                -DifferenceObject $DesiredValues.$fieldName
+                            if ($null -ne $arrayCompare -and `
+                                    -not [System.String]::IsNullOrEmpty($arrayCompare.InputObject))
                             {
                                 Write-Verbose -Message ($script:localizedData.ArrayNotInDesiredState -f $fieldName)
                                 $arrayCompare | ForEach-Object -Process {
                                     Write-Verbose -Message ($script:localizedData.ArrayItemIncorrect -f $_.InputObject, $_.SideIndicator)
                                 }
+
                                 $returnValue = $false
                             }
                         }
@@ -518,54 +622,112 @@ function Test-SCDscParameterState
                     {
                         switch ($desiredType.Name)
                         {
-                            "String" {
+                            "String"
+                            {
                                 if ([string]::IsNullOrEmpty($CurrentValues.$fieldName) -and `
-                                    [string]::IsNullOrEmpty($DesiredValues.$fieldName))
-                                {}
+                                        [string]::IsNullOrEmpty($DesiredValues.$fieldName))
+                                {
+                                }
                                 else
                                 {
                                     Write-Verbose -Message ($script:localizedData.ValueInDesiredState -f "String", $fieldName, $CurrentValues.$fieldName, $DesiredValues.$fieldName)
                                     $returnValue = $false
                                 }
                             }
-                            "Int32" {
+                            "Int32"
+                            {
                                 if (($DesiredValues.$fieldName -eq 0) -and `
                                     ($null -eq $CurrentValues.$fieldName))
-                                {}
+                                {
+                                }
                                 else
                                 {
                                     Write-Verbose -Message ($script:localizedData.ValueInDesiredState -f "Int32", $fieldName, $CurrentValues.$fieldName, $DesiredValues.$fieldName)
                                     $returnValue = $false
                                 }
                             }
-                            "Int16" {
+                            "Int16"
+                            {
                                 if (($DesiredValues.$fieldName -eq 0) -and `
                                     ($null -eq $CurrentValues.$fieldName))
-                                {}
+                                {
+                                }
                                 else
                                 {
                                     Write-Verbose -Message ($script:localizedData.ValueInDesiredState -f "Int16", $fieldName, $CurrentValues.$fieldName, $DesiredValues.$fieldName)
                                     $returnValue = $false
                                 }
                             }
-                            "Boolean" {
+                            "Boolean"
+                            {
                                 if ($CurrentValues.$fieldName -ne $DesiredValues.$fieldName)
                                 {
                                     Write-Verbose -Message ($script:localizedData.ValueInDesiredState -f "Boolean", $fieldName, $CurrentValues.$fieldName, $DesiredValues.$fieldName)
                                     $returnValue = $false
                                 }
                             }
-                            "Single" {
+                            "Single"
+                            {
                                 if (($DesiredValues.$fieldName -eq 0) -and `
                                     ($null -eq $CurrentValues.$fieldName))
-                                {}
+                                {
+                                }
                                 else
                                 {
                                     Write-Verbose -Message ($script:localizedData.ValueInDesiredState -f "Single", $fieldName, $CurrentValues.$fieldName, $DesiredValues.$fieldName)
                                     $returnValue = $false
                                 }
                             }
-                            default {
+                            "Hashtable"
+                            {
+                                Write-Verbose -Message "The current property {$fieldName} is a Hashtable"
+                                $AllDesiredValuesAsArray = @()
+                                foreach ($item in $DesiredValues.$fieldName)
+                                {
+                                    $currentEntry = @{ }
+                                    foreach ($key in $item.Keys)
+                                    {
+                                        $value = $item.$key
+                                        if ([System.String]::IsNullOrEmpty($value))
+                                        {
+                                            $value = $null
+                                        }
+                                        $currentEntry.Add($key, $value)
+                                    }
+                                    $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
+                                }
+
+                                if ($null -ne $DesiredValues.$fieldName -and $null -eq $CurrentValues.$fieldName)
+                                {
+                                    $returnValue = $false
+                                }
+                                else
+                                {
+                                    $AllCurrentValuesAsArray = @()
+                                    foreach ($item in $CurrentValues.$fieldName)
+                                    {
+                                        $currentEntry = @{ }
+                                        foreach ($key in $item.Keys)
+                                        {
+                                            $value = $item.$key
+                                            if ([System.String]::IsNullOrEmpty($value))
+                                            {
+                                                $value = $null
+                                            }
+                                            $currentEntry.Add($key, $value)
+                                        }
+                                        $AllCurrentValuesAsArray += [PSCustomObject]$currentEntry
+                                    }
+                                    $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $AllCurrentValuesAsArray `
+                                                                                 -DesiredValues $AllDesiredValuesAsArray
+                                    if ($null -ne $arrayCompare)
+                                    {
+                                        $returnValue = $false
+                                    }
+                                }
+                            }
+                            default
+                            {
                                 Write-Verbose -Message ($script:localizedData.UnableToCompare -f $fieldName, $desiredType.Name)
                                 $returnValue = $false
                             }

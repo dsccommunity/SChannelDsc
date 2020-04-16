@@ -1,6 +1,3 @@
 # Description
 
-This resource is responsible for enabling or disabling ciphers.
-
-The default value for the Ensure parameter is Present. When not specifying this
-parameter, the cipher is enabled.
+This resource is responsible for configuring various Secure Channel settings.

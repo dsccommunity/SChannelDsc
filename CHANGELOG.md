@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- None
+- SChannelSettings
+  - Added the possiblity to configure the Kerberos Encryption Types
 
 ### Changed
 
-- None
+- SChannelDsc
+  - Implemented the new DSC Community CD/CI system
 
 ### Deprecated
 
