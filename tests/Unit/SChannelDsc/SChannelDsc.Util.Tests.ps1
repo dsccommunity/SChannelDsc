@@ -218,20 +218,13 @@ InModuleScope $script:subModuleName {
     }
 
     Context -Name "Test method Test-SCDscParameterState" -Fixture {
-        [ciminstance[]]$ciminstance = @()
-        $ciminstance += (Get-CimInstance -ClassName Win32_Environment)
-
         $currentValues = @{
             String      = "Test"
             Array       = @("user1","user2")
             Hashtable   = @{ Name = "Test"; Members = @("User1", "User2")}
             Int         = 1
             Boolean     = $true
-            CimInstance = $ciminstance
         }
-
-        [ciminstance[]]$ciminstance2 = @()
-        $ciminstance2 += (Get-CimInstance -ClassName Win32_Environment)
 
         $desiredValues = @{
             String      = "Test"
@@ -239,7 +232,6 @@ InModuleScope $script:subModuleName {
             Hashtable   = @{ Name = "Test"; Members = @("User1", "User2")}
             Int         = 1
             Boolean     = $true
-            CimInstance = $ciminstance2
         }
         It "Objects are equal. Should return true from the method" {
             Test-SCDscParameterState -CurrentValues $currentValues -DesiredValues $desiredValues | Should Be $true
@@ -251,9 +243,6 @@ InModuleScope $script:subModuleName {
             Hashtable   = @{ Name = "Test"; Members = @("User1", "User2")}
             Int         = 1
             Boolean     = $true
-            CimInstance = @(
-                (Get-CimInstance -ClassName Win32_Environment)
-            )
         }
         It "Objects are not equal on string. Should return false from the method" {
             Test-SCDscParameterState -CurrentValues $currentValues -DesiredValues $desiredValues | Should Be $false
@@ -265,9 +254,6 @@ InModuleScope $script:subModuleName {
             Hashtable   = @{ Name = "Test"; Members = @("User1", "User2")}
             Int         = 1
             Boolean     = $true
-            CimInstance = @(
-                (Get-CimInstance -ClassName Win32_Environment)
-            )
         }
         It "Objects are not equal on array. Should return false from the method" {
             Test-SCDscParameterState -CurrentValues $currentValues -DesiredValues $desiredValues | Should Be $false
@@ -279,9 +265,6 @@ InModuleScope $script:subModuleName {
             Hashtable   = @{ Name = "Test"; Members = @("User1", "User2")}
             Int         = 2
             Boolean     = $true
-            CimInstance = @(
-                (Get-CimInstance -ClassName Win32_Environment)
-            )
         }
         It "Objects are not equal on int. Should return false from the method" {
             Test-SCDscParameterState -CurrentValues $currentValues -DesiredValues $desiredValues | Should Be $false
@@ -293,25 +276,8 @@ InModuleScope $script:subModuleName {
             Hashtable   = @{ Name = "Test"; Members = @("User1", "User2")}
             Int         = 1
             Boolean     = $false
-            CimInstance = @(
-                (Get-CimInstance -ClassName Win32_Environment)
-            )
         }
         It "Objects are not equal on boolean. Should return false from the method" {
-            Test-SCDscParameterState -CurrentValues $currentValues -DesiredValues $desiredValues | Should Be $false
-        }
-
-        $currentValues = @{
-            String      = "Test"
-            Array       = @("user1","user2")
-            Hashtable   = @{ Name = "Test"; Members = @("User1", "User2")}
-            Int         = 1
-            Boolean     = $true
-            CimInstance = @(
-                (Get-CimInstance -ClassName Win32_OperatingSystem)
-            )
-        }
-        It "Objects are not equal on CimInstance. Should return false from the method" {
             Test-SCDscParameterState -CurrentValues $currentValues -DesiredValues $desiredValues | Should Be $false
         }
 
@@ -321,9 +287,6 @@ InModuleScope $script:subModuleName {
             Hashtable   = @{ Name = "Test2"; Members = @("User1", "User3")}
             Int         = 1
             Boolean     = $true
-            CimInstance = @(
-                (Get-CimInstance -ClassName Win32_Environment)
-            )
         }
         It "Objects are not equal on Hashtable. Should return false from the method" {
             Test-SCDscParameterState -CurrentValues $currentValues -DesiredValues $desiredValues | Should Be $false
