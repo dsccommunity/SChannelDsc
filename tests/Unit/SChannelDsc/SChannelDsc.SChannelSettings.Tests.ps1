@@ -337,6 +337,82 @@ try
             }
         }
 
+        Context -Name "When the WinHTTP Protocols are not configured, but should be" -Fixture {
+            $testParams = @{
+                IsSingleInstance              = 'Yes'
+                WinHttpDefaultSecureProtocols = @("TLS1.2")
+            }
+
+            Mock -CommandName Get-SChannelRegKeyValue -MockWith {
+                return $null
+            }
+
+            Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
+
+            Mock -CommandName Get-Hotfix -MockWith { return "" }
+
+            Mock -CommandName Get-SCDscOSVersion -MockWith { return [System.Version]"6.2" }
+
+            It "Should return an empty array from the Get method" {
+                $result = Get-TargetResource @testParams
+                $result.WinHttpDefaultSecureProtocols.GetType().Name | Should Be "Object[]"
+                $result.WinHttpDefaultSecureProtocols.Count | Should Be 0
+            }
+
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
+            }
+
+            It "Should update one registry key in the Set method" {
+                Set-TargetResource @testParams
+                Assert-MockCalled Set-SChannelRegKeyValue -Times 1
+            }
+        }
+
+        Context -Name "When the WinHTTP Protocols are configured and should be" -Fixture {
+            $testParams = @{
+                IsSingleInstance              = 'Yes'
+                WinHttpDefaultSecureProtocols = @("SSL2.0","SSL3.0","TLS1.0","TLS1.1","TLS1.2")
+            }
+
+            Mock -CommandName Get-SChannelRegKeyValue -MockWith {
+                return 2728
+            }
+
+            Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
+
+            It "Should return all types from the Get method" {
+                $result = Get-TargetResource @testParams
+                $result.WinHttpDefaultSecureProtocols.GetType().Name | Should Be "Object[]"
+                $result.WinHttpDefaultSecureProtocols.Count | Should Be 5
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $true
+            }
+        }
+
+        Context -Name "When the WinHTTP Protocols are not configured, but OS isn't Windows 2008 R2 or 2012" -Fixture {
+            $testParams = @{
+                IsSingleInstance              = 'Yes'
+                WinHttpDefaultSecureProtocols = @("TLS1.2")
+            }
+
+            Mock -CommandName Get-SChannelRegKeyValue -MockWith {
+                return $null
+            }
+
+            Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
+
+            Mock -CommandName Get-Hotfix -MockWith { return $null }
+
+            Mock -CommandName Get-SCDscOSVersion -MockWith { return [System.Version]"6.2" }
+
+            It "Should throw exception in the Set method" {
+                { Set-TargetResource @testParams } | Should Throw "Hotfix KB3140245 is not installed."
+            }
+        }
+
         Context -Name "When the FIPSPolicy is Disabled, but should be Enabled" -Fixture {
             $testParams = @{
                 IsSingleInstance          = 'Yes'

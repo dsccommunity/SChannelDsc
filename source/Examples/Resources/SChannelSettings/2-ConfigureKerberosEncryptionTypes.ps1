@@ -35,25 +35,23 @@ Updated author, copyright notice, and URLs.
 <#
 
 .DESCRIPTION
- This example shows how to configure SChannel.
+ This example shows how to configure the Kerberos Supported
+ Encryption Types.
 
 #>
 
-    Configuration Example
+Configuration Example
+{
+    param ()
+
+    Import-DscResource -ModuleName SChannelDsc
+
+    node localhost
     {
-        param ()
-
-        Import-DscResource -ModuleName SChannelDsc
-
-        node localhost
+        SChannelSettings 'ConfigureKerberosEncrTypes'
         {
-            SChannelSettings 'ConfigureSChannel'
-            {
-                IsSingleInstance                = 'Yes'
-                TLS12State                      = 'Enabled'
-                DiffieHellmanMinClientKeySize   = 4096
-                DiffieHellmanMinServerKeySize   = 4096
-                EnableFIPSAlgorithmPolicy       = $false
-            }
+            IsSingleInstance                = 'Yes'
+            KerberosSupportedEncryptionType = @("RC4-HMAC-MD5","AES128-HMAC-SHA1","AES256-HMAC-SHA1")
         }
     }
+}
