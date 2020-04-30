@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - SChannelSettings
   - Added the possiblity to configure the Kerberos Encryption Types
+  - Added the possiblity to configure the WinHTTP Default Secure Protocols
 
 ### Changed
 
