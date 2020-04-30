@@ -35,7 +35,8 @@ Updated author, copyright notice, and URLs.
 <#
 
 .DESCRIPTION
- This example shows how to configure SChannel.
+ This example shows how to configure the WinHTTP Default
+ Secure Protocols.
 
 #>
 
@@ -47,13 +48,10 @@ Updated author, copyright notice, and URLs.
 
         node localhost
         {
-            SChannelSettings 'ConfigureSChannel'
+            SChannelSettings 'ConfigureWinHTTPProtocols'
             {
-                IsSingleInstance                = 'Yes'
-                TLS12State                      = 'Enabled'
-                DiffieHellmanMinClientKeySize   = 4096
-                DiffieHellmanMinServerKeySize   = 4096
-                EnableFIPSAlgorithmPolicy       = $false
+                IsSingleInstance              = 'Yes'
+                WinHttpDefaultSecureProtocols = @("TLS1.1","TLS1.2")
             }
         }
     }

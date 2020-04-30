@@ -37,6 +37,11 @@ function Get-TargetResource
         $KerberosSupportedEncryptionType,
 
         [Parameter()]
+        [ValidateSet('SSL2.0', 'SSL3.0', 'TLS1.0', 'TLS1.1', 'TLS1.2')]
+        [System.String[]]
+        $WinHttpDefaultSecureProtocols,
+
+        [Parameter()]
         [System.Boolean]
         $EnableFIPSAlgorithmPolicy
     )
@@ -205,6 +210,93 @@ function Get-TargetResource
         }
     }
 
+    # WinHTTP Default Secure Protocols
+    Write-Verbose -Message ($script:localizedData.GetWinHTTPDefSecProt)
+
+    $winhttp64Key = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+    $winhttp32Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+
+    $winhttp64Value = Get-SChannelRegKeyValue -Key $winhttp64Key `
+                                              -Name 'DefaultSecureProtocols'
+
+    $winhttp32Value = Get-SChannelRegKeyValue -Key $winhttp32Key `
+                                              -Name 'DefaultSecureProtocols'
+
+    $winhttp64Protocols = @()
+    if ($null -ne $winhttp64Value)
+    {
+        ## Check SSL 2.0
+        if (($winhttp64Value -band 8) -eq 8)
+        {
+            $winhttp64Protocols += "SSL2.0"
+        }
+
+        ## Check SSL 3.0
+        if (($winhttp64Value -band 32) -eq 32)
+        {
+            $winhttp64Protocols += "SSL3.0"
+        }
+
+        ## Check TLS1.0
+        if (($winhttp64Value -band 128) -eq 128)
+        {
+            $winhttp64Protocols += "TLS1.0"
+        }
+
+        ## Check TLS1.1
+        if (($winhttp64Value -band 512) -eq 512)
+        {
+            $winhttp64Protocols += "TLS1.1"
+        }
+
+        ## Check TLS1.2
+        if (($winhttp64Value -band 2048) -eq 2048)
+        {
+            $winhttp64Protocols += "TLS1.2"
+        }
+    }
+
+    $winhttp32Protocols = @()
+    if ($null -ne $winhttp32Value)
+    {
+        ## Check SSL 2.0
+        if (($winhttp32Value -band 8) -eq 8)
+        {
+            $winhttp32Protocols += "SSL2.0"
+        }
+
+        ## Check SSL 3.0
+        if (($winhttp32Value -band 32) -eq 32)
+        {
+            $winhttp32Protocols += "SSL3.0"
+        }
+
+        ## Check TLS1.0
+        if (($winhttp32Value -band 128) -eq 128)
+        {
+            $winhttp32Protocols += "TLS1.0"
+        }
+
+        ## Check TLS1.1
+        if (($winhttp32Value -band 512) -eq 512)
+        {
+            $winhttp32Protocols += "TLS1.1"
+        }
+
+        ## Check TLS1.2
+        if (($winhttp32Value -band 2048) -eq 2048)
+        {
+            $winhttp32Protocols += "TLS1.2"
+        }
+    }
+
+    $winhttpProtocols = (Compare-Object -ReferenceObject $winhttp32Protocols -DifferenceObject $winhttp64Protocols -ExcludeDifferent -IncludeEqual).InputObject
+
+    if ($null -eq $winhttpProtocols)
+    {
+        $winhttpProtocols = @()
+    }
+
     # FIPS Algorithm Policy
     Write-Verbose -Message ($script:localizedData.GetFIPS)
 
@@ -237,6 +329,7 @@ function Get-TargetResource
         DiffieHellmanMinClientKeySize   = $dhMinClientKeySizeValue
         DiffieHellmanMinServerKeySize   = $dhMinServerKeySizeValue
         KerberosSupportedEncryptionType = $kerberosEncrTypes
+        WinHttpDefaultSecureProtocols   = $winhttpProtocols
         EnableFIPSAlgorithmPolicy       = $fipsValue
     }
 
@@ -272,6 +365,11 @@ function Set-TargetResource
         [ValidateSet('DES-CBC-CRC', 'DES-CBC-MD5', 'RC4-HMAC-MD5', 'AES128-HMAC-SHA1', 'AES256-HMAC-SHA1')]
         [System.String[]]
         $KerberosSupportedEncryptionType,
+
+        [Parameter()]
+        [ValidateSet('SSL2.0', 'SSL3.0', 'TLS1.0', 'TLS1.1', 'TLS1.2')]
+        [System.String[]]
+        $WinHttpDefaultSecureProtocols,
 
         [Parameter()]
         [System.Boolean]
@@ -493,6 +591,78 @@ function Set-TargetResource
         }
     }
 
+    # WinHTTP Default Secure Protocols
+    if ($PSBoundParameters.ContainsKey('WinHttpDefaultSecureProtocols'))
+    {
+        # Check for Windows 7/2008 R2/2012
+        $osVersion = Get-SCDscOSVersion
+        if ($osVersion.Major -eq 6 -and $osVersion.Minor -in (1,2))
+        {
+            # Check for patch
+            $hotfix = Get-Hotfix -Id KB3140245 -ErrorAction SilentlyContinue
+            if ($null -eq $hotfix)
+            {
+                throw ("Hotfix KB3140245 is not installed. Setting these registry keys will not do anything. " + `
+                       "Please install the hotfix first!")
+            }
+        }
+
+        $winhttp64Key = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings'
+        $winhttp32Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings'
+
+        if ($WinHttpDefaultSecureProtocols.Count -ne 0)
+        {
+            $winhttpValue = 0
+            if ('SSL2.0' -in $WinHttpDefaultSecureProtocols)
+            {
+                $winhttpValue += 8
+            }
+
+            if ('SSL3.0' -in $WinHttpDefaultSecureProtocols)
+            {
+                $winhttpValue += 32
+            }
+
+            if ('TLS1.0' -in $WinHttpDefaultSecureProtocols)
+            {
+                $winhttpValue += 128
+            }
+
+            if ('TLS1.1' -in $WinHttpDefaultSecureProtocols)
+            {
+                $winhttpValue += 512
+            }
+
+            if ('TLS1.2' -in $WinHttpDefaultSecureProtocols)
+            {
+                $winhttpValue += 2048
+            }
+
+            Write-Verbose -Message ($script:localizedData.ConfigureWinHTTPSecProt -f ($WinHttpDefaultSecureProtocols -join ", "))
+            Set-SChannelRegKeyValue -Key $winhttp64Key `
+                                    -SubKey 'WinHttp' `
+                                    -Name 'DefaultSecureProtocols' `
+                                    -Value $winhttpValue
+
+            Set-SChannelRegKeyValue -Key $winhttp32Key `
+                                    -SubKey 'WinHttp' `
+                                    -Name 'DefaultSecureProtocols' `
+                                    -Value $winhttpValue
+        }
+        else
+        {
+            if ($CurrentValues.WinHttpDefaultSecureProtocols.Count -ne 0)
+            {
+                Write-Verbose -Message ($script:localizedData.RemoveWinHTTPDefSecProt)
+                Remove-ItemProperty -Path "$winhttp64Key\WinHttp" `
+                                    -Name 'DefaultSecureProtocols'
+
+                Remove-ItemProperty -Path "$winhttp32Key\WinHttp" `
+                                    -Name 'DefaultSecureProtocols'
+            }
+        }
+    }
+
     # FIPS Algorithm Policy
     if ($null -ne $EnableFIPSAlgorithmPolicy -and
         $EnableFIPSAlgorithmPolicy -ne $CurrentValues.EnableFIPSAlgorithmPolicy)
@@ -548,6 +718,11 @@ function Test-TargetResource
         $KerberosSupportedEncryptionType,
 
         [Parameter()]
+        [ValidateSet('SSL2.0', 'SSL3.0', 'TLS1.0', 'TLS1.1', 'TLS1.2')]
+        [System.String[]]
+        $WinHttpDefaultSecureProtocols,
+
+        [Parameter()]
         [System.Boolean]
         $EnableFIPSAlgorithmPolicy
     )
@@ -575,7 +750,8 @@ function Test-TargetResource
                                                                'DiffieHellmanMinServerKeySize', `
                                                                'EnableFIPSAlgorithmPolicy', `
                                                                'TLS12State',
-                                                               'KerberosSupportedEncryptionType')
+                                                               'KerberosSupportedEncryptionType',
+                                                               'WinHttpDefaultSecureProtocols')
     }
     else
     {
@@ -584,7 +760,8 @@ function Test-TargetResource
                                               -ValuesToCheck @('DiffieHellmanMinClientKeySize', `
                                                                'DiffieHellmanMinServerKeySize', `
                                                                'EnableFIPSAlgorithmPolicy',
-                                                               'KerberosSupportedEncryptionType')
+                                                               'KerberosSupportedEncryptionType',
+                                                               'WinHttpDefaultSecureProtocols')
     }
 
     if ($compliant -eq $true)
@@ -599,3 +776,10 @@ function Test-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+
+function Get-SCDscOSVersion
+{
+    param ()
+
+    return [System.Environment]::OSVersion.Version
+}
