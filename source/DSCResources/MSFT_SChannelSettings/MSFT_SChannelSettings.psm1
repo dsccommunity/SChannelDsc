@@ -56,108 +56,98 @@ function Get-TargetResource
     $dotnetKey = 'HKLM:SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full'
     $keyExists = Get-ItemProperty -Path $dotnetKey -ErrorAction SilentlyContinue
 
-    # Only check TLS12State if .Net Framework is 4.5 or lower
-    # https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed
-    if ($null -eq $keyExists -or
-        (Get-ItemPropertyValue -Path $dotnetKey -Name Release) -lt 390000)
+    # 64 bit keys
+    Write-Verbose -Message ($script:localizedData.NetFramework45Detected)
+
+    # .Net Framework 2.0 - 3.5
+    $dotnet2Key = 'HKLM:\SOFTWARE\Microsoft\.NETFramework\v2.0.50727'
+    $dotnet4Key = 'HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319'
+
+    $net2DefaultTLSVersions = Get-SChannelRegKeyValue -Key $dotnet2Key `
+                                                        -Name 'SystemDefaultTlsVersions'
+    $net2StrongCrypto       = Get-SChannelRegKeyValue -Key $dotnet2Key `
+                                                        -Name 'SchUseStrongCrypto'
+    $net4DefaultTLSVersions = Get-SChannelRegKeyValue -Key $dotnet4Key `
+                                                        -Name 'SystemDefaultTlsVersions'
+    $net4StrongCrypto       = Get-SChannelRegKeyValue -Key $dotnet4Key `
+                                                        -Name 'SchUseStrongCrypto'
+
+    if (Test-Path -Path 'HKLM:\SOFTWARE\Wow6432Node')
     {
-        # 64 bit keys
-        Write-Verbose -Message ($script:localizedData.NetFramework45Detected)
+        # 32 bit keys
+        $dotnet2Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v2.0.50727'
+        $dotnet4Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319'
 
-        # .Net Framework 2.0 - 3.5
-        $dotnet2Key = 'HKLM:\SOFTWARE\Microsoft\.NETFramework\v2.0.50727'
-        $dotnet4Key = 'HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319'
+        $net2DefaultTLSVersions32 = Get-SChannelRegKeyValue -Key $dotnet2Key `
+                                                            -Name 'SystemDefaultTlsVersions'
+        $net2StrongCrypto32       = Get-SChannelRegKeyValue -Key $dotnet2Key `
+                                                            -Name 'SchUseStrongCrypto'
+        $net4DefaultTLSVersions32 = Get-SChannelRegKeyValue -Key $dotnet4Key `
+                                                            -Name 'SystemDefaultTlsVersions'
+        $net4StrongCrypto32       = Get-SChannelRegKeyValue -Key $dotnet4Key `
+                                                            -Name 'SchUseStrongCrypto'
 
-        $net2DefaultTLSVersions = Get-SChannelRegKeyValue -Key $dotnet2Key `
-                                                          -Name 'SystemDefaultTlsVersions'
-        $net2StrongCrypto       = Get-SChannelRegKeyValue -Key $dotnet2Key `
-                                                          -Name 'SchUseStrongCrypto'
-        $net4DefaultTLSVersions = Get-SChannelRegKeyValue -Key $dotnet4Key `
-                                                          -Name 'SystemDefaultTlsVersions'
-        $net4StrongCrypto       = Get-SChannelRegKeyValue -Key $dotnet4Key `
-                                                          -Name 'SchUseStrongCrypto'
-
-        if (Test-Path -Path 'HKLM:\SOFTWARE\Wow6432Node')
+        if ($null -eq $net2DefaultTLSVersions -and
+            $null -eq $net2StrongCrypto -and
+            $null -eq $net4DefaultTLSVersions -and
+            $null -eq $net4StrongCrypto -and
+            $null -eq $net2DefaultTLSVersions32 -and
+            $null -eq $net2StrongCrypto32 -and
+            $null -eq $net4DefaultTLSVersions32 -and
+            $null -eq $net4StrongCrypto32)
         {
-            # 32 bit keys
-            $dotnet2Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v2.0.50727'
-            $dotnet4Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319'
-
-            $net2DefaultTLSVersions32 = Get-SChannelRegKeyValue -Key $dotnet2Key `
-                                                                -Name 'SystemDefaultTlsVersions'
-            $net2StrongCrypto32       = Get-SChannelRegKeyValue -Key $dotnet2Key `
-                                                                -Name 'SchUseStrongCrypto'
-            $net4DefaultTLSVersions32 = Get-SChannelRegKeyValue -Key $dotnet4Key `
-                                                                -Name 'SystemDefaultTlsVersions'
-            $net4StrongCrypto32       = Get-SChannelRegKeyValue -Key $dotnet4Key `
-                                                                -Name 'SchUseStrongCrypto'
-
-            if ($null -eq $net2DefaultTLSVersions -and
-                $null -eq $net2StrongCrypto -and
-                $null -eq $net4DefaultTLSVersions -and
-                $null -eq $net4StrongCrypto -and
-                $null -eq $net2DefaultTLSVersions32 -and
-                $null -eq $net2StrongCrypto32 -and
-                $null -eq $net4DefaultTLSVersions32 -and
-                $null -eq $net4StrongCrypto32)
-            {
-                $currentTls12State = "Default"
-            }
-
-            if ($net2DefaultTLSVersions -eq 1 -and
-                $net2StrongCrypto -eq 1 -and
-                $net4DefaultTLSVersions -eq 1 -and
-                $net4StrongCrypto -eq 1 -and
-                $net2DefaultTLSVersions32 -eq 1 -and
-                $net2StrongCrypto32 -eq 1 -and
-                $net4DefaultTLSVersions32 -eq 1 -and
-                $net4StrongCrypto32 -eq 1)
-            {
-                $currentTls12State = "Enabled"
-            }
-
-            if ($net2DefaultTLSVersions -eq 0 -and
-                $net2StrongCrypto -eq 0 -and
-                $net4DefaultTLSVersions -eq 0 -and
-                $net4StrongCrypto -eq 0 -and
-                $net2DefaultTLSVersions32 -eq 0 -and
-                $net2StrongCrypto32 -eq 0 -and
-                $net4DefaultTLSVersions32 -eq 0 -and
-                $net4StrongCrypto32 -eq 0)
-            {
-                $currentTls12State = "Disabled"
-            }
+            $currentTls12State = "Default"
         }
-        else
+
+        if ($net2DefaultTLSVersions -eq 1 -and
+            $net2StrongCrypto -eq 1 -and
+            $net4DefaultTLSVersions -eq 1 -and
+            $net4StrongCrypto -eq 1 -and
+            $net2DefaultTLSVersions32 -eq 1 -and
+            $net2StrongCrypto32 -eq 1 -and
+            $net4DefaultTLSVersions32 -eq 1 -and
+            $net4StrongCrypto32 -eq 1)
         {
-            if ($null -eq $net2DefaultTLSVersions -and
-                $null -eq $net2StrongCrypto -and
-                $null -eq $net4DefaultTLSVersions -and
-                $null -eq $net4StrongCrypto)
-            {
-                $currentTls12State = "Default"
-            }
+            $currentTls12State = "Enabled"
+        }
 
-            if ($net2DefaultTLSVersions -eq 1 -and
-                $net2StrongCrypto -eq 1 -and
-                $net4DefaultTLSVersions -eq 1 -and
-                $net4StrongCrypto -eq 1)
-            {
-                $currentTls12State = "Enabled"
-            }
-
-            if ($net2DefaultTLSVersions -eq 0 -and
-                $net2StrongCrypto -eq 0 -and
-                $net4DefaultTLSVersions -eq 0 -and
-                $net4StrongCrypto -eq 0)
-            {
-                $currentTls12State = "Disabled"
-            }
+        if ($net2DefaultTLSVersions -eq 0 -and
+            $net2StrongCrypto -eq 0 -and
+            $net4DefaultTLSVersions -eq 0 -and
+            $net4StrongCrypto -eq 0 -and
+            $net2DefaultTLSVersions32 -eq 0 -and
+            $net2StrongCrypto32 -eq 0 -and
+            $net4DefaultTLSVersions32 -eq 0 -and
+            $net4StrongCrypto32 -eq 0)
+        {
+            $currentTls12State = "Disabled"
         }
     }
     else
     {
-        Write-Verbose -Message ($script:localizedData.NetFramework46Detected)
+        if ($null -eq $net2DefaultTLSVersions -and
+            $null -eq $net2StrongCrypto -and
+            $null -eq $net4DefaultTLSVersions -and
+            $null -eq $net4StrongCrypto)
+        {
+            $currentTls12State = "Default"
+        }
+
+        if ($net2DefaultTLSVersions -eq 1 -and
+            $net2StrongCrypto -eq 1 -and
+            $net4DefaultTLSVersions -eq 1 -and
+            $net4StrongCrypto -eq 1)
+        {
+            $currentTls12State = "Enabled"
+        }
+
+        if ($net2DefaultTLSVersions -eq 0 -and
+            $net2StrongCrypto -eq 0 -and
+            $net4DefaultTLSVersions -eq 0 -and
+            $net4StrongCrypto -eq 0)
+        {
+            $currentTls12State = "Disabled"
+        }
     }
 
     # Diffie Hellman Minimum Key Size
@@ -383,126 +373,116 @@ function Set-TargetResource
     $dotnetKey = 'HKLM:SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full'
     $keyExists = Get-ItemProperty -Path $dotnetKey -ErrorAction SilentlyContinue
 
-    # Only check TLS12State if .Net Framework is 4.5 or lower
-    # https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed
-    if ($null -eq $keyExists -or
-        (Get-ItemPropertyValue -Path $dotnetKey -Name Release) -lt 390000)
+    if ($TLS12State -ne $CurrentValues.TLS12State)
     {
-        if ($TLS12State -ne $CurrentValues.TLS12State)
+        Write-Verbose -Message ($script:localizedData.ConfigureTLS12State)
+
+        $dotnet64Key = 'HKLM:\SOFTWARE\Microsoft\.NETFramework'
+        $dotnet32Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework'
+
+        if ($TLS12State -eq 'Default')
         {
-            Write-Verbose -Message ($script:localizedData.ConfigureTLS12State)
+            # 64 bit keys
+            # .Net Framework 2.0 - 3.5
+            Set-SChannelRegKeyValue -Key $dotnet64Key `
+                                    -SubKey 'v2.0.50727' `
+                                    -Name 'SystemDefaultTlsVersions' `
+                                    -Remove
+            Set-SChannelRegKeyValue -Key $dotnet64Key `
+                                    -SubKey 'v2.0.50727' `
+                                    -Name 'SchUseStrongCrypto' `
+                                    -Remove
 
-            $dotnet64Key = 'HKLM:\SOFTWARE\Microsoft\.NETFramework'
-            $dotnet32Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework'
+            # .Net Framework 4.0 - 4.5
+            Set-SChannelRegKeyValue -Key $dotnet64Key `
+                                    -SubKey 'v4.0.30319' `
+                                    -Name 'SystemDefaultTlsVersions' `
+                                    -Remove
+            Set-SChannelRegKeyValue -Key $dotnet64Key `
+                                    -SubKey 'v4.0.30319' `
+                                    -Name 'SchUseStrongCrypto' `
+                                    -Remove
 
-            if ($TLS12State -eq 'Default')
+            if (Test-Path -Path 'HKLM:\SOFTWARE\Wow6432Node')
             {
-                # 64 bit keys
+                # 32 bit keys
                 # .Net Framework 2.0 - 3.5
-                Set-SChannelRegKeyValue -Key $dotnet64Key `
+                Set-SChannelRegKeyValue -Key $dotnet32Key `
                                         -SubKey 'v2.0.50727' `
                                         -Name 'SystemDefaultTlsVersions' `
                                         -Remove
-                Set-SChannelRegKeyValue -Key $dotnet64Key `
+                Set-SChannelRegKeyValue -Key $dotnet32Key `
                                         -SubKey 'v2.0.50727' `
                                         -Name 'SchUseStrongCrypto' `
                                         -Remove
 
                 # .Net Framework 4.0 - 4.5
-                Set-SChannelRegKeyValue -Key $dotnet64Key `
+                Set-SChannelRegKeyValue -Key $dotnet32Key `
                                         -SubKey 'v4.0.30319' `
                                         -Name 'SystemDefaultTlsVersions' `
                                         -Remove
-                Set-SChannelRegKeyValue -Key $dotnet64Key `
+                Set-SChannelRegKeyValue -Key $dotnet32Key `
                                         -SubKey 'v4.0.30319' `
                                         -Name 'SchUseStrongCrypto' `
                                         -Remove
-
-                if (Test-Path -Path 'HKLM:\SOFTWARE\Wow6432Node')
-                {
-                    # 32 bit keys
-                    # .Net Framework 2.0 - 3.5
-                    Set-SChannelRegKeyValue -Key $dotnet32Key `
-                                            -SubKey 'v2.0.50727' `
-                                            -Name 'SystemDefaultTlsVersions' `
-                                            -Remove
-                    Set-SChannelRegKeyValue -Key $dotnet32Key `
-                                            -SubKey 'v2.0.50727' `
-                                            -Name 'SchUseStrongCrypto' `
-                                            -Remove
-
-                    # .Net Framework 4.0 - 4.5
-                    Set-SChannelRegKeyValue -Key $dotnet32Key `
-                                            -SubKey 'v4.0.30319' `
-                                            -Name 'SystemDefaultTlsVersions' `
-                                            -Remove
-                    Set-SChannelRegKeyValue -Key $dotnet32Key `
-                                            -SubKey 'v4.0.30319' `
-                                            -Name 'SchUseStrongCrypto' `
-                                            -Remove
-                }
+            }
+        }
+        else
+        {
+            if ($TLS12State -eq 'Enabled')
+            {
+                $state = 1
             }
             else
             {
-                if ($TLS12State -eq 'Enabled')
-                {
-                    $state = 1
-                }
-                else
-                {
-                    $state = 0
-                }
+                $state = 0
+            }
 
-                # 64 bit keys
+            # 64 bit keys
+            # .Net Framework 2.0 - 3.5
+            Set-SChannelRegKeyValue -Key $dotnet64Key `
+                                    -SubKey 'v2.0.50727' `
+                                    -Name 'SystemDefaultTlsVersions' `
+                                    -Value $state
+            Set-SChannelRegKeyValue -Key $dotnet64Key `
+                                    -SubKey 'v2.0.50727' `
+                                    -Name 'SchUseStrongCrypto' `
+                                    -Value $state
+
+            # .Net Framework 4.0 - 4.5
+            Set-SChannelRegKeyValue -Key $dotnet64Key `
+                                    -SubKey 'v4.0.30319' `
+                                    -Name 'SystemDefaultTlsVersions' `
+                                    -Value $state
+            Set-SChannelRegKeyValue -Key $dotnet64Key `
+                                    -SubKey 'v4.0.30319' `
+                                    -Name 'SchUseStrongCrypto' `
+                                    -Value $state
+
+            if (Test-Path -Path 'HKLM:\SOFTWARE\Wow6432Node')
+            {
+                # 32 bit keys
                 # .Net Framework 2.0 - 3.5
-                Set-SChannelRegKeyValue -Key $dotnet64Key `
+                Set-SChannelRegKeyValue -Key $dotnet32Key `
                                         -SubKey 'v2.0.50727' `
                                         -Name 'SystemDefaultTlsVersions' `
                                         -Value $state
-                Set-SChannelRegKeyValue -Key $dotnet64Key `
+                Set-SChannelRegKeyValue -Key $dotnet32Key `
                                         -SubKey 'v2.0.50727' `
                                         -Name 'SchUseStrongCrypto' `
                                         -Value $state
 
                 # .Net Framework 4.0 - 4.5
-                Set-SChannelRegKeyValue -Key $dotnet64Key `
+                Set-SChannelRegKeyValue -Key $dotnet32Key `
                                         -SubKey 'v4.0.30319' `
                                         -Name 'SystemDefaultTlsVersions' `
                                         -Value $state
-                Set-SChannelRegKeyValue -Key $dotnet64Key `
+                Set-SChannelRegKeyValue -Key $dotnet32Key `
                                         -SubKey 'v4.0.30319' `
                                         -Name 'SchUseStrongCrypto' `
                                         -Value $state
-
-                if (Test-Path -Path 'HKLM:\SOFTWARE\Wow6432Node')
-                {
-                    # 32 bit keys
-                    # .Net Framework 2.0 - 3.5
-                    Set-SChannelRegKeyValue -Key $dotnet32Key `
-                                            -SubKey 'v2.0.50727' `
-                                            -Name 'SystemDefaultTlsVersions' `
-                                            -Value $state
-                    Set-SChannelRegKeyValue -Key $dotnet32Key `
-                                            -SubKey 'v2.0.50727' `
-                                            -Name 'SchUseStrongCrypto' `
-                                            -Value $state
-
-                    # .Net Framework 4.0 - 4.5
-                    Set-SChannelRegKeyValue -Key $dotnet32Key `
-                                            -SubKey 'v4.0.30319' `
-                                            -Name 'SystemDefaultTlsVersions' `
-                                            -Value $state
-                    Set-SChannelRegKeyValue -Key $dotnet32Key `
-                                            -SubKey 'v4.0.30319' `
-                                            -Name 'SchUseStrongCrypto' `
-                                            -Value $state
-                }
             }
         }
-    }
-    else
-    {
-        Write-Verbose -Message ($script:localizedData.NetFramework46Detected)
     }
 
     # Diffie Hellman Minimum Key Size
@@ -737,32 +717,14 @@ function Test-TargetResource
 
     $ErrorActionPreference = 'SilentlyContinue'
 
-    # Only check TLS12State if .Net Framework is 4.5 or lower
-    # https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed
-    $dotnetKey = 'HKLM:SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full'
-    $keyExists = Get-ItemProperty -Path $dotnetKey -ErrorAction SilentlyContinue
-    if ($null -eq $keyExists -or
-        (Get-ItemPropertyValue -Path $dotnetKey -Name Release) -lt 390000)
-    {
-        $compliant = Test-SCDscParameterState -CurrentValues $CurrentValues `
-                                              -DesiredValues $PSBoundParameters `
-                                              -ValuesToCheck @('DiffieHellmanMinClientKeySize', `
-                                                               'DiffieHellmanMinServerKeySize', `
-                                                               'EnableFIPSAlgorithmPolicy', `
-                                                               'TLS12State',
-                                                               'KerberosSupportedEncryptionType',
-                                                               'WinHttpDefaultSecureProtocols')
-    }
-    else
-    {
-        $compliant = Test-SCDscParameterState -CurrentValues $CurrentValues `
-                                              -DesiredValues $PSBoundParameters `
-                                              -ValuesToCheck @('DiffieHellmanMinClientKeySize', `
-                                                               'DiffieHellmanMinServerKeySize', `
-                                                               'EnableFIPSAlgorithmPolicy',
-                                                               'KerberosSupportedEncryptionType',
-                                                               'WinHttpDefaultSecureProtocols')
-    }
+    $compliant = Test-SCDscParameterState -CurrentValues $CurrentValues `
+                                            -DesiredValues $PSBoundParameters `
+                                            -ValuesToCheck @('DiffieHellmanMinClientKeySize', `
+                                                            'DiffieHellmanMinServerKeySize', `
+                                                            'EnableFIPSAlgorithmPolicy', `
+                                                            'TLS12State',
+                                                            'KerberosSupportedEncryptionType',
+                                                            'WinHttpDefaultSecureProtocols')
 
     if ($compliant -eq $true)
     {

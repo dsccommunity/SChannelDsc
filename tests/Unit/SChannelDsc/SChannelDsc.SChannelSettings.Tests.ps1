@@ -139,41 +139,6 @@ try
             }
         }
 
-        Context -Name "When the TLS 1.2 is set to default, but .Net 4.6 or higher is used" -Fixture {
-            $testParams = @{
-                IsSingleInstance = 'Yes'
-                TLS12State       = 'Enabled'
-            }
-
-            Mock -CommandName Get-ItemProperty -MockWith {
-                return '58000'
-            }
-
-            Mock -CommandName Get-ItemPropertyValue -MockWith {
-                return '58000'
-            }
-
-            Mock -CommandName Test-Path -MockWith {
-                return $true
-            }
-
-            Mock -CommandName Get-SChannelRegKeyValue -MockWith {}
-            Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
-
-            It "Should return TLS12State=Null from the Get method" {
-                (Get-TargetResource @testParams).TLS12State | Should BeNullOrEmpty
-            }
-
-            It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should Be $true
-            }
-
-            It "Should update no registry keys in the Set method" {
-                Set-TargetResource @testParams
-                Assert-MockCalled Set-SChannelRegKeyValue -Times 0
-            }
-        }
-
         Context -Name "When the DH Key Size is absent, but should be 4096" -Fixture {
             $testParams = @{
                 IsSingleInstance              = 'Yes'
