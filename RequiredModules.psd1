@@ -14,7 +14,7 @@
     Plaster                     = 'latest'
     ModuleBuilder               = '1.0.0'
     ChangelogManagement         = 'latest'
-    Sampler                     = 'latest'
+    Sampler                     = '0.105.6'
     MarkdownLinkCheck           = 'latest'
     'DscResource.Test'          = 'latest'
     'DscResource.AnalyzerRules' = 'latest'
