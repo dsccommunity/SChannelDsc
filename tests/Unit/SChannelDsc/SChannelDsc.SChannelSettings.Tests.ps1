@@ -37,7 +37,7 @@ try
         # Mocks for all contexts
 
         # Test contexts
-        Context -Name "When the TLS 1.2 is set to default and should be enabled (.Net 4.5 or lower)" -Fixture {
+        Context -Name "When the TLS 1.2 is set to default and should be enabled" -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance = 'Yes'
@@ -74,7 +74,7 @@ try
             }
         }
 
-        Context -Name "When the TLS 1.2 is set to default and should be (.Net 4.5 or lower)" -Fixture {
+        Context -Name "When the TLS 1.2 is set to default and should be" -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance = 'Yes'
@@ -105,7 +105,7 @@ try
             }
         }
 
-        Context -Name "When the TLS 1.2 is set to Enabled and should be Default (.Net 4.5 or lower)" -Fixture {
+        Context -Name "When the TLS 1.2 is set to Enabled and should be Default" -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance = 'Yes'
