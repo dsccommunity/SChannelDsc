@@ -396,7 +396,7 @@ try
             }
 
             It "Should throw exception in the Set method" {
-                { Set-TargetResource @testParams } | Should -Throw "Hotfix KB3140245 is not installed.*"
+                { Set-TargetResource @testParams } | Should -Throw "Hotfix KB3140245 is not installed."
             }
         }
 

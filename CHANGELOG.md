@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - SChannelDsc
-  - Updated tests to support Pester v5
-  - Pinned to Sampler v0.105.6 because of issue in 0.106
+  - Prepared upgrade to Pester v5 (wait until code coverage support is added)
+  - Removed pin of ModuleBuilder, now always takes the latest version
 
 ### Fixed
 
