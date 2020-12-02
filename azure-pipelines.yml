@@ -164,6 +164,7 @@ stages:
             env:
               GitHubToken: $(GitHubToken)
               GalleryApiToken: $(GalleryApiToken)
+              UseNugetPush: false
           - task: PowerShell@2
             name: sendChangelogPR
             displayName: 'Send Changelog PR'
