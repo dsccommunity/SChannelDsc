@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SChannelDsc
   - Prepared upgrade to Pester v5 (wait until code coverage support is added)
   - Removed pin of ModuleBuilder, now always takes the latest version
+- Updated pipeline files.
 
 ### Fixed
 
