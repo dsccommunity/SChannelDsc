@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated pipeline files.
 
+### Fixed
+
+- Fixed issue in SChannelSettings where existing Diffie-Hellman settings
+  were overwritten.
+
 ## [1.2.1] - 2020-09-08
 
 ### Changed

@@ -437,7 +437,7 @@ function Set-SChannelRegKeyValue
             $item = Get-Item -Path $fullSubKey
 
             if (($item.ValueCount -eq 0 -and `
-                 $item.SubKeyCount -eq 0) -or
+                        $item.SubKeyCount -eq 0) -or
                 $Force)
             {
                 if ($SubKey -match '\\')
@@ -458,20 +458,12 @@ function Set-SChannelRegKeyValue
 
         $path = ($Key -replace $root, "").TrimStart('\')
 
-        $null = New-Item -Path $fullSubKey -Force
-
-        $regKey = (Get-Item -Path $root).OpenSubKey($path, $true)
-
-        if ((Test-Path -Path $fullSubKey) -eq $false)
+        $currentKey = Get-Item -Path $fullSubKey -ErrorAction SilentlyContinue
+        if ($null -eq $currentKey)
         {
-            $regKey = $regKey.CreateSubKey($SubKey)
+            $currentKey = New-Item -Path $fullSubKey
         }
-        else
-        {
-            $regKey = $regKey.OpenSubKey($SubKey, $true)
-        }
-
-        $null = $regKey.SetValue($Name, $Value, [Microsoft.Win32.RegistryValueKind]::DWORD)
+        $null = Set-ItemProperty -Path $fullSubKey -Name $Name -Value $Value -Type 'Dword' -Force
     }
 }
 
@@ -481,11 +473,11 @@ function Test-SCDscObjectHasProperty
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $true,Position=1)]
+        [Parameter(Mandatory = $true, Position = 1)]
         [Object]
         $Object,
 
-        [Parameter(Mandatory = $true,Position=2)]
+        [Parameter(Mandatory = $true, Position = 2)]
         [String]
         $PropertyName
     )
@@ -527,13 +519,13 @@ function Test-SCDscParameterState
         ($DesiredValues.GetType().Name -ne "PSBoundParametersDictionary"))
     {
         throw ("Property 'DesiredValues' in Test-SCDscParameterState must be either a " + `
-               "Hashtable or CimInstance. Type detected was $($DesiredValues.GetType().Name)")
+                "Hashtable or CimInstance. Type detected was $($DesiredValues.GetType().Name)")
     }
 
     if (($DesiredValues.GetType().Name -eq "CimInstance") -and ($null -eq $ValuesToCheck))
     {
         throw ("If 'DesiredValues' is a CimInstance then property 'ValuesToCheck' must contain " + `
-               "a value")
+                "a value")
     }
 
     if (($null -eq $ValuesToCheck) -or ($ValuesToCheck.Count -lt 1))
@@ -719,7 +711,7 @@ function Test-SCDscParameterState
                                         $AllCurrentValuesAsArray += [PSCustomObject]$currentEntry
                                     }
                                     $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $AllCurrentValuesAsArray `
-                                                                                 -DesiredValues $AllDesiredValuesAsArray
+                                        -DesiredValues $AllDesiredValuesAsArray
                                     if ($null -ne $arrayCompare)
                                     {
                                         $returnValue = $false
