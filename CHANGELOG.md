@@ -7,8 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Protocol
-  - Fixed issue with IncludeClientSide parameter where the resource was always detected as being out of compliance.
+- Fixed issue #20 in Protocol where IncludeClientSide was always being returned as true causing the resource to always be out of compliance.
 
 ## [1.2.2] - 2020-12-16
 
