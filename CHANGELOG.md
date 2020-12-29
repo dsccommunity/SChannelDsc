@@ -5,6 +5,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Protocol
+  - Fixed issue with IncludeClientSide parameter where the resource was always detected as being out of compliance.
+
 ## [1.2.2] - 2020-12-16
 
 ### Changed
