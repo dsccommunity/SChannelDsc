@@ -208,6 +208,158 @@ try
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
+
+        Context -Name "When the protocol is enabled and should be and the client protocol is enabled and should be included" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Protocol = "TLS 1.0"
+                    IncludeClientSide = $true
+                    State = "Enabled"
+                }
+
+                Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Server' } -MockWith {
+                    return 'Enabled'
+                }
+
+                Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Server' -and $ItemValue -eq 'DisabledByDefault' }  -MockWith {
+                    return 'Disabled'
+                }
+
+                Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Client' }  -MockWith {
+                    return 'Enabled'
+                }
+
+                Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Client' -and $ItemValue -eq 'DisabledByDefault' }  -MockWith {
+                    return 'Disabled'
+                }
+            }
+
+            It "Should return true from the Get method" {
+                (Get-TargetResource @testParams).IncludeClientSide | Should -Be $true
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should -Be $true
+            }
+        }
+
+        Context -Name "When the protocol is enabled and should be and the client protocol isn't enabled and should be included" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Protocol = "TLS 1.0"
+                    IncludeClientSide = $true
+                    State = "Enabled"
+                }
+
+                Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Server' } -MockWith {
+                    return 'Enabled'
+                }
+
+                Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Server' -and $ItemValue -eq 'DisabledByDefault' } -MockWith {
+                    return 'Disabled'
+                }
+
+                Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Client' } -MockWith {
+                    return 'Disabled'
+                }
+
+                Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Client' -and $ItemValue -eq 'DisabledByDefault' } -MockWith {
+                    return 'Enabled'
+                }
+
+                Mock -CommandName Set-SChannelItem -MockWith { }
+            }
+
+            It "Should return IncludeClientSide=false from the Get method" {
+                (Get-TargetResource @testParams).IncludeClientSide | Should -Be $false
+            }
+
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It "Should enable the client side protocol in the set method" {
+                Set-TargetResource @testParams
+                Assert-MockCalled Set-SChannelItem -ParameterFilter { $ItemSubKey -like '*\Client' -and $State -eq "Enabled" }
+            }
+        }
+
+        Context -Name "When the protocol isn't enabled and shouldn't be and the client protocol is enabled and should be included" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Protocol = "TLS 1.0"
+                    IncludeClientSide = $true
+                    State = "Disabled"
+                }
+
+                Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Server' } -MockWith {
+                    return 'Disabled'
+                }
+
+                Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Server' -and $ItemValue -eq 'DisabledByDefault' } -MockWith {
+                    return 'Enabled'
+                }
+
+                Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Client' } -MockWith {
+                    return 'Enabled'
+                }
+
+                Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Client' -and $ItemValue -eq 'DisabledByDefault' } -MockWith {
+                    return 'Disabled'
+                }
+
+                Mock -CommandName Set-SChannelItem -MockWith { }
+            }
+
+            It "Should return IncludeClientSide=false from the Get method" {
+                (Get-TargetResource @testParams).IncludeClientSide | Should -Be $false
+            }
+
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It "Should enable the client side protocol in the set method" {
+                Set-TargetResource @testParams
+                Assert-MockCalled Set-SChannelItem -ParameterFilter { $ItemSubKey -like '*\Client' -and $State -eq "Disabled" }
+            }
+        }
+
+        Context -Name "When the protocol isn't enabled and shouldn't be and the client protocol isn't enabled and should be included" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Protocol = "TLS 1.0"
+                    IncludeClientSide = $true
+                    State = "Disabled"
+                }
+
+                Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Server' } -MockWith {
+                    return 'Disabled'
+                }
+
+                Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Server' -and $ItemValue -eq 'DisabledByDefault' } -MockWith {
+                    return 'Enabled'
+                }
+
+                Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Client' } -MockWith {
+                    return 'Disabled'
+                }
+
+                Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Client' -and $ItemValue -eq 'DisabledByDefault' } -MockWith {
+                    return 'Enabled'
+                }
+
+                Mock -CommandName Set-SChannelItem -MockWith { }
+            }
+
+            It "Should return IncludeClientSide=true from the Get method" {
+                (Get-TargetResource @testParams).IncludeClientSide | Should -Be $true
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should -Be $true
+            }
+        }
     }
 }
 finally
