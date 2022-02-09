@@ -54,7 +54,7 @@ function Get-TargetResource
          $clientResult = $clientEnabledResult
     }
 
-    $clientside = $true
+    $clientside = $false
     if ($serverResult -eq $clientResult)
     {
         $clientside = $true
