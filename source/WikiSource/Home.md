@@ -1,5 +1,7 @@
 ## Welcome to the SChannelDsc wiki!
 
+<sup>*SChannelDsc v#.#.#*</sup>
+
 Here you will find all the information you need to make use of the SChannel DSC resources, including details of the resources that are available, current capabilities and known issues.
 
 Please leave comments, feature requests, and bug reports in the [issues section](https://github.com/dsccommunity/SChannelDsc/issues) for this module.
@@ -27,9 +29,9 @@ It is strongly recommended that PowerShell 5.0 (or above) is used, however, as i
 
 The SChannelDsc module includes the following DSC resources
 
-- [Cipher](Cipher)
-- [CipherSuites](CipherSuites)
-- [Hash](Hash)
-- [Key Exchange Algorithm](KeyExchangeAlgorithm)
-- [Protocol](Protocol)
-- [SChannelSettings](SChannelSettings)
+- _[Cipher](Cipher)_
+- _[CipherSuites](CipherSuites)_
+- _[Hash](Hash)_
+- _[Key Exchange Algorithm](KeyExchangeAlgorithm)_
+- _[Protocol](Protocol)_
+- _[SChannelSettings](SChannelSettings)_
