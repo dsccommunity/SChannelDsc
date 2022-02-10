@@ -8,18 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Cipher
-  - Added ability to reboot the machine
+  - Added ability to reboot the machine after update
 - CipherSuite
-  - Added ability to reboot the machine
+  - Added ability to reboot the machine after update
 - Hash
-  - Added ability to reboot the machine
+  - Added ability to reboot the machine after update
 - KeyExchangeAlgorithm
-  - Added ability to reboot the machine
+  - Added ability to reboot the machine after update
 - Protocol
   - Added support for TLS 1.3
-  - Added ability to reboot the machine
+  - Added ability to reboot the machine after update
 - SChannelSettings
-  - Added ability to reboot the machine
+  - Added ability to reboot the machine after update
 
 ### Changed
 
