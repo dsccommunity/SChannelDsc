@@ -55,9 +55,10 @@ stages:
           - task: PublishPipelineArtifact@1
             displayName: 'Publish Wiki Content Artifact'
             inputs:
-              pathToPublish: '$(buildFolderName)/WikiContent/'
-              artifactName: 'WikiContent'
+              targetPath: '$(buildFolderName)/WikiContent/'
+              artifact: 'WikiContent'
               publishLocation: 'pipeline'
+              parallel: true
 
   - stage: Test
     dependsOn: Build

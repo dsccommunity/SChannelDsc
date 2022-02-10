@@ -2,7 +2,7 @@
 
 Here you will find all the information you need to make use of the SChannel DSC resources, including details of the resources that are available, current capabilities and known issues.
 
-Please leave comments, feature requests, and bug reports in the [issues section](../issues) for this module.
+Please leave comments, feature requests, and bug reports in the [issues section](https://github.com/dsccommunity/SChannelDsc/issues) for this module.
 
 ### Getting started
 
