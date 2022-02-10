@@ -2,8 +2,8 @@
 [ClassVersion("1.0.0.0"), FriendlyName("Protocol")]
 class MSFT_Protocol : OMI_BaseResource
 {
-    [Key, ValueMap{"Multi-Protocol Unified Hello","PCT 1.0","SSL 2.0","SSL 3.0","TLS 1.0","TLS 1.1","TLS 1.2","TLS 1.3"}, Values{"Multi-Protocol Unified Hello","PCT 1.0","SSL 2.0","SSL 3.0","TLS 1.0","TLS 1.1","TLS 1.2","TLS 1.3"}] String Protocol;
-    [Write] Boolean IncludeClientSide;
-    [Write, ValueMap{"Enabled","Disabled","Default"}, Values{"Enabled","Disabled","Default"}] String State;
+    [Key, Description("Specifies the Protocol to configure"), ValueMap{"Multi-Protocol Unified Hello","PCT 1.0","SSL 2.0","SSL 3.0","TLS 1.0","TLS 1.1","TLS 1.2","TLS 1.3"}, Values{"Multi-Protocol Unified Hello","PCT 1.0","SSL 2.0","SSL 3.0","TLS 1.0","TLS 1.1","TLS 1.2","TLS 1.3"}] String Protocol;
+    [Write, Description("Specifies to also include Client Side protocols (Default: False)")] Boolean IncludeClientSide;
+    [Write, Description("Specifies the state of the specified Protocol"), ValueMap{"Enabled","Disabled","Default"}, Values{"Enabled","Disabled","Default"}] String State;
+    [Write, Description("Specifies if a reboot will be performed when required (Default: False)")] Boolean RebootWhenRequired;
 };
-

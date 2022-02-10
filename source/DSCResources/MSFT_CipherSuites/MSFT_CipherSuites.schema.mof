@@ -2,8 +2,8 @@
 [ClassVersion("1.0.0.0"), FriendlyName("CipherSuites")]
 class MSFT_CipherSuites : OMI_BaseResource
 {
-    [Key, ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
-    [Write] String CipherSuitesOrder[];
-    [Write, ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Key, Description("Required parameter to enforce the resource is only added once"), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("Specifies which Cipher Suites should be configured on the server")] String CipherSuitesOrder[];
+    [Write, Description("Specifies if the specified Cipher Suites should be present or not"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Specifies if a reboot will be performed when required (Default: False)")] Boolean RebootWhenRequired;
 };
-

@@ -21,9 +21,13 @@ function Get-TargetResource
         $CipherSuitesOrder,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
-        $Ensure = "Present"
+        $Ensure = "Present",
+
+        [Parameter()]
+        [System.Boolean]
+        $RebootWhenRequired = $false
     )
 
     Write-Verbose -Message "Getting configuration for cipher suites order"
@@ -65,9 +69,13 @@ function Set-TargetResource
         $CipherSuitesOrder,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
-        $Ensure = "Present"
+        $Ensure = "Present",
+
+        [Parameter()]
+        [System.Boolean]
+        $RebootWhenRequired = $false
     )
 
     Write-Verbose -Message "Setting configuration for cipher suites order"
@@ -85,6 +93,11 @@ function Set-TargetResource
     {
         Write-Verbose -Message ($script:localizedData.ItemDisable -f 'CipherSuites' , $Ensure)
         Remove-ItemProperty -Path $itemKey -Name 'Functions' -Force
+    }
+
+    if ($RebootWhenRequired)
+    {
+        $global:DSCMachineStatus = 1
     }
 }
 
@@ -104,9 +117,13 @@ function Test-TargetResource
         $CipherSuitesOrder,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
-        $Ensure = "Present"
+        $Ensure = "Present",
+
+        [Parameter()]
+        [System.Boolean]
+        $RebootWhenRequired = $false
     )
 
     Write-Verbose -Message "Testing configuration for cipher suites order"
@@ -132,13 +149,13 @@ function Test-TargetResource
     $Compliant = $false
 
     if ($Ensure -eq "Present" -and `
-        $currentSuitesOrderAsString -eq $cipherSuitesAsString)
+            $currentSuitesOrderAsString -eq $cipherSuitesAsString)
     {
         $Compliant = $true
     }
 
     if ($Ensure -eq "Absent" -and `
-        $null -eq $currentSuitesOrderAsString)
+            $null -eq $currentSuitesOrderAsString)
     {
         $Compliant = $true
     }

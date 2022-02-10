@@ -43,7 +43,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $EnableFIPSAlgorithmPolicy
+        $EnableFIPSAlgorithmPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $RebootWhenRequired = $false
     )
 
     Write-Verbose -Message "Getting SChannel configuration settings"
@@ -363,7 +367,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $EnableFIPSAlgorithmPolicy
+        $EnableFIPSAlgorithmPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $RebootWhenRequired = $false
     )
 
     Write-Verbose -Message "Setting SChannel configuration settings"
@@ -664,6 +672,11 @@ function Set-TargetResource
                 -Value 0
         }
     }
+
+    if ($RebootWhenRequired)
+    {
+        $global:DSCMachineStatus = 1
+    }
 }
 
 function Test-TargetResource
@@ -704,7 +717,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $EnableFIPSAlgorithmPolicy
+        $EnableFIPSAlgorithmPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $RebootWhenRequired = $false
     )
 
     Write-Verbose -Message "Testing SChannel configuration settings"
