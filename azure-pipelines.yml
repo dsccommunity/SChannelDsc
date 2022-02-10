@@ -11,13 +11,21 @@ trigger:
     exclude:
     - "*-*"
 
+variables:
+  buildFolderName: output
+  buildArtifactName: output
+  testResultFolderName: testResults
+  testArtifactName: testResults
+  sourceFolderName: source
+  defaultBranch: master
+
 stages:
   - stage: Build
     jobs:
       - job: Package_Module
         displayName: 'Package Module'
         pool:
-          vmImage: 'ubuntu 16.04'
+          vmImage: 'ubuntu-18.04'
         steps:
           - task: GitVersion@5
             name: gitVersion
@@ -36,19 +44,20 @@ stages:
             env:
               ModuleVersion: $(gitVersion.NuGetVersionV2)
 
-          - task: PublishBuildArtifacts@1
+          - task: PublishPipelineArtifact@1
             displayName: 'Publish Build Artifact'
             inputs:
-              pathToPublish: 'output/'
-              artifactName: 'output'
-              publishLocation: 'Container'
+              targetPath: '$(buildFolderName)/'
+              artifact: $(buildArtifactName)
+              publishLocation: 'pipeline'
+              parallel: true
 
-          - task: PublishBuildArtifacts@1
+          - task: PublishPipelineArtifact@1
             displayName: 'Publish Wiki Content Artifact'
             inputs:
-              pathToPublish: 'output/WikiContent/'
+              pathToPublish: '$(buildFolderName)/WikiContent/'
               artifactName: 'WikiContent'
-              publishLocation: 'Container'
+              publishLocation: 'pipeline'
 
   - stage: Test
     dependsOn: Build
@@ -56,16 +65,15 @@ stages:
       - job: Test_HQRM
         displayName: 'HQRM'
         pool:
-          vmImage: 'windows-2019'
+          vmImage: 'windows-2022'
         timeoutInMinutes: 0
         steps:
-          - task: DownloadBuildArtifacts@0
+          - task: DownloadPipelineArtifact@2
             displayName: 'Download Build Artifact'
             inputs:
               buildType: 'current'
-              downloadType: 'single'
-              artifactName: 'output'
-              downloadPath: '$(Build.SourcesDirectory)'
+              artifactName: $(buildArtifactName)
+              targetPath: '$(Build.SourcesDirectory)/$(buildFolderName)'
 
           - task: PowerShell@2
             name: test
@@ -83,27 +91,19 @@ stages:
               testResultsFiles: 'output/testResults/NUnit*.xml'
               testRunTitle: 'HQRM'
 
+      # If several pipeline jobs are running test, consider renaming this job:
       - job: Test_Unit
         displayName: 'Unit'
         pool:
-          vmImage: 'windows-2019'
+          vmImage: 'windows-2022'
         timeoutInMinutes: 0
         steps:
-          - powershell: |
-              $repositoryOwner,$repositoryName = $env:BUILD_REPOSITORY_NAME -split '/'
-
-              echo "##vso[task.setvariable variable=RepositoryOwner;isOutput=true]$repositoryOwner"
-              echo "##vso[task.setvariable variable=RepositoryName;isOutput=true]$repositoryName"
-            name: dscBuildVariable
-            displayName: 'Set Environment Variables'
-
-          - task: DownloadBuildArtifacts@0
+          - task: DownloadPipelineArtifact@2
             displayName: 'Download Build Artifact'
             inputs:
               buildType: 'current'
-              downloadType: 'single'
-              artifactName: 'output'
-              downloadPath: '$(Build.SourcesDirectory)'
+              artifactName: $(buildArtifactName)
+              targetPath: '$(Build.SourcesDirectory)/$(buildFolderName)'
 
           - task: PowerShell@2
             name: test
@@ -118,20 +118,57 @@ stages:
             condition: succeededOrFailed()
             inputs:
               testResultsFormat: 'NUnit'
-              testResultsFiles: 'output/testResults/NUnit*.xml'
-              testRunTitle: 'Unit (Windows Server Core)'
+              testResultsFiles: '$(buildFolderName)/$(testResultFolderName)/NUnit*.xml'
+              # If several pipeline jobs are generating test result, consider renaming this title:
+              testRunTitle: 'Unit'
+
+          - task: PublishPipelineArtifact@1
+            displayName: 'Publish Test Artifact'
+            inputs:
+              targetPath: '$(buildFolderName)/$(testResultFolderName)/'
+              artifactName: $(testArtifactName)
+              # If several pipeline jobs are generating code coverage, replace above with this:
+              #artifactName: 'CodeCoverageWindows' # Can be any, in the pipeline, unique name
+              parallel: true
+
+      - job: Code_Coverage
+        displayName: 'Publish Code Coverage'
+        dependsOn: Test_Unit
+        pool:
+          vmImage: 'ubuntu-18.04'
+        timeoutInMinutes: 0
+        steps:
+          - pwsh: |
+              $repositoryOwner,$repositoryName = $env:BUILD_REPOSITORY_NAME -split '/'
+              echo "##vso[task.setvariable variable=RepositoryOwner;isOutput=true]$repositoryOwner"
+              echo "##vso[task.setvariable variable=RepositoryName;isOutput=true]$repositoryName"
+            name: dscBuildVariable
+            displayName: 'Set Environment Variables'
+          - task: DownloadPipelineArtifact@2
+            displayName: 'Download Build Artifact'
+            inputs:
+              buildType: 'current'
+              artifactName: $(buildArtifactName)
+              targetPath: '$(Build.SourcesDirectory)/$(buildFolderName)'
+          - task: DownloadPipelineArtifact@2
+            displayName: 'Download Test Artifact'
+            inputs:
+              buildType: 'current'
+              artifactName: $(testArtifactName)
+              targetPath: '$(Build.SourcesDirectory)/$(buildFolderName)/$(testResultFolderName)'
 
           - task: PublishCodeCoverageResults@1
-            displayName: 'Publish Code Coverage'
-            condition: succeededOrFailed()
+            displayName: 'Publish Code Coverage to Azure DevOps'
             inputs:
               codeCoverageTool: 'JaCoCo'
-              summaryFileLocation: 'output/testResults/CodeCov*.xml'
-              pathToSources: '$(Build.SourcesDirectory)/output/$(dscBuildVariable.RepositoryName)'
+              summaryFileLocation: '$(Build.SourcesDirectory)/$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml'
+              pathToSources: '$(Build.SourcesDirectory)/$(sourceFolderName)/'
+          - script: |
+              bash <(curl -s https://codecov.io/bash) -f "./$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml"
+            displayName: 'Publish Code Coverage to Codecov.io'
 
   - stage: Deploy
     dependsOn: Test
-    # Only execute deploy stage if we're on master and previous stage succeeded
     condition: |
       and(
         succeeded(),
@@ -145,15 +182,14 @@ stages:
       - job: Deploy_Module
         displayName: 'Deploy Module'
         pool:
-          vmImage: 'ubuntu 16.04'
+          vmImage: 'ubuntu-18.04'
         steps:
-          - task: DownloadBuildArtifacts@0
-            displayName: 'Download Build Artifact'
+          - task: DownloadPipelineArtifact@2
+            displayName: 'Download Pipeline Artifact'
             inputs:
               buildType: 'current'
-              downloadType: 'single'
-              artifactName: 'output'
-              downloadPath: '$(Build.SourcesDirectory)'
+              artifactName: $(buildArtifactName)
+              targetPath: '$(Build.SourcesDirectory)/$(buildArtifactName)'
           - task: PowerShell@2
             name: publishRelease
             displayName: 'Publish Release'
@@ -164,6 +200,8 @@ stages:
             env:
               GitHubToken: $(GitHubToken)
               GalleryApiToken: $(GalleryApiToken)
+              ReleaseBranch: $(defaultBranch)
+              MainGitBranch: $(defaultBranch)
           - task: PowerShell@2
             name: sendChangelogPR
             displayName: 'Send Changelog PR'
@@ -173,3 +211,5 @@ stages:
               pwsh: true
             env:
               GitHubToken: $(GitHubToken)
+              ReleaseBranch: $(defaultBranch)
+              MainGitBranch: $(defaultBranch)

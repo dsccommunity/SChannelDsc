@@ -5,6 +5,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Protocol
+  - Added support for TLS 1.3
+
+### Changed
+
+- Updated pipeline files.
+
 ### Fixed
 
 - Fixed issue #20 in Protocol where IncludeClientSide was always being returned as true causing the resource to always be out of compliance.

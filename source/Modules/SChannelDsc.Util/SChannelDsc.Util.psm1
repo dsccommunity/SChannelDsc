@@ -231,6 +231,13 @@ function Convert-SCDscCIMInstanceToString
     return $str
 }
 
+function Get-SCDscOSVersion
+{
+    [CmdletBinding()]
+    param ()
+    return [System.Environment]::OSVersion.Version
+}
+
 function Get-SChannelItem
 {
     [CmdletBinding()]
