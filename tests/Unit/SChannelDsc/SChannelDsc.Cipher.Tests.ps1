@@ -62,8 +62,9 @@ try
         Context -Name "When the cipher is enabled and shouldn't be" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Cipher = "AES 128/128"
-                    State  = "Disabled"
+                    Cipher             = "AES 128/128"
+                    State              = "Disabled"
+                    RebootWhenRequired = $true
                 }
 
                 Mock -CommandName Get-SChannelItem -MockWith {
@@ -82,8 +83,10 @@ try
             }
 
             It "Should disable the cipher in the set method" {
+                $global:DSCMachineStatus = 0
                 Set-TargetResource @testParams
                 Assert-MockCalled Set-SChannelItem
+                $global:DSCMachineStatus | Should -Be 1
             }
         }
 
@@ -140,7 +143,7 @@ try
             BeforeAll {
                 $testParams = @{
                     Cipher = "AES 128/128"
-                    State = "Enabled"
+                    State  = "Enabled"
                 }
 
                 Mock -CommandName Get-SChannelItem -MockWith {
@@ -192,5 +195,5 @@ finally
 }
 
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                               -ChildPath "..\UnitTestHelper.psm1" `
-                               -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)

@@ -41,7 +41,7 @@ try
             BeforeAll {
                 $testParams = @{
                     KeyExchangeAlgorithm = "Diffie-Hellman"
-                    State = "Enabled"
+                    State                = "Enabled"
                 }
 
                 Mock -CommandName Get-SChannelItem -MockWith {
@@ -62,7 +62,8 @@ try
             BeforeAll {
                 $testParams = @{
                     KeyExchangeAlgorithm = "Diffie-Hellman"
-                    State = "Disabled"
+                    State                = "Disabled"
+                    RebootWhenRequired   = $true
                 }
 
                 Mock -CommandName Get-SChannelItem -MockWith {
@@ -81,8 +82,10 @@ try
             }
 
             It "Should disable the key exchange algorithm in the set method" {
+                $global:DSCMachineStatus = 0
                 Set-TargetResource @testParams
                 Assert-MockCalled Set-SChannelItem
+                $global:DSCMachineStatus | Should -Be 1
             }
         }
 
@@ -90,7 +93,7 @@ try
             BeforeAll {
                 $testParams = @{
                     KeyExchangeAlgorithm = "Diffie-Hellman"
-                    State  = "Default"
+                    State                = "Default"
                 }
 
                 Mock -CommandName Get-SChannelItem -MockWith {
@@ -111,7 +114,7 @@ try
             BeforeAll {
                 $testParams = @{
                     KeyExchangeAlgorithm = "Diffie-Hellman"
-                    State  = "Default"
+                    State                = "Default"
                 }
 
                 Mock -CommandName Get-SChannelItem -MockWith {
@@ -139,7 +142,7 @@ try
             BeforeAll {
                 $testParams = @{
                     KeyExchangeAlgorithm = "Diffie-Hellman"
-                    State = "Enabled"
+                    State                = "Enabled"
                 }
 
                 Mock -CommandName Get-SChannelItem -MockWith {
@@ -167,7 +170,7 @@ try
             BeforeAll {
                 $testParams = @{
                     KeyExchangeAlgorithm = "Diffie-Hellman"
-                    State = "Disabled"
+                    State                = "Disabled"
                 }
 
                 Mock -CommandName Get-SChannelItem -MockWith {

@@ -61,8 +61,9 @@ try
         Context -Name "When the hash is enabled and shouldn't be" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Hash  = "MD5"
-                    State = "Disabled"
+                    Hash               = "MD5"
+                    State              = "Disabled"
+                    RebootWhenRequired = $true
                 }
 
                 Mock -CommandName Get-SChannelItem -MockWith {
@@ -81,16 +82,18 @@ try
             }
 
             It "Should disable the hash in the set method" {
+                $global:DSCMachineStatus = 0
                 Set-TargetResource @testParams
                 Assert-MockCalled Set-SChannelItem
+                $global:DSCMachineStatus | Should -Be 1
             }
         }
 
         Context -Name "When the hash is default and should be" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Hash   = "MD5"
-                    State  = "Default"
+                    Hash  = "MD5"
+                    State = "Default"
                 }
 
                 Mock -CommandName Get-SChannelItem -MockWith {
@@ -110,8 +113,8 @@ try
         Context -Name "When the hash should be default, but isn't" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Hash   = "MD5"
-                    State  = "Default"
+                    Hash  = "MD5"
+                    State = "Default"
                 }
 
                 Mock -CommandName Get-SChannelItem -MockWith {

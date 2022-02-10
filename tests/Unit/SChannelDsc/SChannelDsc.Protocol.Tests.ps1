@@ -94,8 +94,9 @@ try
         Context -Name "When the protocol is enabled and shouldn't be" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Protocol = "TLS 1.0"
-                    State    = "Disabled"
+                    Protocol           = "TLS 1.0"
+                    State              = "Disabled"
+                    RebootWhenRequired = $true
                 }
 
                 Mock -CommandName Get-SChannelItem -MockWith {
@@ -118,8 +119,10 @@ try
             }
 
             It "Should disable the protocol in the set method" {
+                $global:DSCMachineStatus = 0
                 Set-TargetResource @testParams
                 Assert-MockCalled Set-SChannelItem
+                $global:DSCMachineStatus | Should -Be 1
             }
         }
 
