@@ -2,7 +2,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("KeyExchangeAlgorithm")]
 class MSFT_KeyExchangeAlgorithm : OMI_BaseResource
 {
-    [Key, ValueMap{"Diffie-Hellman","ECDH","PKCS"}, Values{"Diffie-Hellman","ECDH","PKCS"}] String KeyExchangeAlgorithm;
-    [Write, ValueMap{"Enabled","Disabled","Default"}, Values{"Enabled","Disabled","Default"}] String State;
+    [Key, Description("Specifies the Key Exchange Algorithm to configure"), ValueMap{"Diffie-Hellman","ECDH","PKCS"}, Values{"Diffie-Hellman","ECDH","PKCS"}] String KeyExchangeAlgorithm;
+    [Write, Description("Specifies the state of the specified Key Exchange Algorithm"), ValueMap{"Enabled","Disabled","Default"}, Values{"Enabled","Disabled","Default"}] String State;
+    [Write, Description("Specifies if a reboot will be performed when required (Default: False)")] Boolean RebootWhenRequired;
 };
-

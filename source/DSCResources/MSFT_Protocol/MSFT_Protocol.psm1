@@ -23,7 +23,11 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('Enabled', 'Disabled', 'Default')]
         [System.String]
-        $State = 'Default'
+        $State = 'Default',
+
+        [Parameter()]
+        [System.Boolean]
+        $RebootWhenRequired = $false
     )
 
     Write-Verbose -Message "Getting configuration for protocol $Protocol"
@@ -96,7 +100,11 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('Enabled', 'Disabled', 'Default')]
         [System.String]
-        $State = 'Default'
+        $State = 'Default',
+
+        [Parameter()]
+        [System.Boolean]
+        $RebootWhenRequired = $false
     )
 
     Write-Verbose -Message "Setting configuration for protocol $Protocol"
@@ -156,6 +164,11 @@ function Set-TargetResource
     }
     Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $serverItemKey -State $State -ItemValue 'Enabled'
     Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $serverItemKey -State $State -ItemValue 'DisabledByDefault'
+
+    if ($RebootWhenRequired)
+    {
+        $global:DSCMachineStatus = 1
+    }
 }
 
 function Test-TargetResource
@@ -176,7 +189,11 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('Enabled', 'Disabled', 'Default')]
         [System.String]
-        $State = 'Default'
+        $State = 'Default',
+
+        [Parameter()]
+        [System.Boolean]
+        $RebootWhenRequired = $false
     )
 
     Write-Verbose -Message "Testing configuration for protocol $Protocol"

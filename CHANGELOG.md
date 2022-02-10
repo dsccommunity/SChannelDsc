@@ -7,8 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Cipher
+  - Added ability to reboot the machine
+- CipherSuite
+  - Added ability to reboot the machine
+- Hash
+  - Added ability to reboot the machine
+- KeyExchangeAlgorithm
+  - Added ability to reboot the machine
 - Protocol
   - Added support for TLS 1.3
+  - Added ability to reboot the machine
+- SChannelSettings
+  - Added ability to reboot the machine
 
 ### Changed
 
