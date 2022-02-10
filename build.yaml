@@ -15,11 +15,11 @@ VersionedOutputDirectory: true
 ####################################################
 
 NestedModule:
-#     DscResource.Common:
-#       CopyOnly: true
-#       Path: ./output/RequiredModules/DscResource.Common
-#       AddToManifest: false
-#       Exclude: PSGetModuleInfo.xml
+    DscResource.Common:
+      CopyOnly: true
+      Path: ./output/RequiredModules/DscResource.Common
+      AddToManifest: false
+      Exclude: PSGetModuleInfo.xml
 
 ####################################################
 #       Sampler Pipeline Configuration             #
@@ -62,7 +62,7 @@ Pester:
   OutputFormat: NUnitXML
   # Excludes one or more paths from being used to calculate code coverage.
   ExcludeFromCodeCoverage:
-  #  - Modules/DscResource.Common
+    - Modules/DscResource.Common
   # If no scripts are defined the default is to use all the tests under the project's
   # tests folder or source folder (if present). Test script paths can be defined to
   # only run tests in certain folders, or run specific test files, or can be use to
@@ -81,7 +81,7 @@ DscTest:
   ExcludeSourceFile:
     - output
   ExcludeModuleFile:
-  #  - Modules/DscResource.Common
+   - Modules/DscResource.Common
 
 # Import ModuleBuilder tasks from a specific PowerShell module using the build
 # task's alias. Wildcard * can be used to specify all tasks that has a similar
