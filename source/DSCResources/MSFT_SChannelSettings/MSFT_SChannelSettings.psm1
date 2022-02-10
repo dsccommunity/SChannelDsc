@@ -64,13 +64,13 @@ function Get-TargetResource
     $dotnet4Key = 'HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319'
 
     $net2DefaultTLSVersions = Get-SChannelRegKeyValue -Key $dotnet2Key `
-                                                        -Name 'SystemDefaultTlsVersions'
-    $net2StrongCrypto       = Get-SChannelRegKeyValue -Key $dotnet2Key `
-                                                        -Name 'SchUseStrongCrypto'
+        -Name 'SystemDefaultTlsVersions'
+    $net2StrongCrypto = Get-SChannelRegKeyValue -Key $dotnet2Key `
+        -Name 'SchUseStrongCrypto'
     $net4DefaultTLSVersions = Get-SChannelRegKeyValue -Key $dotnet4Key `
-                                                        -Name 'SystemDefaultTlsVersions'
-    $net4StrongCrypto       = Get-SChannelRegKeyValue -Key $dotnet4Key `
-                                                        -Name 'SchUseStrongCrypto'
+        -Name 'SystemDefaultTlsVersions'
+    $net4StrongCrypto = Get-SChannelRegKeyValue -Key $dotnet4Key `
+        -Name 'SchUseStrongCrypto'
 
     if (Test-Path -Path 'HKLM:\SOFTWARE\Wow6432Node')
     {
@@ -79,13 +79,13 @@ function Get-TargetResource
         $dotnet4Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319'
 
         $net2DefaultTLSVersions32 = Get-SChannelRegKeyValue -Key $dotnet2Key `
-                                                            -Name 'SystemDefaultTlsVersions'
-        $net2StrongCrypto32       = Get-SChannelRegKeyValue -Key $dotnet2Key `
-                                                            -Name 'SchUseStrongCrypto'
+            -Name 'SystemDefaultTlsVersions'
+        $net2StrongCrypto32 = Get-SChannelRegKeyValue -Key $dotnet2Key `
+            -Name 'SchUseStrongCrypto'
         $net4DefaultTLSVersions32 = Get-SChannelRegKeyValue -Key $dotnet4Key `
-                                                            -Name 'SystemDefaultTlsVersions'
-        $net4StrongCrypto32       = Get-SChannelRegKeyValue -Key $dotnet4Key `
-                                                            -Name 'SchUseStrongCrypto'
+            -Name 'SystemDefaultTlsVersions'
+        $net4StrongCrypto32 = Get-SChannelRegKeyValue -Key $dotnet4Key `
+            -Name 'SchUseStrongCrypto'
 
         if ($null -eq $net2DefaultTLSVersions -and
             $null -eq $net2StrongCrypto -and
@@ -155,16 +155,16 @@ function Get-TargetResource
 
     $dhMinKeySizeKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman'
     $dhMinClientKeySizeValue = Get-SChannelRegKeyValue -Key $dhMinKeySizeKey `
-                                                       -Name 'ClientMinKeyBitLength'
+        -Name 'ClientMinKeyBitLength'
     $dhMinServerKeySizeValue = Get-SChannelRegKeyValue -Key $dhMinKeySizeKey `
-                                                       -Name 'ServerMinKeyBitLength'
+        -Name 'ServerMinKeyBitLength'
 
     # Kerberos Supported Encryption Type
     Write-Verbose -Message ($script:localizedData.GetKerbEncrTypes)
 
     $kerberosEncrTypesKey = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters'
     $kerberosEncrTypesValue = Get-SChannelRegKeyValue -Key $kerberosEncrTypesKey `
-                                                      -Name 'SupportedEncryptionTypes'
+        -Name 'SupportedEncryptionTypes'
 
     $kerberosEncrTypes = @()
     if ($null -ne $kerberosEncrTypesValue)
@@ -207,10 +207,10 @@ function Get-TargetResource
     $winhttp32Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
 
     $winhttp64Value = Get-SChannelRegKeyValue -Key $winhttp64Key `
-                                              -Name 'DefaultSecureProtocols'
+        -Name 'DefaultSecureProtocols'
 
     $winhttp32Value = Get-SChannelRegKeyValue -Key $winhttp32Key `
-                                              -Name 'DefaultSecureProtocols'
+        -Name 'DefaultSecureProtocols'
 
     $winhttp64Protocols = @()
     if ($null -ne $winhttp64Value)
@@ -292,7 +292,7 @@ function Get-TargetResource
 
     $fipsKey = 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy'
     $fipsAlgorithmPolicyValue = Get-SChannelRegKeyValue -Key $fipsKey `
-                                                        -Name 'Enabled'
+        -Name 'Enabled'
 
     if ($null -eq $fipsAlgorithmPolicyValue)
     {
@@ -385,46 +385,46 @@ function Set-TargetResource
             # 64 bit keys
             # .Net Framework 2.0 - 3.5
             Set-SChannelRegKeyValue -Key $dotnet64Key `
-                                    -SubKey 'v2.0.50727' `
-                                    -Name 'SystemDefaultTlsVersions' `
-                                    -Remove
+                -SubKey 'v2.0.50727' `
+                -Name 'SystemDefaultTlsVersions' `
+                -Remove
             Set-SChannelRegKeyValue -Key $dotnet64Key `
-                                    -SubKey 'v2.0.50727' `
-                                    -Name 'SchUseStrongCrypto' `
-                                    -Remove
+                -SubKey 'v2.0.50727' `
+                -Name 'SchUseStrongCrypto' `
+                -Remove
 
             # .Net Framework 4.0 - 4.5
             Set-SChannelRegKeyValue -Key $dotnet64Key `
-                                    -SubKey 'v4.0.30319' `
-                                    -Name 'SystemDefaultTlsVersions' `
-                                    -Remove
+                -SubKey 'v4.0.30319' `
+                -Name 'SystemDefaultTlsVersions' `
+                -Remove
             Set-SChannelRegKeyValue -Key $dotnet64Key `
-                                    -SubKey 'v4.0.30319' `
-                                    -Name 'SchUseStrongCrypto' `
-                                    -Remove
+                -SubKey 'v4.0.30319' `
+                -Name 'SchUseStrongCrypto' `
+                -Remove
 
             if (Test-Path -Path 'HKLM:\SOFTWARE\Wow6432Node')
             {
                 # 32 bit keys
                 # .Net Framework 2.0 - 3.5
                 Set-SChannelRegKeyValue -Key $dotnet32Key `
-                                        -SubKey 'v2.0.50727' `
-                                        -Name 'SystemDefaultTlsVersions' `
-                                        -Remove
+                    -SubKey 'v2.0.50727' `
+                    -Name 'SystemDefaultTlsVersions' `
+                    -Remove
                 Set-SChannelRegKeyValue -Key $dotnet32Key `
-                                        -SubKey 'v2.0.50727' `
-                                        -Name 'SchUseStrongCrypto' `
-                                        -Remove
+                    -SubKey 'v2.0.50727' `
+                    -Name 'SchUseStrongCrypto' `
+                    -Remove
 
                 # .Net Framework 4.0 - 4.5
                 Set-SChannelRegKeyValue -Key $dotnet32Key `
-                                        -SubKey 'v4.0.30319' `
-                                        -Name 'SystemDefaultTlsVersions' `
-                                        -Remove
+                    -SubKey 'v4.0.30319' `
+                    -Name 'SystemDefaultTlsVersions' `
+                    -Remove
                 Set-SChannelRegKeyValue -Key $dotnet32Key `
-                                        -SubKey 'v4.0.30319' `
-                                        -Name 'SchUseStrongCrypto' `
-                                        -Remove
+                    -SubKey 'v4.0.30319' `
+                    -Name 'SchUseStrongCrypto' `
+                    -Remove
             }
         }
         else
@@ -441,46 +441,46 @@ function Set-TargetResource
             # 64 bit keys
             # .Net Framework 2.0 - 3.5
             Set-SChannelRegKeyValue -Key $dotnet64Key `
-                                    -SubKey 'v2.0.50727' `
-                                    -Name 'SystemDefaultTlsVersions' `
-                                    -Value $state
+                -SubKey 'v2.0.50727' `
+                -Name 'SystemDefaultTlsVersions' `
+                -Value $state
             Set-SChannelRegKeyValue -Key $dotnet64Key `
-                                    -SubKey 'v2.0.50727' `
-                                    -Name 'SchUseStrongCrypto' `
-                                    -Value $state
+                -SubKey 'v2.0.50727' `
+                -Name 'SchUseStrongCrypto' `
+                -Value $state
 
             # .Net Framework 4.0 - 4.5
             Set-SChannelRegKeyValue -Key $dotnet64Key `
-                                    -SubKey 'v4.0.30319' `
-                                    -Name 'SystemDefaultTlsVersions' `
-                                    -Value $state
+                -SubKey 'v4.0.30319' `
+                -Name 'SystemDefaultTlsVersions' `
+                -Value $state
             Set-SChannelRegKeyValue -Key $dotnet64Key `
-                                    -SubKey 'v4.0.30319' `
-                                    -Name 'SchUseStrongCrypto' `
-                                    -Value $state
+                -SubKey 'v4.0.30319' `
+                -Name 'SchUseStrongCrypto' `
+                -Value $state
 
             if (Test-Path -Path 'HKLM:\SOFTWARE\Wow6432Node')
             {
                 # 32 bit keys
                 # .Net Framework 2.0 - 3.5
                 Set-SChannelRegKeyValue -Key $dotnet32Key `
-                                        -SubKey 'v2.0.50727' `
-                                        -Name 'SystemDefaultTlsVersions' `
-                                        -Value $state
+                    -SubKey 'v2.0.50727' `
+                    -Name 'SystemDefaultTlsVersions' `
+                    -Value $state
                 Set-SChannelRegKeyValue -Key $dotnet32Key `
-                                        -SubKey 'v2.0.50727' `
-                                        -Name 'SchUseStrongCrypto' `
-                                        -Value $state
+                    -SubKey 'v2.0.50727' `
+                    -Name 'SchUseStrongCrypto' `
+                    -Value $state
 
                 # .Net Framework 4.0 - 4.5
                 Set-SChannelRegKeyValue -Key $dotnet32Key `
-                                        -SubKey 'v4.0.30319' `
-                                        -Name 'SystemDefaultTlsVersions' `
-                                        -Value $state
+                    -SubKey 'v4.0.30319' `
+                    -Name 'SystemDefaultTlsVersions' `
+                    -Value $state
                 Set-SChannelRegKeyValue -Key $dotnet32Key `
-                                        -SubKey 'v4.0.30319' `
-                                        -Name 'SchUseStrongCrypto' `
-                                        -Value $state
+                    -SubKey 'v4.0.30319' `
+                    -Name 'SchUseStrongCrypto' `
+                    -Value $state
             }
         }
     }
@@ -492,9 +492,9 @@ function Set-TargetResource
     {
         Write-Verbose -Message ($script:localizedData.ConfigureDHMinKeySize -f 'Client')
         Set-SChannelRegKeyValue -Key $keaKey `
-                                -SubKey 'Diffie-Hellman' `
-                                -Name 'ClientMinKeyBitLength' `
-                                -Value $DiffieHellmanMinClientKeySize
+            -SubKey 'Diffie-Hellman' `
+            -Name 'ClientMinKeyBitLength' `
+            -Value $DiffieHellmanMinClientKeySize
     }
 
     if ($DiffieHellmanMinServerKeySize -ne 0 -and
@@ -502,9 +502,9 @@ function Set-TargetResource
     {
         Write-Verbose -Message ($script:localizedData.ConfigureDHMinKeySize -f 'Server')
         Set-SChannelRegKeyValue -Key $keaKey `
-                                -SubKey 'Diffie-Hellman' `
-                                -Name 'ServerMinKeyBitLength' `
-                                -Value $DiffieHellmanMinServerKeySize
+            -SubKey 'Diffie-Hellman' `
+            -Name 'ServerMinKeyBitLength' `
+            -Value $DiffieHellmanMinServerKeySize
     }
 
     # Kerberos Supported Encyption Types
@@ -541,7 +541,7 @@ function Set-TargetResource
             }
 
             $kerberosEncrTypesValue = Get-SChannelRegKeyValue -Key "$kerberosEncrTypesKey\Parameters" `
-                                                              -Name 'SupportedEncryptionTypes'
+                -Name 'SupportedEncryptionTypes'
 
             if ($null -eq $kerberosEncrTypesValue -or ($kerberosEncrTypesValue -band $ketValue) -ne $ketValue)
             {
@@ -555,9 +555,9 @@ function Set-TargetResource
                     $newValue = $kerberosEncrTypesValue -bor $ketValue
                 }
                 Set-SChannelRegKeyValue -Key $kerberosEncrTypesKey `
-                                        -SubKey 'Parameters' `
-                                        -Name 'SupportedEncryptionTypes' `
-                                        -Value $newValue
+                    -SubKey 'Parameters' `
+                    -Name 'SupportedEncryptionTypes' `
+                    -Value $newValue
             }
         }
         else
@@ -566,7 +566,7 @@ function Set-TargetResource
             {
                 Write-Verbose -Message ($script:localizedData.RemoveKerbEncrTypes)
                 Remove-ItemProperty -Path "$kerberosEncrTypesKey\Parameters" `
-                                    -Name 'SupportedEncryptionTypes'
+                    -Name 'SupportedEncryptionTypes'
             }
         }
     }
@@ -576,14 +576,14 @@ function Set-TargetResource
     {
         # Check for Windows 7/2008 R2/2012
         $osVersion = Get-SCDscOSVersion
-        if ($osVersion.Major -eq 6 -and $osVersion.Minor -in (1,2))
+        if ($osVersion.Major -eq 6 -and $osVersion.Minor -in (1, 2))
         {
             # Check for patch
             $hotfix = Get-Hotfix -Id KB3140245 -ErrorAction SilentlyContinue
             if ($null -eq $hotfix)
             {
                 throw ("Hotfix KB3140245 is not installed. Setting these registry keys will not do anything. " + `
-                       "Please install the hotfix first!")
+                        "Please install the hotfix first!")
             }
         }
 
@@ -620,14 +620,14 @@ function Set-TargetResource
 
             Write-Verbose -Message ($script:localizedData.ConfigureWinHTTPSecProt -f ($WinHttpDefaultSecureProtocols -join ", "))
             Set-SChannelRegKeyValue -Key $winhttp64Key `
-                                    -SubKey 'WinHttp' `
-                                    -Name 'DefaultSecureProtocols' `
-                                    -Value $winhttpValue
+                -SubKey 'WinHttp' `
+                -Name 'DefaultSecureProtocols' `
+                -Value $winhttpValue
 
             Set-SChannelRegKeyValue -Key $winhttp32Key `
-                                    -SubKey 'WinHttp' `
-                                    -Name 'DefaultSecureProtocols' `
-                                    -Value $winhttpValue
+                -SubKey 'WinHttp' `
+                -Name 'DefaultSecureProtocols' `
+                -Value $winhttpValue
         }
         else
         {
@@ -635,10 +635,10 @@ function Set-TargetResource
             {
                 Write-Verbose -Message ($script:localizedData.RemoveWinHTTPDefSecProt)
                 Remove-ItemProperty -Path "$winhttp64Key\WinHttp" `
-                                    -Name 'DefaultSecureProtocols'
+                    -Name 'DefaultSecureProtocols'
 
                 Remove-ItemProperty -Path "$winhttp32Key\WinHttp" `
-                                    -Name 'DefaultSecureProtocols'
+                    -Name 'DefaultSecureProtocols'
             }
         }
     }
@@ -652,16 +652,16 @@ function Set-TargetResource
         if ($EnableFIPSAlgorithmPolicy)
         {
             Set-SChannelRegKeyValue -Key $lsaKey `
-                                    -SubKey 'FIPSAlgorithmPolicy' `
-                                    -Name 'Enabled' `
-                                    -Value 1
+                -SubKey 'FIPSAlgorithmPolicy' `
+                -Name 'Enabled' `
+                -Value 1
         }
         else
         {
             Set-SChannelRegKeyValue -Key $lsaKey `
-                                    -SubKey 'FIPSAlgorithmPolicy' `
-                                    -Name 'Enabled' `
-                                    -Value 0
+                -SubKey 'FIPSAlgorithmPolicy' `
+                -Name 'Enabled' `
+                -Value 0
         }
     }
 }
@@ -717,14 +717,15 @@ function Test-TargetResource
 
     $ErrorActionPreference = 'SilentlyContinue'
 
-    $compliant = Test-SCDscParameterState -CurrentValues $CurrentValues `
-                                            -DesiredValues $PSBoundParameters `
-                                            -ValuesToCheck @('DiffieHellmanMinClientKeySize', `
-                                                            'DiffieHellmanMinServerKeySize', `
-                                                            'EnableFIPSAlgorithmPolicy', `
-                                                            'TLS12State',
-                                                            'KerberosSupportedEncryptionType',
-                                                            'WinHttpDefaultSecureProtocols')
+    $compliant = Test-DscParameterState -TurnOffTypeChecking `
+        -CurrentValues $CurrentValues `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @('DiffieHellmanMinClientKeySize', `
+            'DiffieHellmanMinServerKeySize', `
+            'EnableFIPSAlgorithmPolicy', `
+            'TLS12State', `
+            'KerberosSupportedEncryptionType', `
+            'WinHttpDefaultSecureProtocols')
 
     if ($compliant -eq $true)
     {
@@ -738,10 +739,3 @@ function Test-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
-
-function Get-SCDscOSVersion
-{
-    param ()
-
-    return [System.Environment]::OSVersion.Version
-}

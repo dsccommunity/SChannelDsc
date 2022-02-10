@@ -37,12 +37,40 @@ try
         # Mocks for all contexts
 
         # Test contexts
+        Context -Name "TLS 1.3 is specified with a pre-Windows Server 2022 OS" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Protocol = "TLS 1.3"
+                    State    = "Enabled"
+                }
+
+                Mock -CommandName Get-SCDscOSVersion -MockWith {
+                    return @{
+                        Major = 10
+                        Build = 16000
+                    }
+                }
+            }
+
+            It "Should throw an exception in the Get method" {
+                { Get-TargetResource @testParams } | Should -Throw "You can only use TLS 1.3 with Windows Server 2022 or later"
+            }
+
+            It "Should throw an exception in the Set method" {
+                { Set-TargetResource @testParams } | Should -Throw "You can only use TLS 1.3 with Windows Server 2022 or later"
+            }
+
+            It "Should throw an exception in the Test method" {
+                { Test-TargetResource @testParams } | Should -Throw "You can only use TLS 1.3 with Windows Server 2022 or later"
+            }
+        }
+
         Context -Name "When the protocol is enabled and should be" -Fixture {
             BeforeAll {
                 $testParams = @{
                     Protocol = "TLS 1.0"
                     #IncludeClientSide = $true
-                    State = "Enabled"
+                    State    = "Enabled"
                 }
 
                 Mock -CommandName Get-SChannelItem -MockWith {
@@ -212,9 +240,9 @@ try
         Context -Name "When the protocol is enabled and should be and the client protocol is enabled and should be included" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Protocol = "TLS 1.0"
+                    Protocol          = "TLS 1.0"
                     IncludeClientSide = $true
-                    State = "Enabled"
+                    State             = "Enabled"
                 }
 
                 Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Server' } -MockWith {
@@ -246,9 +274,9 @@ try
         Context -Name "When the protocol is enabled and should be and the client protocol isn't enabled and should be included" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Protocol = "TLS 1.0"
+                    Protocol          = "TLS 1.0"
                     IncludeClientSide = $true
-                    State = "Enabled"
+                    State             = "Enabled"
                 }
 
                 Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Server' } -MockWith {
@@ -287,9 +315,9 @@ try
         Context -Name "When the protocol isn't enabled and shouldn't be and the client protocol is enabled and should be included" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Protocol = "TLS 1.0"
+                    Protocol          = "TLS 1.0"
                     IncludeClientSide = $true
-                    State = "Disabled"
+                    State             = "Disabled"
                 }
 
                 Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Server' } -MockWith {
@@ -328,9 +356,9 @@ try
         Context -Name "When the protocol isn't enabled and shouldn't be and the client protocol isn't enabled and should be included" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Protocol = "TLS 1.0"
+                    Protocol          = "TLS 1.0"
                     IncludeClientSide = $true
-                    State = "Disabled"
+                    State             = "Disabled"
                 }
 
                 Mock -CommandName Get-SChannelItem -ParameterFilter { $ItemKey -like '*\Server' } -MockWith {
