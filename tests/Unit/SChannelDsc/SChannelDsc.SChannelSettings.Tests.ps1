@@ -108,8 +108,9 @@ try
         Context -Name "When the TLS 1.2 is set to Enabled and should be Default" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance = 'Yes'
-                    TLS12State       = 'Default'
+                    IsSingleInstance   = 'Yes'
+                    TLS12State         = 'Default'
+                    RebootWhenRequired = $true
                 }
 
                 Mock -CommandName Get-ItemProperty -MockWith {
@@ -140,8 +141,10 @@ try
             }
 
             It "Should update eight registry keys in the Set method" {
+                $global:DSCMachineStatus = 0
                 Set-TargetResource @testParams
                 Assert-MockCalled Set-SChannelRegKeyValue -Times 8
+                $global:DSCMachineStatus | Should -Be 1
             }
         }
 
@@ -297,7 +300,7 @@ try
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance                = 'Yes'
-                    KerberosSupportedEncryptionType = @("DES-CBC-CRC","DES-CBC-MD5","RC4-HMAC-MD5","AES128-HMAC-SHA1","AES256-HMAC-SHA1")
+                    KerberosSupportedEncryptionType = @("DES-CBC-CRC", "DES-CBC-MD5", "RC4-HMAC-MD5", "AES128-HMAC-SHA1", "AES256-HMAC-SHA1")
                 }
 
                 Mock -CommandName Get-SChannelRegKeyValue -MockWith {
@@ -356,7 +359,7 @@ try
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance              = 'Yes'
-                    WinHttpDefaultSecureProtocols = @("SSL2.0","SSL3.0","TLS1.0","TLS1.1","TLS1.2")
+                    WinHttpDefaultSecureProtocols = @("SSL2.0", "SSL3.0", "TLS1.0", "TLS1.1", "TLS1.2")
                 }
 
                 Mock -CommandName Get-SChannelRegKeyValue -MockWith {

@@ -12,14 +12,18 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Diffie-Hellman','ECDH','PKCS')]
+        [ValidateSet('Diffie-Hellman', 'ECDH', 'PKCS')]
         [System.String]
         $KeyExchangeAlgorithm,
 
         [Parameter()]
-        [ValidateSet('Enabled','Disabled','Default')]
+        [ValidateSet('Enabled', 'Disabled', 'Default')]
         [System.String]
-        $State = 'Default'
+        $State = 'Default',
+
+        [Parameter()]
+        [System.Boolean]
+        $RebootWhenRequired = $false
     )
 
     Write-Verbose -Message "Getting configuration for key exchange algorithm $KeyExchangeAlgorithm"
@@ -29,8 +33,8 @@ function Get-TargetResource
     $result = Get-SChannelItem -ItemKey $key
 
     $returnValue = @{
-        KeyExchangeAlgorithm  = $KeyExchangeAlgorithm
-        State                 = $result
+        KeyExchangeAlgorithm = $KeyExchangeAlgorithm
+        State                = $result
     }
 
     $returnValue
@@ -42,14 +46,18 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Diffie-Hellman','ECDH','PKCS')]
+        [ValidateSet('Diffie-Hellman', 'ECDH', 'PKCS')]
         [System.String]
         $KeyExchangeAlgorithm,
 
         [Parameter()]
-        [ValidateSet('Enabled','Disabled','Default')]
+        [ValidateSet('Enabled', 'Disabled', 'Default')]
         [System.String]
-        $State = 'Default'
+        $State = 'Default',
+
+        [Parameter()]
+        [System.Boolean]
+        $RebootWhenRequired = $false
     )
 
     Write-Verbose -Message "Setting configuration for key exchange algorithm $KeyExchangeAlgorithm"
@@ -58,17 +66,25 @@ function Set-TargetResource
 
     switch ($State)
     {
-        'Default'  {
+        'Default'
+        {
             Write-Verbose -Message ($script:localizedData.ItemDefault -f 'KeyExchangeAlgorithm', $KeyExchangeAlgorithm)
         }
-        'Disabled' {
+        'Disabled'
+        {
             Write-Verbose -Message ($script:localizedData.ItemDisable -f 'KeyExchangeAlgorithm', $KeyExchangeAlgorithm)
         }
-        'Enabled'  {
+        'Enabled'
+        {
             Write-Verbose -Message ($script:localizedData.ItemEnable -f 'KeyExchangeAlgorithm', $KeyExchangeAlgorithm)
         }
     }
     Set-SChannelItem -ItemKey $rootKey -ItemSubKey $KeyExchangeAlgorithm -State $State
+
+    if ($RebootWhenRequired)
+    {
+        $global:DSCMachineStatus = 1
+    }
 }
 
 function Test-TargetResource
@@ -78,14 +94,18 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Diffie-Hellman','ECDH','PKCS')]
+        [ValidateSet('Diffie-Hellman', 'ECDH', 'PKCS')]
         [System.String]
         $KeyExchangeAlgorithm,
 
         [Parameter()]
-        [ValidateSet('Enabled','Disabled','Default')]
+        [ValidateSet('Enabled', 'Disabled', 'Default')]
         [System.String]
-        $State = 'Default'
+        $State = 'Default',
+
+        [Parameter()]
+        [System.Boolean]
+        $RebootWhenRequired = $false
     )
 
     Write-Verbose -Message "Testing configuration for key exchange algorithm $KeyExchangeAlgorithm"

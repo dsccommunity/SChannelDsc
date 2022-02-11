@@ -2,7 +2,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("Hash")]
 class MSFT_Hash : OMI_BaseResource
 {
-    [Key, ValueMap{"MD5","SHA","SHA256","SHA384","SHA512"}, Values{"MD5","SHA","SHA256","SHA384","SHA512"}] String Hash;
-    [Write, ValueMap{"Enabled","Disabled","Default"}, Values{"Enabled","Disabled","Default"}] String State;
+    [Key, Description("Specifies the Hash to configure"), ValueMap{"MD5","SHA","SHA256","SHA384","SHA512"}, Values{"MD5","SHA","SHA256","SHA384","SHA512"}] String Hash;
+    [Write, Description("Specifies the state of the specified Hash"), ValueMap{"Enabled","Disabled","Default"}, Values{"Enabled","Disabled","Default"}] String State;
+    [Write, Description("Specifies if a reboot will be performed when required (Default: False)")] Boolean RebootWhenRequired;
 };
-
