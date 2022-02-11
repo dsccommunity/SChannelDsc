@@ -394,7 +394,7 @@ function Set-SChannelRegKeyValue
         $currentKey = Get-Item -Path $fullSubKey -ErrorAction SilentlyContinue
         if ($null -eq $currentKey)
         {
-            $currentKey = New-Item -Path $fullSubKey
+            $currentKey = New-Item -Path $fullSubKey -Force
         }
         $null = Set-ItemProperty -Path $fullSubKey -Name $Name -Value $Value -Type 'Dword' -Force
     }
