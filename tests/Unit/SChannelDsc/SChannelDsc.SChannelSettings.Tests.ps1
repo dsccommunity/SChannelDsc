@@ -380,6 +380,32 @@ try
             }
         }
 
+        # Regression test for issue #28
+        Context -Name "When the WinHTTP Protocols are configured with one value" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    IsSingleInstance              = 'Yes'
+                    WinHttpDefaultSecureProtocols = @("TLS1.2")
+                }
+
+                Mock -CommandName Get-SChannelRegKeyValue -MockWith {
+                    return 2048
+                }
+
+                Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
+            }
+
+            It "Should return all types from the Get method" {
+                $result = Get-TargetResource @testParams
+                $result.WinHttpDefaultSecureProtocols.GetType().Name | Should -Be "Object[]"
+                $result.WinHttpDefaultSecureProtocols.Count | Should -Be 1
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should -Be $true
+            }
+        }
+
         Context -Name "When the WinHTTP Protocols are not configured, but OS isn't Windows 2008 R2 or 2012" -Fixture {
             BeforeAll {
                 $testParams = @{
