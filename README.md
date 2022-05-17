@@ -1,17 +1,17 @@
 # SChannelDsc
 
+This module contains DSC resources for the management and
+configuration of SChannel settings.
+
+> It is based of the [cSchannel](https://github.com/bdanse/cSchannel) resource created by Bart Danse.
+
 [![Build Status](https://dev.azure.com/dsccommunity/SChannelDsc/_apis/build/status/dsccommunity.SChannelDsc?branchName=master)](https://dev.azure.com/dsccommunity/SChannelDsc/_build/latest?definitionId=32&branchName=master)
 ![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/dsccommunity/SChannelDsc/32/master)
+[![codecov](https://codecov.io/gh/dsccommunity/SChannelDsc/branch/master/graph/badge.svg)](https://codecov.io/gh/dsccommunity/SChannelDsc)
 [![Azure DevOps tests](https://img.shields.io/azure-devops/tests/dsccommunity/SChannelDsc/32/master)](https://dsccommunity.visualstudio.com/SChannelDsc/_test/analytics?definitionId=32&contextType=build)
 [![PowerShell Gallery (with prereleases)](https://img.shields.io/powershellgallery/vpre/SChannelDsc?label=SChannelDsc%20Preview)](https://www.powershellgallery.com/packages/SChannelDsc/)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/v/SChannelDsc?label=SChannelDsc)](https://www.powershellgallery.com/packages/SChannelDsc/)
 
-The SChannelDsc PowerShell module provides DSC resources that can be used to
-manage SChannel settings. It is based of the [cSchannel](https://github.com/bdanse/cSchannel)
-resource created by Bart Danse.
-
-Please leave comments, feature requests, and bug reports in the issues tab for
-this module.
 ## Code of Conduct
 
 This project has adopted this [Code of Conduct](CODE_OF_CONDUCT.md).
@@ -37,45 +37,9 @@ The documentation can be found in the [SChannelDsc Wiki](https://github.com/dscc
 The DSC resources schema files is used to automatically update the
 documentation on each PR merge.
 
-## Installation
-
-To manually install the module, download the source code and unzip the contents
-of the \Modules\SChannelDsc directory to the
-$env:ProgramFiles\WindowsPowerShell\Modules folder
-
-To install from the [PowerShell Gallery](https://www.powershellgallery.com/packages/SChannelDsc)
-using PowerShellGet (in PowerShell 5.0) run the following command:
-
-```PowerShell
-Find-Module -Name SChannelDsc -Repository PSGallery | Install-Module
-```
-
-To confirm installation, run the below command and ensure you see the
-SChannel DSC resoures available:
-
-```PowerShell
-Get-DscResource -Module SChannelDsc
-```
-
-## Requirements
-
-The minimum PowerShell version required is 4.0, which ships in Windows 8.1
-or Windows Server 2012R2 (or higher versions). The preferred version is
-PowerShell 5.0 or higher, which ships with Windows 10 or Windows Server 2016.
-This is discussed [on the SChannelDsc wiki](https://github.com/dsccommunity/SChannelDsc/wiki/Remote%20sessions%20and%20the%20InstallAccount%20variable),
-but generally PowerShell 5 will run the SChannel DSC resources faster and
-with improved verbose level logging.
-
-## Documentation and examples
-
-For a full list of resources in SChannelDsc and examples on their use, check
-out the [SChannelDsc wiki](https://github.com/dsccommunity/SChannelDsc/wiki).
-You can also review the "examples" directory in the SChannelDsc module for
-some general use scenarios for all of the resources that are in the module.
-
 ### Examples
 
-You can review the [Examples](/source/Examples) directory in the Temp module
+You can review the [Examples](/source/Examples) directory in the SChannelDsc module
 for some general use scenarios for all of the resources that are in the module.
 
 The resource examples are also available in the [SChannelDsc Wiki](https://github.com/dsccommunity/SChannelDsc/wiki).

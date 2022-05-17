@@ -25,15 +25,17 @@ stages:
       - job: Package_Module
         displayName: 'Package Module'
         pool:
-          vmImage: 'ubuntu-18.04'
+          vmImage: 'ubuntu-latest'
         steps:
-          - task: GitVersion@5
-            name: gitVersion
-            displayName: 'Evaluate Next Version'
-            inputs:
-              runtime: 'core'
-              configFilePath: 'GitVersion.yml'
-
+          - pwsh: |
+              dotnet tool install --global GitVersion.Tool
+              $gitVersionObject = dotnet-gitversion | ConvertFrom-Json
+              $gitVersionObject.PSObject.Properties.ForEach{
+                  Write-Host -Object "Setting Task Variable '$($_.Name)' with value '$($_.Value)'."
+                  Write-Host -Object "##vso[task.setvariable variable=$($_.Name);]$($_.Value)"
+              }
+              Write-Host -Object "##vso[build.updatebuildnumber]$($gitVersionObject.FullSemVer)"
+            displayName: Calculate ModuleVersion (GitVersion)
           - task: PowerShell@2
             name: package
             displayName: 'Build & Package Module'
@@ -42,21 +44,12 @@ stages:
               arguments: '-ResolveDependency -tasks pack'
               pwsh: true
             env:
-              ModuleVersion: $(gitVersion.NuGetVersionV2)
-
+              ModuleVersion: $(NuGetVersionV2)
           - task: PublishPipelineArtifact@1
             displayName: 'Publish Build Artifact'
             inputs:
               targetPath: '$(buildFolderName)/'
               artifact: $(buildArtifactName)
-              publishLocation: 'pipeline'
-              parallel: true
-
-          - task: PublishPipelineArtifact@1
-            displayName: 'Publish Wiki Content Artifact'
-            inputs:
-              targetPath: '$(buildFolderName)/WikiContent/'
-              artifact: 'WikiContent'
               publishLocation: 'pipeline'
               parallel: true
 
@@ -66,7 +59,7 @@ stages:
       - job: Test_HQRM
         displayName: 'HQRM'
         pool:
-          vmImage: 'windows-2022'
+          vmImage: 'windows-latest'
         timeoutInMinutes: 0
         steps:
           - task: DownloadPipelineArtifact@2
@@ -75,7 +68,6 @@ stages:
               buildType: 'current'
               artifactName: $(buildArtifactName)
               targetPath: '$(Build.SourcesDirectory)/$(buildFolderName)'
-
           - task: PowerShell@2
             name: test
             displayName: 'Run HQRM Test'
@@ -83,7 +75,6 @@ stages:
               filePath: './build.ps1'
               arguments: '-Tasks hqrmtest'
               pwsh: false
-
           - task: PublishTestResults@2
             displayName: 'Publish Test Results'
             condition: succeededOrFailed()
@@ -96,7 +87,7 @@ stages:
       - job: Test_Unit
         displayName: 'Unit'
         pool:
-          vmImage: 'windows-2022'
+          vmImage: 'windows-latest'
         timeoutInMinutes: 0
         steps:
           - task: DownloadPipelineArtifact@2
@@ -105,15 +96,13 @@ stages:
               buildType: 'current'
               artifactName: $(buildArtifactName)
               targetPath: '$(Build.SourcesDirectory)/$(buildFolderName)'
-
           - task: PowerShell@2
             name: test
             displayName: 'Run Unit Test'
             inputs:
               filePath: './build.ps1'
               arguments: "-Tasks test -PesterScript 'tests/Unit'"
-              pwsh: false
-
+              pwsh: true
           - task: PublishTestResults@2
             displayName: 'Publish Test Results'
             condition: succeededOrFailed()
@@ -122,7 +111,6 @@ stages:
               testResultsFiles: '$(buildFolderName)/$(testResultFolderName)/NUnit*.xml'
               # If several pipeline jobs are generating test result, consider renaming this title:
               testRunTitle: 'Unit'
-
           - task: PublishPipelineArtifact@1
             displayName: 'Publish Test Artifact'
             inputs:
@@ -136,7 +124,7 @@ stages:
         displayName: 'Publish Code Coverage'
         dependsOn: Test_Unit
         pool:
-          vmImage: 'ubuntu-18.04'
+          vmImage: 'ubuntu-latest'
         timeoutInMinutes: 0
         steps:
           - pwsh: |
@@ -157,7 +145,6 @@ stages:
               buildType: 'current'
               artifactName: $(testArtifactName)
               targetPath: '$(Build.SourcesDirectory)/$(buildFolderName)/$(testResultFolderName)'
-
           - task: PublishCodeCoverageResults@1
             displayName: 'Publish Code Coverage to Azure DevOps'
             inputs:
@@ -183,7 +170,7 @@ stages:
       - job: Deploy_Module
         displayName: 'Deploy Module'
         pool:
-          vmImage: 'ubuntu-18.04'
+          vmImage: 'ubuntu-latest'
         steps:
           - task: DownloadPipelineArtifact@2
             displayName: 'Download Pipeline Artifact'
