@@ -426,4 +426,4 @@ function Test-SCDscObjectHasProperty
     return $false
 }
 
-$script:localizedData = SChannelDsc.Util\Get-LocalizedData -ResourceName 'SChannelDsc.Util' -ScriptRoot $PSScriptRoot
+$script:localizedData = Get-LocalizedData -ResourceName 'SChannelDsc.Util' -ScriptRoot $PSScriptRoot
