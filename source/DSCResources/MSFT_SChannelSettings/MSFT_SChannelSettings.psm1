@@ -292,6 +292,11 @@ function Get-TargetResource
     {
         $winhttpProtocols = @()
     }
+    else
+    {
+        # Fix for issue #28.
+        $winhttpProtocols = @($winhttpProtocols)
+    }
 
     # FIPS Algorithm Policy
     Write-Verbose -Message ($script:localizedData.GetFIPS)
@@ -325,7 +330,7 @@ function Get-TargetResource
         DiffieHellmanMinClientKeySize   = $dhMinClientKeySizeValue
         DiffieHellmanMinServerKeySize   = $dhMinServerKeySizeValue
         KerberosSupportedEncryptionType = $kerberosEncrTypes
-        WinHttpDefaultSecureProtocols   = @($winhttpProtocols)
+        WinHttpDefaultSecureProtocols   = $winhttpProtocols
         EnableFIPSAlgorithmPolicy       = $fipsValue
     }
 
