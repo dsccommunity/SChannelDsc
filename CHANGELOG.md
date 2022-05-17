@@ -5,6 +5,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- SChannelDsc
+  - Explicitly use the correct version of the command `Get-LocalizedData`
+    ([issue #27](https://github.com/dsccommunity/SChannelDsc/issues/27)).
+- SChannelSettings
+  - Now the resource imports the dependent module *DscResource.Common*.
+  - Now the property `WinHttpDefaultSecureProtocols` always return an array
+    even if only one value is set in the current state ([issue #28](https://github.com/dsccommunity/SChannelDsc/issues/28)).
+
 ## [1.3.0] - 2022-02-11
 
 ### Added

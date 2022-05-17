@@ -3,7 +3,9 @@ $script:modulesFolderPath = Join-Path -Path $script:resourceModulePath -ChildPat
 $script:resourceHelperModulePath = Join-Path -Path $script:modulesFolderPath -ChildPath 'SChannelDsc.Util'
 Import-Module -Name (Join-Path -Path $script:resourceHelperModulePath -ChildPath 'SChannelDsc.Util.psm1')
 
-$script:localizedData = Get-LocalizedData -ResourceName 'MSFT_SChannelSettings'
+Import-Module -Name (Join-Path -Path $script:modulesFolderPath  -ChildPath 'DscResource.Common')
+
+$script:localizedData = SChannelDsc.Util\Get-LocalizedData -ResourceName 'MSFT_SChannelSettings'
 
 function Get-TargetResource
 {
@@ -323,7 +325,7 @@ function Get-TargetResource
         DiffieHellmanMinClientKeySize   = $dhMinClientKeySizeValue
         DiffieHellmanMinServerKeySize   = $dhMinServerKeySizeValue
         KerberosSupportedEncryptionType = $kerberosEncrTypes
-        WinHttpDefaultSecureProtocols   = $winhttpProtocols
+        WinHttpDefaultSecureProtocols   = @($winhttpProtocols)
         EnableFIPSAlgorithmPolicy       = $fipsValue
     }
 
