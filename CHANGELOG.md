@@ -1,9 +1,16 @@
-# Change log for SChannelDsc
+# Changelog for SChannelDsc
 
 The format is based on and uses the types of changes according to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Changed
+
+- SChannelDsc
+  - Moved some documentation from the README.md to the GitHub repository
+    wiki page.
+  - Updated the pipeline files to use the latest from Sampler.
 
 ### Fixed
 

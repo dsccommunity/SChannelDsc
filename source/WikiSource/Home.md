@@ -17,7 +17,13 @@ To confirm installation, run the below command and ensure you see the SChannel D
 
     Get-DscResource -Module SChannelDsc
 
-#### DSC requirements
+## Requirements
+
+The minimum PowerShell version required is 4.0, which ships in Windows 8.1
+or Windows Server 2012R2 (or higher versions). The preferred version is
+PowerShell 5.0 or higher, which ships with Windows 10 or Windows Server 2016.
+
+### DSC requirements
 
 To run PowerShell DSC, you need to have PowerShell 4.0 or higher (which is included in Windows Management Framework 4.0 or higher).
 This version of PowerShell is shipped with Windows Server 2012 R2, and Windows 8.1 or higher.
