@@ -4,6 +4,12 @@ The format is based on and uses the types of changes according to [Keep a Change
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+
+- SChannelDsc
+  - Using Native commands for enabeling/disabeling and ordering cipher suites for Windows Server 2016 and newer (TLS module)
+  - Ensuring disabeling and ordering of named cipher suites for older OS' than Windows Server 2016.
+    ([issue #33](https://github.com/dsccommunity/SChannelDsc/issues/33)).
 
 ## [1.4.0] - 2022-05-17
 
