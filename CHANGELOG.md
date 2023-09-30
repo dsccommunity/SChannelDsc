@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Ensuring disabeling and ordering of named cipher suites for older OS' than Windows Server 2016.
     ([issue #33](https://github.com/dsccommunity/SChannelDsc/issues/33)).
 
+### Changed
+
+- SChannelDsc
+  - Changed the build pipeline to use the build worked image `windows-latest`.
+
 ## [1.4.0] - 2022-05-17
 
 ### Changed
