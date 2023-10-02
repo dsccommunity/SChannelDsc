@@ -113,6 +113,18 @@ function Set-TargetResource
         }
         Else {
             Write-Verbose -Message ($script:localizedData.ItemDisable -f 'CipherSuites' , $Ensure)
+            $item = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002' -Name 'Functions' -ErrorAction SilentlyContinue).Functions
+            If (-Not ($item)) {
+                $item = (Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Cryptography\Configuration\Local\SSL\00010002' -Name 'Functions' -ErrorAction SilentlyContinue).Functions
+            }
+            [System.Collections.ArrayList]$array = @($item)
+
+            foreach ($CipherSuite in $CipherSuitesOrder){
+                while ($array -contains "$CipherSuite") {
+                    $array.Remove("$CipherSuite")
+                }
+            }
+            $CipherSuitesOrder = $array
         }
         $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002'
         $cipherSuitesAsString = [string]::join(',', $cipherSuitesOrder)
