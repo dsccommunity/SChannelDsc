@@ -206,12 +206,12 @@ function Test-TargetResource
 
     if ($Ensure -eq "Absent")
     {
-        foreach ($CipherSuite in $currentSuitesOrderAsString) 
-        { 
+        foreach ($CipherSuite in $currentSuitesOrderAsString)
+        {
             if (($currentSuitesOrderAsString).Contains($CipherSuite))
             {
                 $Compliant = $true
-            } 
+            }
         }
     }
 
