@@ -32,14 +32,17 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for cipher suites order"
 
-    if (([System.Environment]::OSVersion.Version).Major -lt 10) {
+    if (([System.Environment]::OSVersion.Version).Major -lt 10)
+    {
         $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002'
         $item = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002' -Name 'Functions' -ErrorAction SilentlyContinue).Functions
-        if (-Not ($item)) {
+        if (-Not ($item))
+        {
             $item = (Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Cryptography\Configuration\Local\SSL\00010002' -Name 'Functions' -ErrorAction SilentlyContinue).Functions
         }
     }
-    else {
+    else
+    {
         $item = (Get-TlsCipherSuite).Name
     }
 
@@ -86,41 +89,51 @@ function Set-TargetResource
         $RebootWhenRequired = $false
     )
 
-    if ($Ensure -ne 'Absent') {
+    if ($Ensure -ne 'Absent')
+    {
         Write-Verbose -Message "Setting configuration for cipher suites order"
     }
-    if (([System.Environment]::OSVersion.Version).Major -ge 10) {
+    if (([System.Environment]::OSVersion.Version).Major -ge 10)
+    {
         if ($Ensure -eq 'Present')
         {
             Write-Verbose -Message ($script:localizedData.ItemEnable -f 'CipherSuites' , $Ensure)
             $Posision = 0
-            foreach ($CipherSuite in $CipherSuitesOrder) {
+            foreach ($CipherSuite in $CipherSuitesOrder)
+            {
                 Enable-TlsCipherSuite -Name $CipherSuite -Position ($Posision++)
             }
         }
         else
         {
             Write-Verbose -Message ($script:localizedData.ItemDisable -f 'CipherSuites' , $Ensure)
-            foreach ($CipherSuite in $CipherSuitesOrder) {
+            foreach ($CipherSuite in $CipherSuitesOrder)
+            {
                 Write-Verbose -Message "Disabeling cipher suite $($CipherSuite)"
                 Disable-TlsCipherSuite -Name $CipherSuite
             }
         }
     }
-    else {
-        if ($Ensure -eq 'Present') {
+    else
+    {
+        if ($Ensure -eq 'Present')
+        {
             Write-Verbose -Message ($script:localizedData.ItemEnable -f 'CipherSuites' , $Ensure)
         }
-        else {
+        else
+        {
             Write-Verbose -Message ($script:localizedData.ItemDisable -f 'CipherSuites' , $Ensure)
             $item = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002' -Name 'Functions' -ErrorAction SilentlyContinue).Functions
-            if (-Not ($item)) {
+            if (-Not ($item))
+            {
                 $item = (Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Cryptography\Configuration\Local\SSL\00010002' -Name 'Functions' -ErrorAction SilentlyContinue).Functions
             }
             [System.Collections.ArrayList]$array = @($item)
 
-            foreach ($CipherSuite in $CipherSuitesOrder){
-                while ($array -contains "$CipherSuite") {
+            foreach ($CipherSuite in $CipherSuitesOrder)
+            {
+                while ($array -contains "$CipherSuite")
+                {
                     $array.Remove("$CipherSuite")
                 }
             }
@@ -193,8 +206,10 @@ function Test-TargetResource
 
     if ($Ensure -eq "Absent")
     {
-        foreach ($CipherSuite in $currentSuitesOrderAsString) { 
-            if (($currentSuitesOrderAsString).Contains($CipherSuite)) {
+        foreach ($CipherSuite in $currentSuitesOrderAsString) 
+        { 
+            if (($currentSuitesOrderAsString).Contains($CipherSuite))
+            {
                 $Compliant = $true
             } 
         }
