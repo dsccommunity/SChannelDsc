@@ -202,10 +202,6 @@ function Get-SChannelItem
         {
             return 'Enabled'
         }
-        4294967295
-        {
-            return 'Enabled'
-        } # 0xffffffff
     }
 }
 
@@ -319,7 +315,7 @@ function Set-SChannelItem
             }
             else
             {
-                $null = $regKey.SetValue($ItemValue, 0xffffffff, [Microsoft.Win32.RegistryValueKind]::DWORD)
+                $null = $regKey.SetValue($ItemValue, 1, [Microsoft.Win32.RegistryValueKind]::DWORD)
             }
         }
     }
