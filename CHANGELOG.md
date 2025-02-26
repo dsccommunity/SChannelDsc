@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Changed the build pipeline to use the build worked image `windows-latest`.
 - Protocol
   - Setting `State` to `Enabled` exclusively uses '1', instead of '4294967295', when assessing the associated
-    registry key value ([issue 32](https://github.com/dsccommunity/SChannelDsc/issues/32)).
+    registry key value ([issue 32](https://github.com/dsccommunity/SChannelDsc/issues/32) and
+    [issue 38](https://github.com/dsccommunity/SChannelDsc/issues/38)).
 
 ## [1.4.0] - 2022-05-17
 
