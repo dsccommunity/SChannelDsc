@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     registry key value ([issue 32](https://github.com/dsccommunity/SChannelDsc/issues/32) and
     [issue 38](https://github.com/dsccommunity/SChannelDsc/issues/38)).
 
+### Fixed
+
+- Update build process to pin GitVersion to 5.* to resolve errors
+  (https://github.com/gaelcolas/Sampler/issues/477).
+
 ## [1.4.0] - 2022-05-17
 
 ### Changed
