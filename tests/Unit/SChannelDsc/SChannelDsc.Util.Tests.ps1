@@ -128,7 +128,7 @@ InModuleScope $script:subModuleName {
 
         It "Setting is enabled. Should enable the specified item in this method" {
             Set-SChannelItem -ItemKey 'TestRegistry:\SCHANNEL\Protocols' -ItemSubKey 'SSL 3.0' -State 'Enabled'
-            (Get-ItemPropertyValue -Path 'TestRegistry:\SChannel\Protocols\SSL 3.0' -Name 'Enabled') | Should -Be 4294967295
+            (Get-ItemPropertyValue -Path 'TestRegistry:\SChannel\Protocols\SSL 3.0' -Name 'Enabled') | Should -Be 1
         }
 
         It "Setting is disabled. Should disable the specified item in this method" {
