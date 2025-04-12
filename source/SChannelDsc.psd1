@@ -9,7 +9,7 @@
 @{
 
     # Script module or binary module file associated with this manifest.
-    # RootModule = ''
+    RootModule           = 'SchannelDsc.psm1'
 
     # Version number of this module.
     ModuleVersion        = '0.0.1'
@@ -51,7 +51,7 @@
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    # RequiredModules = @()
+    RequiredModules = @()
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
@@ -66,7 +66,7 @@
     # FormatsToProcess = @()
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    NestedModules        = @("Modules\SChannelDsc.Util\SChannelDsc.Util.psm1")
+    NestedModules        = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport    = @()
@@ -81,14 +81,7 @@
     AliasesToExport      = @()
 
     # DSC resources to export from this module
-    DscResourcesToExport = @(
-        'Cipher'
-        'CipherSuites'
-        'Hash'
-        'KeyExchangeAlgorithm'
-        'Protocol'
-        'SChannelSettings'
-    )
+    DscResourcesToExport = @()
 
     # List of all modules packaged with this module
     # ModuleList = @()
