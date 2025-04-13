@@ -27,7 +27,7 @@
     CompanyName          = 'DSC Community'
 
     # Copyright statement for this module
-    Copyright            = '(c) 2022 DSC Community. All rights reserved.'
+    Copyright            = '(c) DSC Community. All rights reserved.'
 
     # Description of the functionality provided by this module
     Description          = 'This DSC module is used to manage Secure Channel (SChannel) configurations.'

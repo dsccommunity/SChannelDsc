@@ -8,6 +8,7 @@ CopyPaths:
   - DSCResources
   - Modules
 Encoding: UTF8
+VersionedOutputDirectory: true
 BuiltModuleSubdirectory: builtModule
 
 ####################################################
