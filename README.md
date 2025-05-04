@@ -1,7 +1,7 @@
 # SChannelDsc
 
 This module contains DSC resources for the management and
-configuration of SChannel settings.
+configuration of SChannel.
 
 > It is based of the [cSchannel](https://github.com/bdanse/cSchannel) resource created by Bart Danse.
 

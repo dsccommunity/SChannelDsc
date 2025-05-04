@@ -9,17 +9,18 @@ CopyPaths:
   - Modules
 Encoding: UTF8
 VersionedOutputDirectory: true
+BuiltModuleSubdirectory: builtModule
 
 ####################################################
 #      ModuleBuilder Submodules Configuration      #
 ####################################################
 
 NestedModule:
-    DscResource.Common:
-      CopyOnly: true
-      Path: ./output/RequiredModules/DscResource.Common
-      AddToManifest: false
-      Exclude: PSGetModuleInfo.xml
+  DscResource.Common:
+    CopyOnly: true
+    Path: ./output/RequiredModules/DscResource.Common
+    AddToManifest: false
+    Exclude: PSGetModuleInfo.xml
 
 ####################################################
 #       Sampler Pipeline Configuration             #
@@ -34,24 +35,30 @@ BuildWorkflow:
     - Build_Module_ModuleBuilder
     - Build_NestedModules_ModuleBuilder
     - Create_changelog_release_output
+
+  docs:
     - Generate_Conceptual_Help
     - Generate_Wiki_Content
+    - Generate_Wiki_Sidebar
+    - Clean_Markdown_Metadata
+    - Package_Wiki_Content
 
   pack:
     - build
+    - docs
     - package_module_nupkg
 
   hqrmtest:
     - DscResource_Tests_Stop_On_Fail
 
-  # Defining test task to be run when invoking `./build.ps1 -Tasks test`
   test:
     - Pester_Tests_Stop_On_Fail
-    - Pester_if_Code_Coverage_Under_Threshold
+    - Convert_Pester_Coverage
+    - Pester_If_Code_Coverage_Under_Threshold
 
   publish:
-    - publish_module_to_gallery
     - Publish_Release_To_GitHub
+    - publish_module_to_gallery
     - Publish_GitHub_Wiki_Content
 
 ####################################################
@@ -60,23 +67,18 @@ BuildWorkflow:
 
 Pester:
   OutputFormat: NUnitXML
-  # Excludes one or more paths from being used to calculate code coverage.
   ExcludeFromCodeCoverage:
     - Modules/DscResource.Common
-  # If no scripts are defined the default is to use all the tests under the project's
-  # tests folder or source folder (if present). Test script paths can be defined to
-  # only run tests in certain folders, or run specific test files, or can be use to
-  # specify the order tests are run.
   Script:
     - tests/Unit
   Tag:
-  CodeCoverageThreshold: 85 # Set to 0 to bypass
+  CodeCoverageThreshold: 85
   CodeCoverageOutputFile: JaCoCo_coverage.xml
   CodeCoverageOutputFileEncoding: ascii
 
 DscTest:
   ExcludeTag:
-    - "Common Tests - New Error-Level Script Analyzer Rules"
+    - 'Common Tests - New Error-Level Script Analyzer Rules'
   Tag:
   ExcludeSourceFile:
     - output
@@ -94,6 +96,8 @@ ModuleBuildTasks:
     - '*.ib.tasks'
   DscResource.DocGenerator:
     - 'Task.*'
+  DscResource.Test:
+    - 'Task.*'
 
 # Invoke-Build Header to be used to 'decorate' the terminal output of the tasks.
 TaskHeader: |
@@ -107,6 +111,9 @@ TaskHeader: |
   Write-Build DarkGray "  $($Task.InvocationInfo.ScriptName):$($Task.InvocationInfo.ScriptLineNumber)"
   ""
 
+####################################################
+#               GitHub Configuration               #
+####################################################
 GitHubConfig:
   GitHubFilesToAdd:
     - 'CHANGELOG.md'
@@ -126,3 +133,18 @@ DscResource.DocGenerator:
       - '_(.+?)_' # Match Italic (underscore)
       - '\*\*(.+?)\*\*' # Match bold
       - '\*(.+?)\*' # Match Italic (asterisk)
+  Publish_GitHub_Wiki_Content:
+    Debug: false
+  Generate_Markdown_For_DSC_Resources:
+    MofResourceMetadata:
+      Type: MofResource
+      Category: Resources
+    ClassResourceMetadata:
+      Type: ClassResource
+      Category: Resources
+    CompositeResourceMetadata:
+      Type: CompositeResource
+      Category: Resources
+  Generate_Wiki_Sidebar:
+    Debug: false
+    AlwaysOverwrite: true

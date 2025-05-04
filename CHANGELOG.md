@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - SChannelDsc
   - Changed the build pipeline to use the build worked image `windows-latest`.
+  - Updated repository files from Sampler template.
 
 ## [1.4.0] - 2022-05-17
 
