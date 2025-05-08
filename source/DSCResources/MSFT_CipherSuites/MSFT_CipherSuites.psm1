@@ -32,14 +32,25 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for cipher suites order"
 
-    $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002'
-    $item = Get-ItemProperty -Path $itemKey -Name 'Functions' -ErrorAction SilentlyContinue
+    if (([System.Environment]::OSVersion.Version).Major -lt 10)
+    {
+        $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002'
+        $item = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002' -Name 'Functions' -ErrorAction SilentlyContinue).Functions
+        if (-Not ($item))
+        {
+            $item = (Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Cryptography\Configuration\Local\SSL\00010002' -Name 'Functions' -ErrorAction SilentlyContinue).Functions
+        }
+    }
+    else
+    {
+        $item = (Get-TlsCipherSuite).Name
+    }
 
     $order = $null
     if ($null -ne $item)
     {
         $Ensure = 'Present'
-        $order = (Get-ItemPropertyValue -Path $itemKey -Name 'Functions' -ErrorAction SilentlyContinue).Split(',')
+        $order = $item
     }
     else
     {
@@ -78,21 +89,60 @@ function Set-TargetResource
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message "Setting configuration for cipher suites order"
-
-    $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002'
-
-    if ($Ensure -eq 'Present')
+    if ($Ensure -ne 'Absent')
     {
-        Write-Verbose -Message ($script:localizedData.ItemEnable -f 'CipherSuites' , $Ensure)
-        $cipherSuitesAsString = [string]::join(',', $cipherSuitesOrder)
-        New-Item $itemKey -Force
-        New-ItemProperty -Path $itemKey -Name 'Functions' -Value $cipherSuitesAsString -PropertyType 'String' -Force | Out-Null
+        Write-Verbose -Message "Setting configuration for cipher suites order"
+    }
+    if (([System.Environment]::OSVersion.Version).Major -ge 10)
+    {
+        if ($Ensure -eq 'Present')
+        {
+            Write-Verbose -Message ($script:localizedData.ItemEnable -f 'CipherSuites' , $Ensure)
+            $Posision = 0
+            foreach ($CipherSuite in $CipherSuitesOrder)
+            {
+                Enable-TlsCipherSuite -Name $CipherSuite -Position ($Posision++)
+            }
+        }
+        else
+        {
+            Write-Verbose -Message ($script:localizedData.ItemDisable -f 'CipherSuites' , $Ensure)
+            foreach ($CipherSuite in $CipherSuitesOrder)
+            {
+                Write-Verbose -Message "Disabeling cipher suite $($CipherSuite)"
+                Disable-TlsCipherSuite -Name $CipherSuite
+            }
+        }
     }
     else
     {
-        Write-Verbose -Message ($script:localizedData.ItemDisable -f 'CipherSuites' , $Ensure)
-        Remove-ItemProperty -Path $itemKey -Name 'Functions' -Force
+        if ($Ensure -eq 'Present')
+        {
+            Write-Verbose -Message ($script:localizedData.ItemEnable -f 'CipherSuites' , $Ensure)
+        }
+        else
+        {
+            Write-Verbose -Message ($script:localizedData.ItemDisable -f 'CipherSuites' , $Ensure)
+            $item = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002' -Name 'Functions' -ErrorAction SilentlyContinue).Functions
+            if (-Not ($item))
+            {
+                $item = (Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Cryptography\Configuration\Local\SSL\00010002' -Name 'Functions' -ErrorAction SilentlyContinue).Functions
+            }
+            [System.Collections.ArrayList]$array = @($item)
+
+            foreach ($CipherSuite in $CipherSuitesOrder)
+            {
+                while ($array -contains "$CipherSuite")
+                {
+                    $array.Remove("$CipherSuite")
+                }
+            }
+            $CipherSuitesOrder = $array
+        }
+        $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002'
+        $cipherSuitesAsString = [string]::join(',', $cipherSuitesOrder)
+        New-Item $itemKey -Force
+        New-ItemProperty -Path $itemKey -Name 'Functions' -Value $cipherSuitesAsString -PropertyType 'String' -Force | Out-Null
     }
 
     if ($RebootWhenRequired)
@@ -154,10 +204,15 @@ function Test-TargetResource
         $Compliant = $true
     }
 
-    if ($Ensure -eq "Absent" -and `
-            $null -eq $currentSuitesOrderAsString)
+    if ($Ensure -eq "Absent")
     {
-        $Compliant = $true
+        foreach ($CipherSuite in $currentSuitesOrderAsString)
+        {
+            if (($currentSuitesOrderAsString).Contains($CipherSuite))
+            {
+                $Compliant = $true
+            }
+        }
     }
 
     if ($Compliant -eq $true)
