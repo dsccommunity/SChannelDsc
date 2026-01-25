@@ -71,6 +71,16 @@ function Test-TlsNegotiation
 
         [Parameter()]
         [System.Security.Authentication.SslProtocols[]]
+        $Protocol,
+
+        [Parameter()]
+        [ValidateRange(1, 600)]
+        [System.UInt32]
+        $TimeoutSeconds = 5
+    )
+
+    if (-not $PSBoundParameters.ContainsKey('Protocol'))
+    {
         $Protocol = @(
             [System.Security.Authentication.SslProtocols]::Ssl2,
             [System.Security.Authentication.SslProtocols]::Ssl3,
@@ -78,13 +88,8 @@ function Test-TlsNegotiation
             [System.Security.Authentication.SslProtocols]::Tls11,
             [System.Security.Authentication.SslProtocols]::Tls12,
             [System.Security.Authentication.SslProtocols]::Tls13
-        ),
-
-        [Parameter()]
-        [ValidateRange(1, 600)]
-        [System.UInt32]
-        $TimeoutSeconds = 5
-    )
+        )
+    }
 
     # Equivalent to: (sender, certificate, chain, sslPolicyErrors) => true
     $certValidationCallback = [System.Net.Security.RemoteCertificateValidationCallback] {
