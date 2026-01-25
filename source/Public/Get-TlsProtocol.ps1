@@ -1,0 +1,67 @@
+<#
+    .SYNOPSIS
+        Returns configured SCHANNEL protocol settings for Server or Client.
+
+    .DESCRIPTION
+        Reads the `Enabled` and `DisabledByDefault` values for one or more
+        SCHANNEL protocol keys and returns a PSCustomObject with the results.
+
+    .PARAMETER Protocol
+        One or more protocol names. Valid values: Ssl2, Ssl3, Tls, Tls11, Tls12, Tls13.
+
+    .PARAMETER Client
+        When specified, reads the `Client` key. By default the `Server` key is used.
+
+    .OUTPUTS
+        System.Management.Automation.PSCustomObject
+#>
+function Get-TlsProtocol
+{
+    [CmdletBinding()]
+    [OutputType([System.Management.Automation.PSCustomObject])]
+    param
+    (
+        [Parameter()]
+        [ValidateSet('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13', IgnoreCase = $true)]
+        [System.String[]]
+        $Protocol = @('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13'),
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Client
+    )
+
+    foreach ($p in $Protocol)
+    {
+        $regPath = Get-TlsProtocolRegistryPath -Protocol $p -Client:$Client
+
+        $protocolEnabled = Get-RegistryPropertyValue -Path $regPath -Name 'Enabled' -ErrorAction SilentlyContinue
+        $protocolDisabled = Get-RegistryPropertyValue -Path $regPath -Name 'DisabledByDefault' -ErrorAction SilentlyContinue
+
+        $protocolEnabled = if ($null -ne $protocolEnabled)
+        {
+            [System.Int32] $protocolEnabled
+        }
+        else
+        {
+            $null
+        }
+
+        $protocolDisabled = if ($null -ne $protocolDisabled)
+        {
+            [System.Int32] $protocolDisabled
+        }
+        else
+        {
+            $null
+        }
+
+        [PSCustomObject]@{
+            Protocol          = $p
+            Target            = Get-TlsProtocolTargetRegistryName -Client:$Client
+            Enabled           = $protocolEnabled
+            DisabledByDefault = $protocolDisabled
+            RegistryPath      = $regPath
+        }
+    }
+}

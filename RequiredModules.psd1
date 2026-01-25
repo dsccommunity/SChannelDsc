@@ -29,5 +29,4 @@
     # Prerequisite modules for documentation.
     'DscResource.DocGenerator'     = 'latest'
     PlatyPS                        = 'latest'
-
 }
