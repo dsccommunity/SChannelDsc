@@ -9,7 +9,7 @@
 
     InvokeBuild                    = 'latest'
     PSScriptAnalyzer               = 'latest'
-    Pester                         = '4.10.1'
+    Pester                         = '5.7.1'
     Plaster                        = 'latest'
     ModuleBuilder                  = 'latest'
     ChangelogManagement            = 'latest'
@@ -30,4 +30,6 @@
     'DscResource.DocGenerator'     = 'latest'
     PlatyPS                        = 'latest'
 
+    # For development
+    'Viscalyx.Common'              = 'latest' # Invoke-PesterJob to run tests
 }
