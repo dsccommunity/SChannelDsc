@@ -146,6 +146,15 @@ function Test-TlsNegotiation
         }
         catch
         {
+            $innerExceptionMessage = if ($_.Exception.InnerException)
+            {
+                $_.Exception.InnerException.Message
+            }
+            else
+            {
+                $null
+            }
+
             [PSCustomObject] @{
                 HostName              = $HostName
                 Port                  = $Port
@@ -154,7 +163,7 @@ function Test-TlsNegotiation
                 NegotiatedProtocol    = $null
                 NegotiatedCipherSuite = $null
                 Error                 = $_.Exception.Message
-                InnerError            = $_.Exception.InnerException?.Message
+                InnerError            = $innerExceptionMessage
             }
         }
         finally
