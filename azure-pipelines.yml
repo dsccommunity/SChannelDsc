@@ -60,7 +60,7 @@ stages:
         displayName: 'HQRM'
         pool:
           vmImage: 'windows-latest'
-        timeoutInMinutes: 0
+        timeoutInMinutes: '0'
         steps:
           - task: DownloadPipelineArtifact@2
             displayName: 'Download Build Artifact'
@@ -88,7 +88,7 @@ stages:
         displayName: 'Unit'
         pool:
           vmImage: 'windows-latest'
-        timeoutInMinutes: 0
+        timeoutInMinutes: '0'
         steps:
           - task: DownloadPipelineArtifact@2
             displayName: 'Download Build Artifact'
@@ -125,7 +125,7 @@ stages:
         dependsOn: Test_Unit
         pool:
           vmImage: 'ubuntu-latest'
-        timeoutInMinutes: 0
+        timeoutInMinutes: '0'
         steps:
           - task: DownloadPipelineArtifact@2
             displayName: 'Download Build Artifact'
@@ -133,19 +133,21 @@ stages:
               buildType: 'current'
               artifactName: $(buildArtifactName)
               targetPath: '$(Build.SourcesDirectory)/$(buildFolderName)'
+
           - task: DownloadPipelineArtifact@2
             displayName: 'Download Test Artifact'
             inputs:
               buildType: 'current'
               artifactName: $(testArtifactName)
               targetPath: '$(Build.SourcesDirectory)/$(buildFolderName)/$(testResultFolderName)'
-          - task: PublishCodeCoverageResults@1
+
+          - task: PublishCodeCoverageResults@2
             displayName: 'Publish Code Coverage to Azure DevOps'
             condition: succeededOrFailed()
             inputs:
-              codeCoverageTool: 'JaCoCo'
               summaryFileLocation: '$(Build.SourcesDirectory)/$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml'
               pathToSources: '$(Build.SourcesDirectory)/$(sourceFolderName)/'
+
           - script: |
               bash <(curl -s https://codecov.io/bash) -f "./$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml"
             displayName: 'Publish Code Coverage to Codecov.io'
