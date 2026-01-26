@@ -9,7 +9,7 @@ configuration of SChannel.
 ![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/dsccommunity/SChannelDsc/32/master)
 [![codecov](https://codecov.io/gh/dsccommunity/SChannelDsc/branch/master/graph/badge.svg)](https://codecov.io/gh/dsccommunity/SChannelDsc)
 [![Azure DevOps tests](https://img.shields.io/azure-devops/tests/dsccommunity/SChannelDsc/32/master)](https://dsccommunity.visualstudio.com/SChannelDsc/_test/analytics?definitionId=32&contextType=build)
-[![PowerShell Gallery (with prereleases)](https://img.shields.io/powershellgallery/vpre/SChannelDsc?label=SChannelDsc%20Preview)](https://www.powershellgallery.com/packages/SChannelDsc/)
+[![PowerShell Gallery (with prereleases)](https://img.shields.io/powershellgallery/v/SChannelDsc?label=SChannelDsc%20Preview&include_prereleases)](https://www.powershellgallery.com/packages/SChannelDsc/)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/v/SChannelDsc?label=SChannelDsc)](https://www.powershellgallery.com/packages/SChannelDsc/)
 
 ## Code of Conduct
