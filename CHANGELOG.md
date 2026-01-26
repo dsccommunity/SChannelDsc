@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Fixed README.
   - Use PublishCodeCoverageResults@2.
   - Fix deploy step. [Fixes #45](https://github.com/dsccommunity/SChannelDsc/issues/45)
+  - Renamed `master` branch to `main` - Fixes [Issue #41](https://github.com/dsccommunity/SChannelDsc/issues/41)
 
 ## [1.4.0] - 2022-05-17
 

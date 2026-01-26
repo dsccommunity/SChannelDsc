@@ -13,7 +13,7 @@
 
 .TAGS
 
-.LICENSEURI https://github.com/dsccommunity/SChannelDsc/blob/master/LICENSE
+.LICENSEURI https://github.com/dsccommunity/SChannelDsc/blob/main/LICENSE
 
 .PROJECTURI https://github.com/dsccommunity/SChannelDsc
 
@@ -40,19 +40,19 @@ Updated author, copyright notice, and URLs.
 
 #>
 
-    Configuration Example
-    {
-        param(
-        )
+Configuration Example
+{
+    param(
+    )
 
-        Import-DscResource -ModuleName SChannelDsc
+    Import-DscResource -ModuleName SChannelDsc
 
-        node localhost {
-            Protocol EnableSSLv3
-            {
-                Protocol          = "SSL 3.0"
-                IncludeClientSide = $true
-                State             = "Enabled"
-            }
+    node localhost {
+        Protocol EnableSSLv3
+        {
+            Protocol          = "SSL 3.0"
+            IncludeClientSide = $true
+            State             = "Enabled"
         }
     }
+}
