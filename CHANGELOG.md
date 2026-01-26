@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Updated repository files from Sampler template.
   - Fixed README.
   - Use PublishCodeCoverageResults@2.
+  - Fix deploy step. [Fixes #45](https://github.com/dsccommunity/SChannelDsc/issues/45)
 
 ## [1.4.0] - 2022-05-17
 
