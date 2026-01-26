@@ -13,7 +13,7 @@
 
 .TAGS
 
-.LICENSEURI https://github.com/dsccommunity/SChannelDsc/blob/master/LICENSE
+.LICENSEURI https://github.com/dsccommunity/SChannelDsc/blob/main/LICENSE
 
 .PROJECTURI https://github.com/dsccommunity/SChannelDsc
 
@@ -40,18 +40,18 @@ Updated author, copyright notice, and URLs.
 
 #>
 
-    Configuration Example
+Configuration Example
+{
+    param ()
+
+    Import-DscResource -ModuleName SChannelDsc
+
+    node localhost
     {
-        param ()
-
-        Import-DscResource -ModuleName SChannelDsc
-
-        node localhost
+        SChannelSettings 'ConfigureWinHTTPProtocols'
         {
-            SChannelSettings 'ConfigureWinHTTPProtocols'
-            {
-                IsSingleInstance              = 'Yes'
-                WinHttpDefaultSecureProtocols = @("TLS1.1","TLS1.2")
-            }
+            IsSingleInstance              = 'Yes'
+            WinHttpDefaultSecureProtocols = @("TLS1.1", "TLS1.2")
         }
     }
+}
