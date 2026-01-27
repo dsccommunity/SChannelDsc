@@ -95,7 +95,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
             } -ParameterFilter { $Path -like '*\\Server' -and $Name -eq 'DisabledByDefault' }
         }
 
-        It 'Should return $false when DisabledByDefault is 1' {
+        It 'Should return false' {
             $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
 
             $result | Should -BeFalse
@@ -140,7 +140,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
                 } -ParameterFilter { $Path -like '*\\Server' -and $Name -eq 'DisabledByDefault' }
             }
 
-            It 'Should return $true for -Disabled' {
+            It 'Should return true' {
                 $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled
 
                 $result | Should -BeTrue
@@ -158,7 +158,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
                 } -ParameterFilter { $Path -like '*\\Server' -and $Name -eq 'DisabledByDefault' }
             }
 
-            It 'Should return $false for -Disabled' {
+            It 'Should return false' {
                 $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled
 
                 $result | Should -BeFalse
@@ -170,7 +170,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
                 Mock -CommandName Get-RegistryPropertyValue
             }
 
-            It 'Should treat missing keys as enabled for -Disabled' {
+            It 'Should return false' {
                 $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled
 
                 $result | Should -BeFalse

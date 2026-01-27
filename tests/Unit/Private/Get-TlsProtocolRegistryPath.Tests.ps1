@@ -43,7 +43,7 @@ Describe 'Get-TlsProtocolRegistryPath' -Tag 'Private' {
             Mock -CommandName Get-TlsProtocolTargetRegistryName -MockWith { 'Server' }
         }
 
-        It 'returns server registry path for Tls12 by default' {
+        It 'Should return server registry path for Tls12 by default' {
             InModuleScope -ScriptBlock {
                 $result = Get-TlsProtocolRegistryPath -Protocol 'Tls12'
 
@@ -59,7 +59,7 @@ Describe 'Get-TlsProtocolRegistryPath' -Tag 'Private' {
             Mock -CommandName Get-TlsProtocolTargetRegistryName -MockWith { 'Client' }
         }
 
-        It 'returns client registry path when -Client is specified' {
+        It 'Should return client registry path' {
             InModuleScope -ScriptBlock {
                 $result = Get-TlsProtocolRegistryPath -Protocol 'Tls12' -Client
 
