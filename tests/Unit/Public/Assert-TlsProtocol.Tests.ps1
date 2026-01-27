@@ -37,6 +37,23 @@ AfterAll {
 }
 
 Describe 'Assert-TlsProtocol' -Tag 'Public' {
+    It 'Should have the correct parameters in parameter set <ExpectedParameterSetName>' -ForEach @(
+        @{
+            ExpectedParameterSetName = '__AllParameterSets'
+            ExpectedParameters = '[-Protocol] <SslProtocols[]> [-Client] [-Disabled] [<CommonParameters>]'
+        }
+    ) {
+        $result = (Get-Command -Name 'Assert-TlsProtocol').ParameterSets |
+            Where-Object -FilterScript { $_.Name -eq $ExpectedParameterSetName } |
+            Select-Object -Property @(
+                @{ Name = 'ParameterSetName'; Expression = { $_.Name } },
+                @{ Name = 'ParameterListAsString'; Expression = { $_.ToString() } }
+            )
+
+        $result.ParameterSetName | Should -Be $ExpectedParameterSetName
+        $result.ParameterListAsString | Should -Be $ExpectedParameters
+    }
+
     Context 'When protocols are enabled' {
         BeforeAll {
             Mock -CommandName Test-TlsProtocol -MockWith { return $true }
@@ -124,6 +141,18 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
             $parameterInfo = $script:commandInfo.Parameters['Protocol']
 
             $parameterInfo.Attributes.Mandatory | Should -Contain $true
+        }
+
+        It 'Should have Protocol declared as an array type' {
+            $parameterInfo = $script:commandInfo.Parameters['Protocol']
+
+            $parameterInfo.ParameterType.IsArray | Should -BeTrue
+        }
+
+        It 'Should have Client as a non-mandatory parameter' {
+            $parameterInfo = $script:commandInfo.Parameters['Client']
+
+            $parameterInfo.Attributes.Mandatory | Should -Not -Contain $true
         }
 
         It 'Should have Client defined as a switch parameter' {
