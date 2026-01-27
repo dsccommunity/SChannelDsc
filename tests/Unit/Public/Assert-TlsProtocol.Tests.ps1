@@ -106,4 +106,36 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
             Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Client -eq $true } -Times 1
         }
     }
+
+    Context 'When validating parameters' {
+        BeforeAll {
+            $script:commandInfo = Get-Command -Name 'Assert-TlsProtocol'
+        }
+
+        It 'Should have parameter set __AllParameterSets' {
+            $result = $script:commandInfo.ParameterSets |
+                Where-Object -FilterScript { $_.Name -eq '__AllParameterSets' }
+
+            $result | Should -Not -BeNullOrEmpty
+            $result.Name | Should -Be '__AllParameterSets'
+        }
+
+        It 'Should have Protocol as a mandatory parameter' {
+            $parameterInfo = $script:commandInfo.Parameters['Protocol']
+
+            $parameterInfo.Attributes.Mandatory | Should -Contain $true
+        }
+
+        It 'Should have Client defined as a switch parameter' {
+            $parameterInfo = $script:commandInfo.Parameters['Client']
+
+            $parameterInfo.ParameterType.Name | Should -Be 'SwitchParameter'
+        }
+
+        It 'Should have Disabled defined as a switch parameter' {
+            $parameterInfo = $script:commandInfo.Parameters['Disabled']
+
+            $parameterInfo.ParameterType.Name | Should -Be 'SwitchParameter'
+        }
+    }
 }

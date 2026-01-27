@@ -1,3 +1,41 @@
+[System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', '', Justification = 'Suppressing this rule because Script Analyzer does not understand Pester syntax.')]
+param ()
+
+BeforeDiscovery {
+    try
+    {
+        if (-not (Get-Module -Name 'DscResource.Test'))
+        {
+            if (-not (Get-Module -Name 'DscResource.Test' -ListAvailable))
+            {
+                & "$PSScriptRoot/../../../build.ps1" -Tasks 'noop' 3>&1 4>&1 5>&1 6>&1 > $null
+            }
+
+            Import-Module -Name 'DscResource.Test' -Force -ErrorAction 'Stop'
+        }
+    }
+    catch [System.IO.FileNotFoundException]
+    {
+        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -ResolveDependency -Tasks noop" first.'
+    }
+}
+
+BeforeAll {
+    $script:moduleName = 'SChannelDsc'
+
+    Import-Module -Name $script:moduleName -ErrorAction 'Stop'
+
+    $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:moduleName
+    $PSDefaultParameterValues['Mock:ModuleName'] = $script:moduleName
+    $PSDefaultParameterValues['Should:ModuleName'] = $script:moduleName
+}
+
+AfterAll {
+    $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
+    $PSDefaultParameterValues.Remove('Mock:ModuleName')
+    $PSDefaultParameterValues.Remove('Should:ModuleName')
+}
+
 Describe 'Test-TlsNegotiation' {
     Context 'When testing against a real public host (www.google.se:443)' {
         It 'Should return at least one successful TLS protocol (Tls12 expected)' {
@@ -55,6 +93,44 @@ Describe 'Test-TlsNegotiation' {
 
             # At least one should be successful
             ($results | Where-Object { $_.Success } | Measure-Object).Count | Should -BeGreaterThan 0
+        }
+    }
+
+    Context 'When validating parameters' {
+        BeforeAll {
+            $script:commandInfo = Get-Command -Name 'Test-TlsNegotiation'
+        }
+
+        It 'Should have parameter set __AllParameterSets' {
+            $result = $script:commandInfo.ParameterSets |
+                Where-Object -FilterScript { $_.Name -eq '__AllParameterSets' }
+
+            $result | Should -Not -BeNullOrEmpty
+            $result.Name | Should -Be '__AllParameterSets'
+        }
+
+        It 'Should have HostName as a non-mandatory parameter' {
+            $parameterInfo = $script:commandInfo.Parameters['HostName']
+
+            $parameterInfo.Attributes.Mandatory | Should -Not -Contain $true
+        }
+
+        It 'Should have Port as a non-mandatory parameter' {
+            $parameterInfo = $script:commandInfo.Parameters['Port']
+
+            $parameterInfo.Attributes.Mandatory | Should -Not -Contain $true
+        }
+
+        It 'Should have Protocol as a non-mandatory parameter' {
+            $parameterInfo = $script:commandInfo.Parameters['Protocol']
+
+            $parameterInfo.Attributes.Mandatory | Should -Not -Contain $true
+        }
+
+        It 'Should have TimeoutSeconds as a non-mandatory parameter' {
+            $parameterInfo = $script:commandInfo.Parameters['TimeoutSeconds']
+
+            $parameterInfo.Attributes.Mandatory | Should -Not -Contain $true
         }
     }
 }
