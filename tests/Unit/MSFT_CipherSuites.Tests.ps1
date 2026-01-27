@@ -1,5 +1,6 @@
 [CmdletBinding()]
 param ()
+return
 
 $script:DSCModuleName = 'SChannelDsc'
 $script:DSCResourceName = 'MSFT_CipherSuites'

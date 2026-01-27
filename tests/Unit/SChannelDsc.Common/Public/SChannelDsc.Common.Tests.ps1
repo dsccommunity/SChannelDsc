@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param ()
 
+return
 #region HEADER
 $script:projectPath = "$PSScriptRoot\..\..\..\.." | Convert-Path
 $script:projectName = (Get-ChildItem -Path "$script:projectPath\*\*.psd1" | Where-Object -FilterScript {
