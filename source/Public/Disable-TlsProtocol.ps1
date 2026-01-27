@@ -112,7 +112,7 @@ function Disable-TlsProtocol
             {
                 $errorMessage = ($script:localizedData.Disable_TlsProtocol_FailedToDisable -f $p, $_.Exception.Message)
                 $exception = New-Exception -Message $errorMessage -ErrorRecord $_
-                $errorRecord = New-ErrorRecord -Exception $exception -ErrorId 'DTP0001' -ErrorCategory 'InvalidOperation' -TargetObject $p
+                $errorRecord = New-ErrorRecord -Exception $exception -ErrorId 'DTP0002' -ErrorCategory 'InvalidOperation' -TargetObject $p
                 $PSCmdlet.ThrowTerminatingError($errorRecord)
             }
         }
