@@ -120,6 +120,4 @@ function Test-TargetResource
     }
 
     Test-DscParameterState @compareDscParameterStateParameters
-
-
 }

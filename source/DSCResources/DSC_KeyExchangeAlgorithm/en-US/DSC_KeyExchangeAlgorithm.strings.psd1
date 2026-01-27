@@ -1,7 +1,9 @@
 ConvertFrom-StringData @'
-    ItemEnable                     = Enabling {0} {1}
-    ItemDisable                    = Disabling {0} {1}
-    ItemDefault                    = Defaulting {0} {1}
-    ItemNotCompliant               = {0} {1} not compliant.
-    ItemCompliant                  = {0} {1} compliant.
+    ItemEnable                     = Enabling KeyExchangeAlgorithm {0}
+    ItemDisable                    = Disabling KeyExchangeAlgorithm {0}
+    ItemDefault                    = Defaulting KeyExchangeAlgorithm {0}
+
+    GettingConfiguration = Getting configuration for key exchange algorithm {0}
+    TestingConfiguration = Testing configuration for key exchange algorithm {0}
+    SettingConfiguration = Setting configuration for key exchange algorithm {0}
 '@
