@@ -57,7 +57,7 @@
         script and correct parameter values. This will also affect the use of parameter
         `-UseModuleFast` of the Resolve-Dependency.ps1 or build.ps1 script.
     #>
-    #UseModuleFast = $true
+    UseModuleFast = $true
     #ModuleFastVersion = '0.1.2'
     #ModuleFastBleedingEdge = $true
 
@@ -73,4 +73,3 @@
     UsePowerShellGetCompatibilityModule = $true
     UsePowerShellGetCompatibilityModuleVersion = '3.0.23-beta23'
 }
-
