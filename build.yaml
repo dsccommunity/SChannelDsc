@@ -6,7 +6,6 @@
 CopyPaths:
   - en-US
   - DSCResources
-  - Modules
 Encoding: UTF8
 VersionedOutputDirectory: true
 BuiltModuleSubdirectory: builtModule
@@ -21,6 +20,12 @@ NestedModule:
     Path: ./output/RequiredModules/DscResource.Common
     AddToManifest: false
     Exclude: PSGetModuleInfo.xml
+  SChannelDsc.Common:
+    Prefix: prefix.ps1
+    VersionedOutputDirectory: false
+    CopyPaths:
+      - en-US
+    Encoding: UTF8
 
 ####################################################
 #       Sampler Pipeline Configuration             #
