@@ -1,6 +1,6 @@
 <#
     .SYNOPSIS
-        Unit test for MSFT_Cipher DSC resource.
+        Unit test for DSC_Cipher DSC resource.
 #>
 
 # Suppressing this rule because Script Analyzer does not understand Pester's syntax.
@@ -31,7 +31,7 @@ BeforeDiscovery {
 
 BeforeAll {
     $script:dscModuleName = 'SChannelDsc'
-    $script:dscResourceName = 'MSFT_Cipher'
+    $script:dscResourceName = 'DSC_Cipher'
 
     $script:testEnvironment = Initialize-TestEnvironment `
         -DSCModuleName $script:dscModuleName `
@@ -55,7 +55,7 @@ AfterAll {
     Get-Module -Name $script:dscResourceName -All | Remove-Module -Force
 }
 
-Describe 'MSFT_Cipher\Get-TargetResource' -Tag 'Get' {
+Describe 'DSC_Cipher\Get-TargetResource' -Tag 'Get' {
     Context 'When the resource is in the desired state' {
         BeforeAll {
             Mock -CommandName Get-SChannelItem -MockWith {
@@ -82,7 +82,7 @@ Describe 'MSFT_Cipher\Get-TargetResource' -Tag 'Get' {
     }
 }
 
-Describe 'MSFT_Cipher\Test-TargetResource' -Tag 'Test' {
+Describe 'DSC_Cipher\Test-TargetResource' -Tag 'Test' {
     Context 'When the resource is in the desired state' {
         BeforeAll {
             Mock -CommandName Get-TargetResource -MockWith {
@@ -136,7 +136,7 @@ Describe 'MSFT_Cipher\Test-TargetResource' -Tag 'Test' {
     }
 }
 
-Describe 'MSFT_Cipher\Set-TargetResource' -Tag 'Set' {
+Describe 'DSC_Cipher\Set-TargetResource' -Tag 'Set' {
     Context 'When the resource is not in the desired state' {
         BeforeDiscovery {
             $testCases = @(
@@ -162,9 +162,9 @@ Describe 'MSFT_Cipher\Set-TargetResource' -Tag 'Set' {
                 Set-StrictMode -Version 1.0
 
                 $testParams = @{
-                    Cipher              = 'AES 128/128'
-                    State               = $State
-                    RebootWhenRequired  = $true
+                    Cipher             = 'AES 128/128'
+                    State              = $State
+                    RebootWhenRequired = $true
                 }
 
                 $null = Set-TargetResource @testParams

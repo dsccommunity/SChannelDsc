@@ -1,6 +1,6 @@
 
 [ClassVersion("1.0.0.0"), FriendlyName("SChannelSettings")]
-class MSFT_SChannelSettings : OMI_BaseResource
+class DSC_SChannelSettings : OMI_BaseResource
 {
     [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'"), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("Specifies the state of TLS 1.2 for the .Net Framework 3.5 and 4.*"), ValueMap{"Enabled","Disabled","Default"}, Values{"Enabled","Disabled","Default"}] String TLS12State;

@@ -1,6 +1,6 @@
 
 [ClassVersion("1.0.0.0"), FriendlyName("CipherSuites")]
-class MSFT_CipherSuites : OMI_BaseResource
+class DSC_CipherSuites : OMI_BaseResource
 {
     [Key, Description("Required parameter to enforce the resource is only added once"), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("Specifies which Cipher Suites should be configured on the server")] String CipherSuitesOrder[];

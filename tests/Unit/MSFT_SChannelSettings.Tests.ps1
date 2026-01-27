@@ -3,7 +3,7 @@ param ()
 return
 
 $script:DSCModuleName = 'SChannelDsc'
-$script:DSCResourceName = 'MSFT_SChannelSettings'
+$script:DSCResourceName = 'DSC_SChannelSettings'
 
 function Invoke-TestSetup
 {
@@ -38,7 +38,7 @@ try
         # Mocks for all contexts
 
         # Test contexts
-        Context -Name "When the TLS 1.2 is set to default and should be enabled" -Fixture {
+        Context -Name 'When the TLS 1.2 is set to default and should be enabled' -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance = 'Yes'
@@ -61,21 +61,21 @@ try
                 Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
             }
 
-            It "Should return TLS12State=Default from the Get method" {
+            It 'Should return TLS12State=Default from the Get method' {
                 (Get-TargetResource @testParams).TLS12State | Should -Be 'Default'
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should update eight registry keys in the Set method" {
+            It 'Should update eight registry keys in the Set method' {
                 Set-TargetResource @testParams
                 Assert-MockCalled Set-SChannelRegKeyValue -Times 8
             }
         }
 
-        Context -Name "When the TLS 1.2 is set to default and should be" -Fixture {
+        Context -Name 'When the TLS 1.2 is set to default and should be' -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance = 'Yes'
@@ -97,16 +97,16 @@ try
                 Mock -CommandName Get-SChannelRegKeyValue -MockWith {}
             }
 
-            It "Should return TLS12State=Default from the Get method" {
+            It 'Should return TLS12State=Default from the Get method' {
                 (Get-TargetResource @testParams).TLS12State | Should -Be 'Default'
             }
 
-            It "Should return true from the Test method" {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
 
-        Context -Name "When the TLS 1.2 is set to Enabled and should be Default" -Fixture {
+        Context -Name 'When the TLS 1.2 is set to Enabled and should be Default' -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance   = 'Yes'
@@ -133,15 +133,15 @@ try
                 Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
             }
 
-            It "Should return TLS12State=Default from the Get method" {
+            It 'Should return TLS12State=Default from the Get method' {
                 (Get-TargetResource @testParams).TLS12State | Should -Be 'Enabled'
             }
 
-            It "Should return true from the Test method" {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should update eight registry keys in the Set method" {
+            It 'Should update eight registry keys in the Set method' {
                 $global:DSCMachineStatus = 0
                 Set-TargetResource @testParams
                 Assert-MockCalled Set-SChannelRegKeyValue -Times 8
@@ -149,7 +149,7 @@ try
             }
         }
 
-        Context -Name "When the DH Key Size is absent, but should be 4096" -Fixture {
+        Context -Name 'When the DH Key Size is absent, but should be 4096' -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance              = 'Yes'
@@ -170,23 +170,23 @@ try
                 Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
             }
 
-            It "Should return DHKeySizes=Null from the Get method" {
+            It 'Should return DHKeySizes=Null from the Get method' {
                 $result = Get-TargetResource @testParams
                 $result.DiffieHellmanMinClientKeySize | Should -BeNullOrEmpty
                 $result.DiffieHellmanMinServerKeySize | Should -BeNullOrEmpty
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should update two registry keys in the Set method" {
+            It 'Should update two registry keys in the Set method' {
                 Set-TargetResource @testParams
                 Assert-MockCalled Set-SChannelRegKeyValue -Times 2
             }
         }
 
-        Context -Name "When the DH Key Size is 1024, but should be 4096" -Fixture {
+        Context -Name 'When the DH Key Size is 1024, but should be 4096' -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance              = 'Yes'
@@ -213,23 +213,23 @@ try
                 Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
             }
 
-            It "Should return DHKeySizes=Null from the Get method" {
+            It 'Should return DHKeySizes=Null from the Get method' {
                 $result = Get-TargetResource @testParams
                 $result.DiffieHellmanMinClientKeySize | Should -Be 1024
                 $result.DiffieHellmanMinServerKeySize | Should -Be 1024
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should update two registry keys in the Set method" {
+            It 'Should update two registry keys in the Set method' {
                 Set-TargetResource @testParams
                 Assert-MockCalled Set-SChannelRegKeyValue -Times 2
             }
         }
 
-        Context -Name "When the DH Key Size is 4096 and should be 4096" -Fixture {
+        Context -Name 'When the DH Key Size is 4096 and should be 4096' -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance              = 'Yes'
@@ -256,22 +256,22 @@ try
                 Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
             }
 
-            It "Should return DHKeySizes=Null from the Get method" {
+            It 'Should return DHKeySizes=Null from the Get method' {
                 $result = Get-TargetResource @testParams
                 $result.DiffieHellmanMinClientKeySize | Should -Be 4096
                 $result.DiffieHellmanMinServerKeySize | Should -Be 4096
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
 
-        Context -Name "When the Kerberos Encryption Types not configured, but should be" -Fixture {
+        Context -Name 'When the Kerberos Encryption Types not configured, but should be' -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance                = 'Yes'
-                    KerberosSupportedEncryptionType = "AES128-HMAC-SHA1"
+                    KerberosSupportedEncryptionType = 'AES128-HMAC-SHA1'
                 }
 
                 Mock -CommandName Get-SChannelRegKeyValue -MockWith {
@@ -281,27 +281,27 @@ try
                 Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
             }
 
-            It "Should return an empty array from the Get method" {
+            It 'Should return an empty array from the Get method' {
                 $result = Get-TargetResource @testParams
-                $result.KerberosSupportedEncryptionType.GetType().Name | Should -Be "Object[]"
+                $result.KerberosSupportedEncryptionType.GetType().Name | Should -Be 'Object[]'
                 $result.KerberosSupportedEncryptionType.Count | Should -Be 0
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should update one registry key in the Set method" {
+            It 'Should update one registry key in the Set method' {
                 Set-TargetResource @testParams
                 Assert-MockCalled Set-SChannelRegKeyValue -Times 1
             }
         }
 
-        Context -Name "When the Kerberos Encryption Types are configured and should be" -Fixture {
+        Context -Name 'When the Kerberos Encryption Types are configured and should be' -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance                = 'Yes'
-                    KerberosSupportedEncryptionType = @("DES-CBC-CRC", "DES-CBC-MD5", "RC4-HMAC-MD5", "AES128-HMAC-SHA1", "AES256-HMAC-SHA1")
+                    KerberosSupportedEncryptionType = @('DES-CBC-CRC', 'DES-CBC-MD5', 'RC4-HMAC-MD5', 'AES128-HMAC-SHA1', 'AES256-HMAC-SHA1')
                 }
 
                 Mock -CommandName Get-SChannelRegKeyValue -MockWith {
@@ -311,22 +311,22 @@ try
                 Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
             }
 
-            It "Should return all types from the Get method" {
+            It 'Should return all types from the Get method' {
                 $result = Get-TargetResource @testParams
-                $result.KerberosSupportedEncryptionType.GetType().Name | Should -Be "Object[]"
+                $result.KerberosSupportedEncryptionType.GetType().Name | Should -Be 'Object[]'
                 $result.KerberosSupportedEncryptionType.Count | Should -Be 5
             }
 
-            It "Should return true from the Test method" {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
 
-        Context -Name "When the WinHTTP Protocols are not configured, but should be" -Fixture {
+        Context -Name 'When the WinHTTP Protocols are not configured, but should be' -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance              = 'Yes'
-                    WinHttpDefaultSecureProtocols = @("TLS1.2")
+                    WinHttpDefaultSecureProtocols = @('TLS1.2')
                 }
 
                 Mock -CommandName Get-SChannelRegKeyValue -MockWith {
@@ -335,32 +335,32 @@ try
 
                 Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
 
-                Mock -CommandName Get-Hotfix -MockWith { return "" }
+                Mock -CommandName Get-Hotfix -MockWith { return '' }
 
-                Mock -CommandName Get-SCDscOSVersion -MockWith { return [System.Version]"6.2" }
+                Mock -CommandName Get-SCDscOSVersion -MockWith { return [System.Version]'6.2' }
             }
 
-            It "Should return an empty array from the Get method" {
+            It 'Should return an empty array from the Get method' {
                 $result = Get-TargetResource @testParams
-                $result.WinHttpDefaultSecureProtocols.GetType().Name | Should -Be "Object[]"
+                $result.WinHttpDefaultSecureProtocols.GetType().Name | Should -Be 'Object[]'
                 $result.WinHttpDefaultSecureProtocols.Count | Should -Be 0
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should update one registry key in the Set method" {
+            It 'Should update one registry key in the Set method' {
                 Set-TargetResource @testParams
                 Assert-MockCalled Set-SChannelRegKeyValue -Times 1
             }
         }
 
-        Context -Name "When the WinHTTP Protocols are configured and should be" -Fixture {
+        Context -Name 'When the WinHTTP Protocols are configured and should be' -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance              = 'Yes'
-                    WinHttpDefaultSecureProtocols = @("SSL2.0", "SSL3.0", "TLS1.0", "TLS1.1", "TLS1.2")
+                    WinHttpDefaultSecureProtocols = @('SSL2.0', 'SSL3.0', 'TLS1.0', 'TLS1.1', 'TLS1.2')
                 }
 
                 Mock -CommandName Get-SChannelRegKeyValue -MockWith {
@@ -370,23 +370,23 @@ try
                 Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
             }
 
-            It "Should return all types from the Get method" {
+            It 'Should return all types from the Get method' {
                 $result = Get-TargetResource @testParams
-                $result.WinHttpDefaultSecureProtocols.GetType().Name | Should -Be "Object[]"
+                $result.WinHttpDefaultSecureProtocols.GetType().Name | Should -Be 'Object[]'
                 $result.WinHttpDefaultSecureProtocols.Count | Should -Be 5
             }
 
-            It "Should return true from the Test method" {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
 
         # Regression test for issue #28
-        Context -Name "When the WinHTTP Protocols are configured with one value" -Fixture {
+        Context -Name 'When the WinHTTP Protocols are configured with one value' -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance              = 'Yes'
-                    WinHttpDefaultSecureProtocols = @("TLS1.2")
+                    WinHttpDefaultSecureProtocols = @('TLS1.2')
                 }
 
                 Mock -CommandName Get-SChannelRegKeyValue -MockWith {
@@ -396,13 +396,13 @@ try
                 Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
             }
 
-            It "Should return all types from the Get method" {
+            It 'Should return all types from the Get method' {
                 $result = Get-TargetResource @testParams
-                $result.WinHttpDefaultSecureProtocols.GetType().Name | Should -Be "Object[]"
+                $result.WinHttpDefaultSecureProtocols.GetType().Name | Should -Be 'Object[]'
                 $result.WinHttpDefaultSecureProtocols.Count | Should -Be 1
             }
 
-            It "Should return true from the Test method" {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
@@ -411,7 +411,7 @@ try
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance              = 'Yes'
-                    WinHttpDefaultSecureProtocols = @("TLS1.2")
+                    WinHttpDefaultSecureProtocols = @('TLS1.2')
                 }
 
                 Mock -CommandName Get-SChannelRegKeyValue -MockWith {
@@ -422,15 +422,15 @@ try
 
                 Mock -CommandName Get-Hotfix -MockWith { return $null }
 
-                Mock -CommandName Get-SCDscOSVersion -MockWith { return [System.Version]"6.2" }
+                Mock -CommandName Get-SCDscOSVersion -MockWith { return [System.Version]'6.2' }
             }
 
-            It "Should throw exception in the Set method" {
-                { Set-TargetResource @testParams } | Should -Throw "Hotfix KB3140245 is not installed."
+            It 'Should throw exception in the Set method' {
+                { Set-TargetResource @testParams } | Should -Throw 'Hotfix KB3140245 is not installed.'
             }
         }
 
-        Context -Name "When the FIPSPolicy is Disabled, but should be Enabled" -Fixture {
+        Context -Name 'When the FIPSPolicy is Disabled, but should be Enabled' -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance          = 'Yes'
@@ -456,22 +456,22 @@ try
                 Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
             }
 
-            It "Should return FipsPolicy=False from the Get method" {
+            It 'Should return FipsPolicy=False from the Get method' {
                 $result = Get-TargetResource @testParams
                 $result.EnableFIPSAlgorithmPolicy | Should -Be $false
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should update one registry key in the Set method" {
+            It 'Should update one registry key in the Set method' {
                 Set-TargetResource @testParams
                 Assert-MockCalled Set-SChannelRegKeyValue -Times 1
             }
         }
 
-        Context -Name "When the FIPSPolicy is Enabled and should be" -Fixture {
+        Context -Name 'When the FIPSPolicy is Enabled and should be' -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance          = 'Yes'
@@ -497,12 +497,12 @@ try
                 Mock -CommandName Set-SChannelRegKeyValue -MockWith {}
             }
 
-            It "Should return FipsPolicy=True from the Get method" {
+            It 'Should return FipsPolicy=True from the Get method' {
                 $result = Get-TargetResource @testParams
                 $result.EnableFIPSAlgorithmPolicy | Should -Be $true
             }
 
-            It "Should return true from the Test method" {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }

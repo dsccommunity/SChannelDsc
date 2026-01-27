@@ -3,7 +3,7 @@ param ()
 return
 
 $script:DSCModuleName = 'SChannelDsc'
-$script:DSCResourceName = 'MSFT_CipherSuites'
+$script:DSCResourceName = 'DSC_CipherSuites'
 
 function Invoke-TestSetup
 {
@@ -38,56 +38,56 @@ try
         # Mocks for all contexts
 
         # Test contexts
-        Context -Name "When the cipher suite order is correct" -Fixture {
+        Context -Name 'When the cipher suite order is correct' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance  = "Yes"
-                    CipherSuitesOrder = @("TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384")
-                    Ensure            = "Present"
+                    IsSingleInstance  = 'Yes'
+                    CipherSuitesOrder = @('TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256', 'TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256', 'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384')
+                    Ensure            = 'Present'
                 }
 
-                Mock -CommandName Get-ItemProperty -MockWith { return "" }
+                Mock -CommandName Get-ItemProperty -MockWith { return '' }
                 Mock -CommandName Get-ItemPropertyValue -MockWith {
-                    return @("TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384")
+                    return @('TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256', 'TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256', 'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384')
                 }
             }
 
-            It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+            It 'Should return present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It "Should return true from the Test method" {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
 
-        Context -Name "When the cipher suite order is incorrect" -Fixture {
+        Context -Name 'When the cipher suite order is incorrect' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance   = "Yes"
-                    CipherSuitesOrder  = @("TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256")
-                    Ensure             = "Present"
+                    IsSingleInstance   = 'Yes'
+                    CipherSuitesOrder  = @('TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256', 'TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384', 'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256')
+                    Ensure             = 'Present'
                     RebootWhenRequired = $true
                 }
 
                 Mock -CommandName New-Item -MockWith { }
                 Mock -CommandName New-ItemProperty -MockWith { }
 
-                Mock -CommandName Get-ItemProperty -MockWith { return "" }
+                Mock -CommandName Get-ItemProperty -MockWith { return '' }
                 Mock -CommandName Get-ItemPropertyValue -MockWith {
-                    return @("TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384")
+                    return @('TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256', 'TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256', 'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384')
                 }
             }
 
-            It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+            It 'Should return present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should configure the cipher suites in the set method" {
+            It 'Should configure the cipher suites in the set method' {
                 $global:DSCMachineStatus = 0
                 Set-TargetResource @testParams
                 Assert-MockCalled New-ItemProperty
@@ -95,12 +95,12 @@ try
             }
         }
 
-        Context -Name "When the cipher suite order has not been set yet" -Fixture {
+        Context -Name 'When the cipher suite order has not been set yet' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance  = "Yes"
-                    CipherSuitesOrder = @("TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256")
-                    Ensure            = "Present"
+                    IsSingleInstance  = 'Yes'
+                    CipherSuitesOrder = @('TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256', 'TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384', 'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256')
+                    Ensure            = 'Present'
                 }
 
                 Mock -CommandName New-Item -MockWith { }
@@ -109,15 +109,15 @@ try
                 Mock -CommandName Get-ItemProperty -MockWith { return $null }
             }
 
-            It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
+            It 'Should return absent from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should configure the cipher suites in the set method" {
+            It 'Should configure the cipher suites in the set method' {
                 Set-TargetResource @testParams
                 Assert-MockCalled New-ItemProperty
             }
@@ -126,27 +126,27 @@ try
         Context -Name "When the cipher suite order exists, but shouldn't" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance  = "Yes"
-                    CipherSuitesOrder = @("TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384")
-                    Ensure            = "Absent"
+                    IsSingleInstance  = 'Yes'
+                    CipherSuitesOrder = @('TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256', 'TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256', 'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384')
+                    Ensure            = 'Absent'
                 }
 
                 Mock -CommandName Remove-ItemProperty -MockWith { }
-                Mock -CommandName Get-ItemProperty -MockWith { return "" }
+                Mock -CommandName Get-ItemProperty -MockWith { return '' }
                 Mock -CommandName Get-ItemPropertyValue -MockWith {
-                    return @("TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384")
+                    return @('TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256', 'TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256', 'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384')
                 }
             }
 
-            It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+            It 'Should return present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should remove the cipher suites in the set method" {
+            It 'Should remove the cipher suites in the set method' {
                 Set-TargetResource @testParams
                 Assert-MockCalled Remove-ItemProperty
             }
@@ -155,20 +155,20 @@ try
         Context -Name "When the cipher suite order doesn't exists and shouldn't" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance  = "Yes"
-                    CipherSuitesOrder = @("TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384")
-                    Ensure            = "Absent"
+                    IsSingleInstance  = 'Yes'
+                    CipherSuitesOrder = @('TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256', 'TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256', 'TLS_DHE_RSA_WITH_AES_256_GCM_SHA384')
+                    Ensure            = 'Absent'
                 }
 
                 Mock -CommandName Remove-ItemProperty -MockWith { }
                 Mock -CommandName Get-ItemProperty -MockWith { return $null }
             }
 
-            It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
+            It 'Should return absent from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
 
-            It "Should return true from the Test method" {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }

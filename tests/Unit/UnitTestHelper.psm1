@@ -20,13 +20,13 @@ function New-SCDscUnitTestHelper
         $IncludeDistributedCacheStubs
     )
 
-    $repoRoot = Join-Path -Path $PSScriptRoot -ChildPath "..\..\" -Resolve
-    $moduleRoot = Join-Path -Path $repoRoot -ChildPath "Modules\SChannelDsc"
+    $repoRoot = Join-Path -Path $PSScriptRoot -ChildPath '..\..\' -Resolve
+    $moduleRoot = Join-Path -Path $repoRoot -ChildPath 'Modules\SChannelDsc'
 
-    $mainModule = Join-Path -Path $moduleRoot -ChildPath "SChannelDsc.psd1"
+    $mainModule = Join-Path -Path $moduleRoot -ChildPath 'SChannelDsc.psd1'
     Import-Module -Name $mainModule -Global
 
-    if ($PSBoundParameters.ContainsKey("SubModulePath") -eq $true)
+    if ($PSBoundParameters.ContainsKey('SubModulePath') -eq $true)
     {
         $describeHeader = "Sub-module '$SubModulePath'"
         $modulesPath = Join-Path -Path $moduleRoot -ChildPath 'Modules'
@@ -34,11 +34,11 @@ function New-SCDscUnitTestHelper
         $moduleName = (Get-Item -Path $moduleToLoad).BaseName
     }
 
-    if ($PSBoundParameters.ContainsKey("DscResource") -eq $true)
+    if ($PSBoundParameters.ContainsKey('DscResource') -eq $true)
     {
         $describeHeader = "DSC Resource '$DscResource'"
-        $moduleName = "MSFT_$DscResource"
-        $modulePath = "DSCResources\MSFT_$DscResource\MSFT_$DscResource.psm1"
+        $moduleName = "DSC_$DscResource"
+        $modulePath = "DSCResources\DSC_$DscResource\DSC_$DscResource.psm1"
         $moduleToLoad = Join-Path -Path $moduleRoot -ChildPath $modulePath
     }
 
@@ -51,17 +51,17 @@ function New-SCDscUnitTestHelper
 
     if ($ExcludeInvokeHelper -eq $false)
     {
-        $initScript += @"
+        $initScript += @'
             # Additional Mocks
-"@
+'@
     }
 
     return @{
-        DescribeHeader         = $describeHeader
-        ModuleName             = $moduleName
-        InitializeScript       = [ScriptBlock]::Create($initScript)
-        RepoRoot               = $repoRoot
-        CleanupScript          = [ScriptBlock]::Create(@"
+        DescribeHeader   = $describeHeader
+        ModuleName       = $moduleName
+        InitializeScript = [ScriptBlock]::Create($initScript)
+        RepoRoot         = $repoRoot
+        CleanupScript    = [ScriptBlock]::Create(@"
 
             Get-Variable -Scope Global -Name "SCDsc*" | Remove-Variable -Force -Scope "Global"
             `$global:DSCMachineStatus = 0
