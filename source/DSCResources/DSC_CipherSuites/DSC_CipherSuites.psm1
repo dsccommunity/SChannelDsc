@@ -13,7 +13,7 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Yes")]
+        [ValidateSet('Yes')]
         [System.String]
         $IsSingleInstance,
 
@@ -22,16 +22,16 @@ function Get-TargetResource
         $CipherSuitesOrder,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Boolean]
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message "Getting configuration for cipher suites order"
+    Write-Verbose -Message $script:localizedData.GettingConfiguration
 
     $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002'
     $item = Get-ItemProperty -Path $itemKey -Name 'Functions' -ErrorAction SilentlyContinue
@@ -61,7 +61,7 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Yes")]
+        [ValidateSet('Yes')]
         [System.String]
         $IsSingleInstance,
 
@@ -70,33 +70,36 @@ function Set-TargetResource
         $CipherSuitesOrder,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Boolean]
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message "Setting configuration for cipher suites order"
+    Write-Verbose -Message $script:localizedData.SettingConfiguration
 
     $itemKey = 'HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002'
+    $shouldReboot = $false
 
     if ($Ensure -eq 'Present')
     {
-        Write-Verbose -Message ($script:localizedData.ItemEnable -f 'CipherSuites' , $Ensure)
+        Write-Verbose -Message ($script:localizedData.ItemEnable -f $Ensure)
         $cipherSuitesAsString = [string]::join(',', $cipherSuitesOrder)
         New-Item $itemKey -Force
-        New-ItemProperty -Path $itemKey -Name 'Functions' -Value $cipherSuitesAsString -PropertyType 'String' -Force | Out-Null
+        $null = New-ItemProperty -Path $itemKey -Name 'Functions' -Value $cipherSuitesAsString -PropertyType 'String' -Force
+        $shouldReboot = $true
     }
     else
     {
-        Write-Verbose -Message ($script:localizedData.ItemDisable -f 'CipherSuites' , $Ensure)
+        Write-Verbose -Message ($script:localizedData.ItemDisable -f $Ensure)
         Remove-ItemProperty -Path $itemKey -Name 'Functions' -Force
+        $shouldReboot = $true
     }
 
-    if ($RebootWhenRequired)
+    if ($RebootWhenRequired -and $shouldReboot)
     {
         Set-DscMachineRebootRequired
     }
@@ -109,7 +112,7 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Yes")]
+        [ValidateSet('Yes')]
         [System.String]
         $IsSingleInstance,
 
@@ -118,57 +121,24 @@ function Test-TargetResource
         $CipherSuitesOrder,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Boolean]
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message "Testing configuration for cipher suites order"
+    Write-Verbose -Message $script:localizedData.TestingConfiguration
 
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    Write-Verbose -Message "Current Values: $(Convert-SCDscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-SCDscHashtableToString -Hashtable $PSBoundParameters)"
-
-    if ($null -ne $CipherSuitesOrder)
-    {
-        $cipherSuitesAsString = [string]::join(',', $cipherSuitesOrder)
-    }
-    if ($null -ne $CurrentValues.CipherSuitesOrder)
-    {
-        $currentSuitesOrderAsString = [string]::join(',', $CurrentValues.CipherSuitesOrder)
-    }
-    else
-    {
-        $currentSuitesOrderAsString = $null
+    $compareDscParameterStateParameters = @{
+        CurrentValues       = Get-TargetResource @PSBoundParameters
+        DesiredValues       = $PSBoundParameters
+        ExcludeProperties   = @('IsSingleInstance', 'RebootWhenRequired')
+        SortArrayValues     = $false
+        TurnOffTypeChecking = $false
     }
 
-    $Compliant = $false
-
-    if ($Ensure -eq "Present" -and `
-            $currentSuitesOrderAsString -eq $cipherSuitesAsString)
-    {
-        $Compliant = $true
-    }
-
-    if ($Ensure -eq "Absent" -and `
-            $null -eq $currentSuitesOrderAsString)
-    {
-        $Compliant = $true
-    }
-
-    if ($Compliant -eq $true)
-    {
-        Write-Verbose -Message ($script:localizedData.ItemCompliant -f "CipherSuitesOrder" , $Ensure)
-    }
-    else
-    {
-        Write-Verbose -Message ($script:localizedData.ItemNotCompliant -f "CipherSuitesOrder" , $Ensure)
-    }
-
-    return $Compliant
+    Test-DscParameterState @compareDscParameterStateParameters
 }
