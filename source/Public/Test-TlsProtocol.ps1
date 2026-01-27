@@ -5,7 +5,9 @@
     .DESCRIPTION
         Tests one or more SCHANNEL protocol keys under
         HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols
-        to determine whether the protocol is enabled for server-side connections.
+        to determine whether the protocol is enabled or disabled for server-side
+        or client-side connections. Returns `$true` if all specified protocols
+        match the expected state, or `$false` if any do not.
 
     .PARAMETER Protocol
         One or more protocol names to check. Accepts values from the
@@ -13,15 +15,21 @@
         `Ssl3`, `Tls`, `Tls11`, `Tls12`, `Tls13`.
 
     .PARAMETER Client
-        When specified, will check the protocol `Client` registry
-        key instead of the default `Server` key.
+        When specified, checks the protocol `Client` registry key instead of the
+        default `Server` key.
 
     .PARAMETER Disabled
-        When specified, test that the protocol(s) are disabled. By default the
+        When specified, tests that the protocol(s) are disabled. By default the
         command tests that the protocol(s) are enabled.
 
+    .INPUTS
+        None.
+
     .OUTPUTS
-        System.Boolean
+        `System.Boolean`
+
+        Returns `$true` if all specified protocols match the expected state,
+        `$false` otherwise.
 
     .EXAMPLE
         Test-TlsProtocol -Protocol Tls12
@@ -32,6 +40,22 @@
         Test-TlsProtocol -Protocol Tls13 -Client
 
         Tests if TLS 1.3 is enabled for client-side connections.
+
+    .EXAMPLE
+        Test-TlsProtocol -Protocol Tls12 -Disabled
+
+        Tests if TLS 1.2 is disabled for server-side connections.
+
+    .EXAMPLE
+        Test-TlsProtocol -Protocol Ssl2, Ssl3 -Disabled
+
+        Tests if both SSL 2.0 and SSL 3.0 are disabled for server-side
+        connections. Returns `$true` only if both protocols are disabled.
+
+    .EXAMPLE
+        Test-TlsProtocol -Protocol Tls12 -Client -Disabled
+
+        Tests if TLS 1.2 is disabled for client-side connections.
 #>
 function Test-TlsProtocol
 {
