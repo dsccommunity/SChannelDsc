@@ -38,7 +38,7 @@ AfterAll {
 
 Describe 'Get-TlsProtocolTargetRegistryName' -Tag 'Private' {
     Context 'When Client switch is present' {
-        It 'returns Client' {
+        It 'Should return Client' {
             InModuleScope -ScriptBlock {
                 (Get-TlsProtocolTargetRegistryName -Client) | Should -Be 'Client'
             }
@@ -46,7 +46,7 @@ Describe 'Get-TlsProtocolTargetRegistryName' -Tag 'Private' {
     }
 
     Context 'When Client switch is not present' {
-        It 'returns Server' {
+        It 'Should return Server' {
             InModuleScope -ScriptBlock {
                 (Get-TlsProtocolTargetRegistryName) | Should -Be 'Server'
             }

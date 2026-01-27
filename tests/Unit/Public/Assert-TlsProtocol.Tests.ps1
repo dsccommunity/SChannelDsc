@@ -59,7 +59,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
             Mock -CommandName Test-TlsProtocol -MockWith { return $true }
         }
 
-        It 'Should not throw an error' {
+        It 'Should not throw' {
             $null = Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
         }
     }
@@ -69,7 +69,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
             Mock -CommandName Test-TlsProtocol -MockWith { return $true }
         }
 
-        It 'Should not throw an error and pass Client switch' {
+        It 'Should not throw and pass Client switch to Test-TlsProtocol' {
             $null = Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client
 
             Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Client -eq $true } -Times 1
@@ -82,7 +82,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
                 Mock -CommandName Test-TlsProtocol -MockWith { return $true }
             }
 
-            It 'Should not throw an error and pass Disabled switch' {
+            It 'Should not throw and pass Disabled switch to Test-TlsProtocol' {
                 $null = Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled
 
                 Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Disabled -eq $true } -Times 1
@@ -94,7 +94,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
                 Mock -CommandName Test-TlsProtocol -MockWith { return $false }
             }
 
-            It 'Should throw an error and pass Disabled switch' {
+            It 'Should throw and pass Disabled switch to Test-TlsProtocol' {
                 { Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled } | Should -Throw
 
                 Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Disabled -eq $true } -Times 1
@@ -107,7 +107,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
             Mock -CommandName Test-TlsProtocol -MockWith { return $false }
         }
 
-        It 'Should throw an error' {
+        It 'Should throw' {
             { Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) } | Should -Throw
         }
     }
@@ -117,7 +117,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
             Mock -CommandName Test-TlsProtocol -MockWith { return $false }
         }
 
-        It 'Should throw an error and pass Client switch' {
+        It 'Should throw and pass Client switch to Test-TlsProtocol' {
             { Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client } | Should -Throw
 
             Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Client -eq $true } -Times 1

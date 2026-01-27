@@ -74,7 +74,7 @@ Describe 'Disable-TlsProtocol' -Tag 'Public' {
             Mock -CommandName New-ItemProperty
         }
 
-        It 'Should NOT write DisabledByDefault' {
+        It 'Should not write DisabledByDefault' {
             Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Force
 
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' } -Exactly -Times 0
@@ -88,7 +88,7 @@ Describe 'Disable-TlsProtocol' -Tag 'Public' {
             Mock -CommandName New-ItemProperty
         }
 
-        It 'Should write DisabledByDefault=1 and target Client path' {
+        It 'Should write DisabledByDefault to 1 and target Client path' {
             Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client -SetDisabledByDefault -Force
 
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 1 } -Exactly -Times 1
@@ -102,7 +102,7 @@ Describe 'Disable-TlsProtocol' -Tag 'Public' {
             Mock -CommandName New-ItemProperty
         }
 
-        It 'Should write DisabledByDefault=1 and target Server path' {
+        It 'Should write DisabledByDefault to 1 and target Server path' {
             Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -SetDisabledByDefault -Force
 
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 1 } -Exactly -Times 1

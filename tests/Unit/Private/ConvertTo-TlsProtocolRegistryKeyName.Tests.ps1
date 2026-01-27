@@ -38,37 +38,37 @@ AfterAll {
 
 Describe 'ConvertTo-TlsProtocolRegistryKeyName' -Tag 'Private' {
     Context 'When converting known protocol enum values' {
-        It 'Maps Tls12 to TLS 1.2' {
+        It 'Should map Tls12 to TLS 1.2' {
             InModuleScope -ScriptBlock {
                 ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) | Should -Be 'TLS 1.2'
             }
         }
 
-        It 'Maps Tls11 to TLS 1.1' {
+        It 'Should map Tls11 to TLS 1.1' {
             InModuleScope -ScriptBlock {
                 ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Tls11) | Should -Be 'TLS 1.1'
             }
         }
 
-        It 'Maps Tls to TLS 1.0' {
+        It 'Should map Tls to TLS 1.0' {
             InModuleScope -ScriptBlock {
                 ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Tls) | Should -Be 'TLS 1.0'
             }
         }
 
-        It 'Maps Ssl3 to SSL 3.0' {
+        It 'Should map Ssl3 to SSL 3.0' {
             InModuleScope -ScriptBlock {
                 ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) | Should -Be 'SSL 3.0'
             }
         }
 
-        It 'Maps Ssl2 to SSL 2.0' {
+        It 'Should map Ssl2 to SSL 2.0' {
             InModuleScope -ScriptBlock {
                 ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Ssl2) | Should -Be 'SSL 2.0'
             }
         }
 
-        It 'Maps Tls13 to TLS 1.3' {
+        It 'Should map Tls13 to TLS 1.3' {
             InModuleScope -ScriptBlock {
                 ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Tls13) | Should -Be 'TLS 1.3'
             }

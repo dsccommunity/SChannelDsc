@@ -54,7 +54,7 @@ Describe 'Test-TlsNegotiation' {
         $result.ParameterListAsString | Should -Be $ExpectedParameters
     }
 
-    Context 'When testing against a real public host (www.google.se:443)' {
+    Context 'When testing against a real public host' {
         It 'Should return at least one successful TLS protocol (Tls12 expected)' {
             $results = Test-TlsNegotiation -HostName 'www.google.se' -Port 443 -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -TimeoutSeconds 10
 
@@ -67,7 +67,7 @@ Describe 'Test-TlsNegotiation' {
             $single.NegotiatedCipherSuite | Should -Not -BeNullOrEmpty
         }
 
-        It 'Should return objects for multiple protocols' {
+        It 'Should return result objects for multiple protocols' {
             $protocols = @(
                 [System.Security.Authentication.SslProtocols]::Ssl2,
                 [System.Security.Authentication.SslProtocols]::Ssl3,
@@ -90,7 +90,7 @@ Describe 'Test-TlsNegotiation' {
             ($results | Where-Object { $_.Success } | Measure-Object).Count | Should -BeGreaterThan 0
         }
 
-        It 'Should return objects for specific protocols' {
+        It 'Should return result objects for specific protocols' {
             $protocols = @(
                 [System.Security.Authentication.SslProtocols]::Tls12,
                 [System.Security.Authentication.SslProtocols]::Tls13
