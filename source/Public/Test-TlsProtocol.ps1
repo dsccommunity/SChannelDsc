@@ -126,7 +126,8 @@ function Test-TlsProtocol
                 continue
             }
 
-            if ($protocolEnabled -eq 1 -and $protocolDisabled -ne 1)
+            if ((($protocolEnabled -eq 1 -and $protocolDisabled -ne 1) -or
+                 ($protocolEnabled -eq $null -and $protocolDisabled -eq 0)))
             {
                 continue
             }
