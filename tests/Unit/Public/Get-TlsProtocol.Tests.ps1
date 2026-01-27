@@ -168,4 +168,30 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
             } -Exactly -Times 1 -Scope It
         }
     }
+
+    Context 'When validating parameters' {
+        BeforeAll {
+            $script:commandInfo = Get-Command -Name 'Get-TlsProtocol'
+        }
+
+        It 'Should have parameter set __AllParameterSets' {
+            $result = $script:commandInfo.ParameterSets |
+                Where-Object -FilterScript { $_.Name -eq '__AllParameterSets' }
+
+            $result | Should -Not -BeNullOrEmpty
+            $result.Name | Should -Be '__AllParameterSets'
+        }
+
+        It 'Should have Protocol as a non-mandatory parameter' {
+            $parameterInfo = $script:commandInfo.Parameters['Protocol']
+
+            $parameterInfo.Attributes.Mandatory | Should -Not -Contain $true
+        }
+
+        It 'Should have Client defined as a switch parameter' {
+            $parameterInfo = $script:commandInfo.Parameters['Client']
+
+            $parameterInfo.ParameterType.Name | Should -Be 'SwitchParameter'
+        }
+    }
 }
