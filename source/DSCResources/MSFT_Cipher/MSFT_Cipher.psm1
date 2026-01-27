@@ -72,15 +72,15 @@ function Set-TargetResource
     {
         'Default'
         {
-            Write-Verbose -Message ($script:localizedData.ItemDefault -f 'Cipher', $Cipher)
+            Write-Verbose -Message ($script:localizedData.ItemDefault -f $Cipher)
         }
         'Disabled'
         {
-            Write-Verbose -Message ($script:localizedData.ItemDisable -f 'Cipher', $Cipher)
+            Write-Verbose -Message ($script:localizedData.ItemDisable -f $Cipher)
         }
         'Enabled'
         {
-            Write-Verbose -Message ($script:localizedData.ItemEnable -f 'Cipher', $Cipher)
+            Write-Verbose -Message ($script:localizedData.ItemEnable -f $Cipher)
         }
     }
 

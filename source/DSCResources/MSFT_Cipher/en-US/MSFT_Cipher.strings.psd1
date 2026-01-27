@@ -1,7 +1,7 @@
 ConvertFrom-StringData @'
-    ItemEnable                     = Enabling {0} {1}
-    ItemDisable                    = Disabling {0} {1}
-    ItemDefault                    = Defaulting {0} {1}
+    ItemEnable                     = Enabling Cipher {0}
+    ItemDisable                    = Disabling Cipher {0}
+    ItemDefault                    = Defaulting Cipher {0}
 
     GettingConfiguration = Getting configuration for cipher {0}
     SettingConfiguration = Setting configuration for cipher {0}
