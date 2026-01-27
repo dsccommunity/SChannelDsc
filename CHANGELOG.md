@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Rename SChannelDsc.Utils to SChannelDsc.Common.
   - Convert SChannelDsc.Common a buildable nested module.
   - Update case on resource README files.
+  - Converted Unit tests to Pester 5 [issue #42](https://github.com/dsccommunity/SChannelDsc/issues/42).
+  - Renamed MSFT prefix to DSC [issue #43](https://github.com/dsccommunity/SChannelDsc/issues/43).
 
 ## [1.5.0] - 2026-01-27
 
