@@ -13,7 +13,7 @@
 
 .TAGS
 
-.LICENSEURI https://github.com/dsccommunity/SChannelDsc/blob/master/LICENSE
+.LICENSEURI https://github.com/dsccommunity/SChannelDsc/blob/main/LICENSE
 
 .PROJECTURI https://github.com/dsccommunity/SChannelDsc
 
