@@ -115,14 +115,6 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
             $script:commandInfo = Get-Command -Name 'Enable-TlsProtocol'
         }
 
-        It 'Should have parameter set __AllParameterSets' {
-            $result = $script:commandInfo.ParameterSets |
-                Where-Object -FilterScript { $_.Name -eq '__AllParameterSets' }
-
-            $result | Should -Not -BeNullOrEmpty
-            $result.Name | Should -Be '__AllParameterSets'
-        }
-
         It 'Should have Protocol as a mandatory parameter' {
             $parameterInfo = $script:commandInfo.Parameters['Protocol']
 

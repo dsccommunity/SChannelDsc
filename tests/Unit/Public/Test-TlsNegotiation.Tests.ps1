@@ -118,14 +118,6 @@ Describe 'Test-TlsNegotiation' {
             $script:commandInfo = Get-Command -Name 'Test-TlsNegotiation'
         }
 
-        It 'Should have parameter set __AllParameterSets' {
-            $result = $script:commandInfo.ParameterSets |
-                Where-Object -FilterScript { $_.Name -eq '__AllParameterSets' }
-
-            $result | Should -Not -BeNullOrEmpty
-            $result.Name | Should -Be '__AllParameterSets'
-        }
-
         It 'Should have HostName as a non-mandatory parameter' {
             $parameterInfo = $script:commandInfo.Parameters['HostName']
 

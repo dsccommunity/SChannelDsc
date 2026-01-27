@@ -127,7 +127,7 @@ function Test-TlsNegotiation
             if (-not $iar.AsyncWaitHandle.WaitOne([System.TimeSpan]::FromSeconds($TimeoutSeconds), $false))
             {
                 $message = $script:localizedData.Test_TlsNegotiation_ConnectTimeout -f $TimeoutSeconds
-                $exception = New-Exception -Message $message -ErrorRecord ([System.TimeoutException]::new($message))
+                $exception = New-Exception -Message $message
                 $errorRecord = New-ErrorRecord -Exception $exception -ErrorId 'TTN0002' -ErrorCategory 'OperationTimeout' -TargetObject $HostName
                 $PSCmdlet.ThrowTerminatingError($errorRecord)
             }
