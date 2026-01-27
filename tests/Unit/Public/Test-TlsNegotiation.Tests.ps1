@@ -37,6 +37,23 @@ AfterAll {
 }
 
 Describe 'Test-TlsNegotiation' {
+    It 'Should have the correct parameters in parameter set <ExpectedParameterSetName>' -ForEach @(
+        @{
+            ExpectedParameterSetName = '__AllParameterSets'
+            ExpectedParameters = '[[-HostName] <string>] [[-Port] <ushort>] [-Protocol <SslProtocols[]>] [-TimeoutSeconds <uint>] [<CommonParameters>]'
+        }
+    ) {
+        $result = (Get-Command -Name 'Test-TlsNegotiation').ParameterSets |
+            Where-Object -FilterScript { $_.Name -eq $ExpectedParameterSetName } |
+            Select-Object -Property @(
+                @{ Name = 'ParameterSetName'; Expression = { $_.Name } },
+                @{ Name = 'ParameterListAsString'; Expression = { $_.ToString() } }
+            )
+
+        $result.ParameterSetName | Should -Be $ExpectedParameterSetName
+        $result.ParameterListAsString | Should -Be $ExpectedParameters
+    }
+
     Context 'When testing against a real public host (www.google.se:443)' {
         It 'Should return at least one successful TLS protocol (Tls12 expected)' {
             $results = Test-TlsNegotiation -HostName 'www.google.se' -Port 443 -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -TimeoutSeconds 10
@@ -125,6 +142,12 @@ Describe 'Test-TlsNegotiation' {
             $parameterInfo = $script:commandInfo.Parameters['Protocol']
 
             $parameterInfo.Attributes.Mandatory | Should -Not -Contain $true
+        }
+
+        It 'Should have Protocol declared as an array type' {
+            $parameterInfo = $script:commandInfo.Parameters['Protocol']
+
+            $parameterInfo.ParameterType.IsArray | Should -BeTrue
         }
 
         It 'Should have TimeoutSeconds as a non-mandatory parameter' {
