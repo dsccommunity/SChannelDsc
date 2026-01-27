@@ -86,14 +86,14 @@ function Enable-TlsProtocol
         $ConfirmPreference = 'None'
     }
 
-    foreach ($p in $Protocol)
+    foreach ($currentProtocol in $Protocol)
     {
         $target = Get-TlsProtocolTargetRegistryName -Client:$Client
 
-        $regPath = Get-TlsProtocolRegistryPath -Protocol $p -Client:$Client
+        $regPath = Get-TlsProtocolRegistryPath -Protocol $currentProtocol -Client:$Client
 
         # For ShouldProcess description use the localized template with the key name and target
-        $protocolKeyName = ConvertTo-TlsProtocolRegistryKeyName -Protocol $p
+        $protocolKeyName = ConvertTo-TlsProtocolRegistryKeyName -Protocol $currentProtocol
 
         $descriptionMessage = $script:localizedData.Enable_TlsProtocol_ShouldProcessDescription -f $protocolKeyName, $target
         $confirmationMessage = $script:localizedData.Enable_TlsProtocol_ShouldProcessConfirmation -f $protocolKeyName
@@ -112,10 +112,10 @@ function Enable-TlsProtocol
             }
             catch
             {
-                $errorMessage = ($script:localizedData.Enable_TlsProtocol_FailedToEnable -f $p, $_.Exception.Message)
+                $errorMessage = ($script:localizedData.Enable_TlsProtocol_FailedToEnable -f $currentProtocol, $_.Exception.Message)
 
                 $exception = New-Exception -Message $errorMessage -ErrorRecord $_
-                $errorRecord = New-ErrorRecord -Exception $exception -ErrorId 'ETP0001' -ErrorCategory 'InvalidOperation' -TargetObject $p
+                $errorRecord = New-ErrorRecord -Exception $exception -ErrorId 'ETP0001' -ErrorCategory 'InvalidOperation' -TargetObject $currentProtocol
                 $PSCmdlet.ThrowTerminatingError($errorRecord)
             }
         }
