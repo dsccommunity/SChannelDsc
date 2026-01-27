@@ -39,11 +39,13 @@ AfterAll {
 
 Describe 'Get-TlsProtocolRegistryPath' -Tag 'Private' {
     Context 'When building the registry path for Server' {
+        BeforeAll {
+            Mock -CommandName ConvertTo-TlsProtocolRegistryKeyName -MockWith { 'Tls12' }
+            Mock -CommandName Get-TlsProtocolTargetRegistryName -MockWith { 'Server' }
+        }
+
         It 'returns server registry path for Tls12 by default' {
             InModuleScope -ScriptBlock {
-                Mock -CommandName ConvertTo-TlsProtocolRegistryKeyName -MockWith { 'Tls12' }
-                Mock -CommandName Get-TlsProtocolTargetRegistryName -MockWith { 'Server' }
-
                 $result = Get-TlsProtocolRegistryPath -Protocol 'Tls12'
 
                 $expected = 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\Tls12\\Server'
@@ -53,11 +55,13 @@ Describe 'Get-TlsProtocolRegistryPath' -Tag 'Private' {
     }
 
     Context 'When building the registry path for Client' {
+        BeforeAll {
+            Mock -CommandName ConvertTo-TlsProtocolRegistryKeyName -MockWith { 'Tls12' }
+            Mock -CommandName Get-TlsProtocolTargetRegistryName -MockWith { 'Client' }
+        }
+
         It 'returns client registry path when -Client is specified' {
             InModuleScope -ScriptBlock {
-                Mock -CommandName ConvertTo-TlsProtocolRegistryKeyName -MockWith { 'Tls12' }
-                Mock -CommandName Get-TlsProtocolTargetRegistryName -MockWith { 'Client' }
-
                 $result = Get-TlsProtocolRegistryPath -Protocol 'Tls12' -Client
 
                 $expected = 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\Tls12\\Client'
