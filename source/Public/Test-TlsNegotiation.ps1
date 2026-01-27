@@ -112,7 +112,7 @@ function Test-TlsNegotiation
 
     foreach ($p in $Protocol)
     {
-        Write-Verbose "Trying $p"
+        Write-Verbose -Message ($script:localizedData.Test_TlsNegotiation_TryingProtocol -f $p)
 
         $client = $null
         $sslStream = $null

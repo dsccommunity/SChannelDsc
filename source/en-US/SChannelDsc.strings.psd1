@@ -21,4 +21,7 @@ ConvertFrom-StringData @'
     ## Disable-TlsProtocol
     Disable_TlsProtocol_ShouldProcessDescription = Disable TLS protocol: {0} ({1}). (DTP0001)
     Disable_TlsProtocol_FailedToDisable = Failed to disable protocol '{0}': {1}. (DTP0002)
+
+    ## Test-TlsNegotiation
+    Test_TlsNegotiation_TryingProtocol = Attempting TLS negotiation using protocol: {0}. (TTN0001)
 '@
