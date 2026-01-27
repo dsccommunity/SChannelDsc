@@ -95,22 +95,25 @@ function Enable-TlsProtocol
         # For ShouldProcess description use the localized template with the key name and target
         $protocolKeyName = ConvertTo-TlsProtocolRegistryKeyName -Protocol $p
 
-        $description = ($script:localizedData.Enable_TlsProtocol_ShouldProcessDescription -f $protocolKeyName, $target)
+        $descriptionMessage = $script:localizedData.Enable_TlsProtocol_ShouldProcessDescription -f $protocolKeyName, $target
+        $confirmationMessage = $script:localizedData.Enable_TlsProtocol_ShouldProcessConfirmation -f $protocolKeyName
+        $captionMessage = $script:localizedData.Enable_TlsProtocol_ShouldProcessCaption
 
-        if ($PSCmdlet.ShouldProcess($description))
+        if ($PSCmdlet.ShouldProcess($descriptionMessage, $confirmationMessage, $captionMessage))
         {
             try
             {
-                New-Item -Path $regPath -Force | Out-Null
-                New-ItemProperty -Path $regPath -Name 'Enabled' -Value 1 -PropertyType DWord -Force | Out-Null
+                $null = New-Item -Path $regPath -Force -ErrorAction 'Stop'
+                $null = New-ItemProperty -Path $regPath -Name 'Enabled' -Value 1 -PropertyType DWord -Force -ErrorAction 'Stop'
                 if ($SetDisabledByDefault.IsPresent)
                 {
-                    New-ItemProperty -Path $regPath -Name 'DisabledByDefault' -Value 0 -PropertyType DWord -Force | Out-Null
+                    $null = New-ItemProperty -Path $regPath -Name 'DisabledByDefault' -Value 0 -PropertyType DWord -Force -ErrorAction 'Stop'
                 }
             }
             catch
             {
                 $errorMessage = ($script:localizedData.Enable_TlsProtocol_FailedToEnable -f $p, $_.Exception.Message)
+
                 $exception = New-Exception -Message $errorMessage -ErrorRecord $_
                 $errorRecord = New-ErrorRecord -Exception $exception -ErrorId 'ETP0001' -ErrorCategory 'InvalidOperation' -TargetObject $p
                 $PSCmdlet.ThrowTerminatingError($errorRecord)
