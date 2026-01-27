@@ -27,7 +27,7 @@ function Get-TargetResource
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message "Getting configuration for hash $Hash"
+    Write-Verbose -Message ($script:localizedData.GettingConfiguration -f $Hash)
 
     $rootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes'
     $key = $rootKey + '\' + $Hash
@@ -61,7 +61,7 @@ function Set-TargetResource
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message "Setting configuration for hash $Hash"
+    Write-Verbose -Message ($script:localizedData.SettingConfiguration -f $Hash)
 
     $rootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes'
 
@@ -69,17 +69,18 @@ function Set-TargetResource
     {
         'Default'
         {
-            Write-Verbose -Message ($script:localizedData.ItemDefault -f 'Hash', $Hash)
+            Write-Verbose -Message ($script:localizedData.ItemDefault -f $Hash)
         }
         'Disabled'
         {
-            Write-Verbose -Message ($script:localizedData.ItemDisable -f 'Hash', $Hash)
+            Write-Verbose -Message ($script:localizedData.ItemDisable -f $Hash)
         }
         'Enabled'
         {
-            Write-Verbose -Message ($script:localizedData.ItemEnable -f 'Hash', $Hash)
+            Write-Verbose -Message ($script:localizedData.ItemEnable -f $Hash)
         }
     }
+
     Set-SChannelItem -ItemKey $rootKey -ItemSubKey $Hash -State $State
 
     if ($RebootWhenRequired)
@@ -109,28 +110,16 @@ function Test-TargetResource
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message "Testing configuration for hash $Hash"
+    Write-Verbose -Message ($script:localizedData.TestingConfiguration -f $Hash)
 
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-    $Compliant = $false
-
-    Write-Verbose -Message "Current Values: $(Convert-SCDscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-SCDscHashtableToString -Hashtable $PSBoundParameters)"
-
-    $ErrorActionPreference = 'SilentlyContinue'
-    if ($CurrentValues.State -eq $State)
-    {
-        $Compliant = $true
+    $compareDscParameterStateParameters = @{
+        CurrentValues       = Get-TargetResource @PSBoundParameters
+        DesiredValues       = $PSBoundParameters
+        ExcludeProperties   = @('RebootWhenRequired')
+        TurnOffTypeChecking = $false
     }
 
-    if ($Compliant -eq $true)
-    {
-        Write-Verbose -Message ($script:localizedData.ItemCompliant -f 'Hash', $Hash)
-    }
-    else
-    {
-        Write-Verbose -Message ($script:localizedData.ItemNotCompliant -f 'Hash', $Hash)
-    }
+    Test-DscParameterState @compareDscParameterStateParameters
 
-    return $Compliant
+
 }

@@ -1,7 +1,9 @@
 ConvertFrom-StringData @'
-    ItemEnable                     = Enabling {0} {1}
-    ItemDisable                    = Disabling {0} {1}
-    ItemDefault                    = Defaulting {0} {1}
-    ItemNotCompliant               = {0} {1} not compliant.
-    ItemCompliant                  = {0} {1} compliant.
+    ItemEnable                     = Enabling Hash {0}
+    ItemDisable                    = Disabling Hash {0}
+    ItemDefault                    = Defaulting Hash {0}
+
+    GettingConfiguration           = Getting configuration for hash {0}
+    TestingConfiguration           = Testing configuration for hash {0}
+    SettingConfiguration           = Setting configuration for hash {0}
 '@

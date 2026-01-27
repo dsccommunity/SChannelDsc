@@ -1,6 +1,6 @@
 <#
     .SYNOPSIS
-        Unit test for DSC_Cipher DSC resource.
+        Unit test for DSC_CipherSuites DSC resource.
 #>
 
 # Suppressing this rule because Script Analyzer does not understand Pester's syntax.
