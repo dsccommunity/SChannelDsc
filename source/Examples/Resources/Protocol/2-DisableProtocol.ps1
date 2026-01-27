@@ -41,16 +41,15 @@ Updated author, copyright notice, and URLs.
 
 Configuration Example
 {
-    param(
-    )
+    param ()
 
     Import-DscResource -ModuleName SChannelDsc
 
     node localhost {
         Protocol DisableSSLv3
         {
-            Protocol = "SSL 3.0"
-            State    = "Disabled"
+            Protocol = 'SSL 3.0'
+            State    = 'Disabled'
         }
     }
 }

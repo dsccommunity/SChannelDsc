@@ -57,18 +57,19 @@ function Set-SChannelRegKeyValue
     else
     {
         # Update registry key
-        if ($Key -match "(.*:).*")
-        {
-            $root = $Matches[1]
-        }
+        # if ($Key -match "(.*:).*")
+        # {
+        #     $root = $Matches[1]
+        # }
 
-        $path = ($Key -replace $root, "").TrimStart('\')
+        # $path = ($Key -replace $root, "").TrimStart('\')
 
         $currentKey = Get-Item -Path $fullSubKey -ErrorAction SilentlyContinue
         if ($null -eq $currentKey)
         {
             $currentKey = New-Item -Path $fullSubKey -Force
         }
+
         $null = Set-ItemProperty -Path $fullSubKey -Name $Name -Value $Value -Type 'Dword' -Force
     }
 }

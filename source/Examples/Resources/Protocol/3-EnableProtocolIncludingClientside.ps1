@@ -42,17 +42,16 @@ Updated author, copyright notice, and URLs.
 
 Configuration Example
 {
-    param(
-    )
+    param ()
 
     Import-DscResource -ModuleName SChannelDsc
 
     node localhost {
         Protocol EnableSSLv3
         {
-            Protocol          = "SSL 3.0"
+            Protocol          = 'SSL 3.0'
             IncludeClientSide = $true
-            State             = "Enabled"
+            State             = 'Enabled'
         }
     }
 }

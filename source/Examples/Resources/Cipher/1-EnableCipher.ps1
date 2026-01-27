@@ -39,18 +39,17 @@ Updated author, copyright notice, and URLs.
 
 #>
 
-    Configuration Example
-    {
-        param(
-        )
+Configuration Example
+{
+    param ()
 
-        Import-DscResource -ModuleName SChannelDsc
+    Import-DscResource -ModuleName SChannelDsc
 
-        node localhost {
-            Cipher EnableAES128
-            {
-                Cipher = "AES 128/128"
-                State  = "Enabled"
-            }
+    node localhost {
+        Cipher EnableAES128
+        {
+            Cipher = 'AES 128/128'
+            State  = 'Enabled'
         }
     }
+}

@@ -41,16 +41,15 @@ Updated author, copyright notice, and URLs.
 
 Configuration Example
 {
-    param(
-    )
+    param ()
 
     Import-DscResource -ModuleName SChannelDsc
 
     node localhost {
         KeyExchangeAlgorithm DisableECDH
         {
-            KeyExchangeAlgorithm = "ECDH"
-            State                = "Disabled"
+            KeyExchangeAlgorithm = 'ECDH'
+            State                = 'Disabled'
         }
     }
 }

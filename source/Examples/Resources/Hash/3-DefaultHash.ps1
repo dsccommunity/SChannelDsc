@@ -41,16 +41,15 @@ Updated author, copyright notice, and URLs.
 
 Configuration Example
 {
-    param(
-    )
+    param ()
 
     Import-DscResource -ModuleName SChannelDsc
 
     node localhost {
         Hash DisableMD5
         {
-            Hash  = "MD5"
-            State = "Default"
+            Hash  = 'MD5'
+            State = 'Default'
         }
     }
 }

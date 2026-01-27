@@ -168,7 +168,7 @@ function Set-TargetResource
 
     if ($RebootWhenRequired)
     {
-        $global:DSCMachineStatus = 1
+        Set-DscMachineRebootRequired
     }
 }
 
