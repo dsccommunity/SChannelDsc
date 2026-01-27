@@ -13,7 +13,7 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Multi-Protocol Unified Hello", "PCT 1.0", "SSL 2.0", "SSL 3.0", "TLS 1.0", "TLS 1.1", "TLS 1.2", "TLS 1.3")]
+        [ValidateSet('Multi-Protocol Unified Hello', 'PCT 1.0', 'SSL 2.0', 'SSL 3.0', 'TLS 1.0', 'TLS 1.1', 'TLS 1.2', 'TLS 1.3')]
         [System.String]
         $Protocol,
 
@@ -31,24 +31,23 @@ function Get-TargetResource
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message "Getting configuration for protocol $Protocol"
+    Write-Verbose -Message ($script:localizedData.GettingConfiguration -f $Protocol)
 
     if ($Protocol -eq 'TLS 1.3')
     {
         $osVersion = Get-SCDscOSVersion
         if ($osVersion.Major -ne 10 -or $osVersion.Build -lt 20000)
         {
-            throw "You can only use TLS 1.3 with Windows Server 2022 or later"
+            New-InvalidOperationException -Message $script:localizedData.OSVersionNotSupported
         }
     }
 
     $itemRoot = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols'
-    $itemKey = $itemRoot + "\" + $Protocol
+    $itemKey = $itemRoot + '\' + $Protocol
 
     $serverItemKey = $itemKey + '\Server'
     $serverEnabledResult = Get-SChannelItem -ItemKey $serverItemKey
-    $serverDisabledByDefaultResult = Get-SChannelItem -ItemKey $serverItemKey `
-        -ItemValue 'DisabledByDefault'
+    $serverDisabledByDefaultResult = Get-SChannelItem -ItemKey $serverItemKey -ItemValue 'DisabledByDefault'
 
     if (($serverEnabledResult -eq 'Enabled' -and $serverDisabledByDefaultResult -eq 'Disabled') -or
         ($serverEnabledResult -eq 'Disabled' -and $serverDisabledByDefaultResult -eq 'Enabled' ) -or
@@ -59,8 +58,7 @@ function Get-TargetResource
 
     $clientItemKey = $itemKey + '\Client'
     $clientEnabledResult = Get-SChannelItem -ItemKey $clientItemKey
-    $clientDisabledByDefaultResult = Get-SChannelItem -ItemKey $clientItemKey `
-        -ItemValue 'DisabledByDefault'
+    $clientDisabledByDefaultResult = Get-SChannelItem -ItemKey $clientItemKey -ItemValue 'DisabledByDefault'
     if (($clientEnabledResult -eq 'Enabled' -and $clientDisabledByDefaultResult -eq 'Disabled') -or
         ($clientEnabledResult -eq 'Disabled' -and $clientDisabledByDefaultResult -eq 'Enabled' ) -or
         ($clientEnabledResult -eq 'Default' -and $clientDisabledByDefaultResult -eq 'Default' ))
@@ -68,15 +66,15 @@ function Get-TargetResource
         $clientResult = $clientEnabledResult
     }
 
-    $clientside = $false
+    $clientSide = $false
     if ($serverResult -eq $clientResult)
     {
-        $clientside = $true
+        $clientSide = $true
     }
 
     $returnValue = @{
         Protocol          = $Protocol
-        IncludeClientSide = $clientside
+        IncludeClientSide = $clientSide
         State             = $serverResult
     }
 
@@ -90,7 +88,7 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Multi-Protocol Unified Hello", "PCT 1.0", "SSL 2.0", "SSL 3.0", "TLS 1.0", "TLS 1.1", "TLS 1.2", "TLS 1.3")]
+        [ValidateSet('Multi-Protocol Unified Hello', 'PCT 1.0', 'SSL 2.0', 'SSL 3.0', 'TLS 1.0', 'TLS 1.1', 'TLS 1.2', 'TLS 1.3')]
         [System.String]
         $Protocol,
 
@@ -108,14 +106,14 @@ function Set-TargetResource
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message "Setting configuration for protocol $Protocol"
+    Write-Verbose -Message ($script:localizedData.SettingConfiguration -f $Protocol)
 
     if ($Protocol -eq 'TLS 1.3')
     {
         $osVersion = Get-SCDscOSVersion
         if ($osVersion.Major -ne 10 -or $osVersion.Build -lt 20000)
         {
-            throw "You can only use TLS 1.3 with Windows Server 2022 or later"
+            New-InvalidOperationException -Message $script:localizedData.OSVersionNotSupported
         }
     }
 
@@ -130,17 +128,18 @@ function Set-TargetResource
         {
             'Default'
             {
-                Write-Verbose -Message ($script:localizedData.ItemDefault -f 'Protocol', $Protocol)
+                Write-Verbose -Message ($script:localizedData.ItemDefault -f $Protocol)
             }
             'Disabled'
             {
-                Write-Verbose -Message ($script:localizedData.ItemDisable -f 'Protocol', $Protocol)
+                Write-Verbose -Message ($script:localizedData.ItemDisable -f $Protocol)
             }
             'Enabled'
             {
-                Write-Verbose -Message ($script:localizedData.ItemEnable -f 'Protocol', $Protocol)
+                Write-Verbose -Message ($script:localizedData.ItemEnable -f $Protocol)
             }
         }
+
         Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $clientItemKey -State $State -ItemValue 'Enabled'
         Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $clientItemKey -State $State -ItemValue 'DisabledByDefault'
     }
@@ -152,17 +151,18 @@ function Set-TargetResource
     {
         'Default'
         {
-            Write-Verbose -Message ($script:localizedData.ItemDefault -f 'Protocol', $Protocol)
+            Write-Verbose -Message ($script:localizedData.ItemDefault -f $Protocol)
         }
         'Disabled'
         {
-            Write-Verbose -Message ($script:localizedData.ItemDisable -f 'Protocol', $Protocol)
+            Write-Verbose -Message ($script:localizedData.ItemDisable -f $Protocol)
         }
         'Enabled'
         {
-            Write-Verbose -Message ($script:localizedData.ItemEnable -f 'Protocol', $Protocol)
+            Write-Verbose -Message ($script:localizedData.ItemEnable -f $Protocol)
         }
     }
+
     Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $serverItemKey -State $State -ItemValue 'Enabled'
     Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $serverItemKey -State $State -ItemValue 'DisabledByDefault'
 
@@ -179,7 +179,7 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Multi-Protocol Unified Hello", "PCT 1.0", "SSL 2.0", "SSL 3.0", "TLS 1.0", "TLS 1.1", "TLS 1.2", "TLS 1.3")]
+        [ValidateSet('Multi-Protocol Unified Hello', 'PCT 1.0', 'SSL 2.0', 'SSL 3.0', 'TLS 1.0', 'TLS 1.1', 'TLS 1.2', 'TLS 1.3')]
         [System.String]
         $Protocol,
 
@@ -197,39 +197,14 @@ function Test-TargetResource
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message "Testing configuration for protocol $Protocol"
+    Write-Verbose -Message ($script:localizedData.TestingConfiguration -f $Protocol)
 
-    $CurrentValues = Get-TargetResource -Protocol $Protocol
-    $Compliant = $false
-
-    Write-Verbose -Message "Current Values: $(Convert-SCDscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-SCDscHashtableToString -Hashtable $PSBoundParameters)"
-
-    $ErrorActionPreference = "SilentlyContinue"
-
-    if ($CurrentValues.State -eq $State)
-    {
-        if ($PSBoundParameters.ContainsKey("IncludeClientSide") -eq $true)
-        {
-            if ($CurrentValues.IncludeClientSide -eq $IncludeClientSide)
-            {
-                $Compliant = $true
-            }
-        }
-        else
-        {
-            $Compliant = $true
-        }
+    $compareDscParameterStateParameters = @{
+        CurrentValues       = Get-TargetResource @PSBoundParameters
+        DesiredValues       = $PSBoundParameters
+        ExcludeProperties   = @('RebootWhenRequired')
+        TurnOffTypeChecking = $false
     }
 
-    if ($Compliant -eq $true)
-    {
-        Write-Verbose -Message ($script:localizedData.ItemCompliant -f 'Protocol', $Protocol)
-    }
-    else
-    {
-        Write-Verbose -Message ($script:localizedData.ItemNotCompliant -f 'Protocol', $Protocol)
-    }
-
-    return $Compliant
+    Test-DscParameterState @compareDscParameterStateParameters
 }
