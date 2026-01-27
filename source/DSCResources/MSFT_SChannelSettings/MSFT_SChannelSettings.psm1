@@ -13,7 +13,7 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Yes")]
+        [ValidateSet('Yes')]
         [System.String]
         $IsSingleInstance,
 
@@ -51,7 +51,7 @@ function Get-TargetResource
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message "Getting SChannel configuration settings"
+    Write-Verbose -Message 'Getting SChannel configuration settings'
 
     # TLS v1.2 state for the .Net Framework
     Write-Verbose -Message ($script:localizedData.GetTLS12)
@@ -101,7 +101,7 @@ function Get-TargetResource
             $null -eq $net4DefaultTLSVersions32 -and
             $null -eq $net4StrongCrypto32)
         {
-            $currentTls12State = "Default"
+            $currentTls12State = 'Default'
         }
 
         if ($net2DefaultTLSVersions -eq 1 -and
@@ -113,7 +113,7 @@ function Get-TargetResource
             $net4DefaultTLSVersions32 -eq 1 -and
             $net4StrongCrypto32 -eq 1)
         {
-            $currentTls12State = "Enabled"
+            $currentTls12State = 'Enabled'
         }
 
         if ($net2DefaultTLSVersions -eq 0 -and
@@ -125,7 +125,7 @@ function Get-TargetResource
             $net4DefaultTLSVersions32 -eq 0 -and
             $net4StrongCrypto32 -eq 0)
         {
-            $currentTls12State = "Disabled"
+            $currentTls12State = 'Disabled'
         }
     }
     else
@@ -135,7 +135,7 @@ function Get-TargetResource
             $null -eq $net4DefaultTLSVersions -and
             $null -eq $net4StrongCrypto)
         {
-            $currentTls12State = "Default"
+            $currentTls12State = 'Default'
         }
 
         if ($net2DefaultTLSVersions -eq 1 -and
@@ -143,7 +143,7 @@ function Get-TargetResource
             $net4DefaultTLSVersions -eq 1 -and
             $net4StrongCrypto -eq 1)
         {
-            $currentTls12State = "Enabled"
+            $currentTls12State = 'Enabled'
         }
 
         if ($net2DefaultTLSVersions -eq 0 -and
@@ -151,7 +151,7 @@ function Get-TargetResource
             $net4DefaultTLSVersions -eq 0 -and
             $net4StrongCrypto -eq 0)
         {
-            $currentTls12State = "Disabled"
+            $currentTls12State = 'Disabled'
         }
     }
 
@@ -177,31 +177,31 @@ function Get-TargetResource
         ## Check DES-CBC-CRC
         if (($kerberosEncrTypesValue -band 1) -eq 1)
         {
-            $kerberosEncrTypes += "DES-CBC-CRC"
+            $kerberosEncrTypes += 'DES-CBC-CRC'
         }
 
         ## Check DES-CBC-MD5
         if (($kerberosEncrTypesValue -band 2) -eq 2)
         {
-            $kerberosEncrTypes += "DES-CBC-MD5"
+            $kerberosEncrTypes += 'DES-CBC-MD5'
         }
 
         ## Check RC4-HMAC
         if (($kerberosEncrTypesValue -band 4) -eq 4)
         {
-            $kerberosEncrTypes += "RC4-HMAC-MD5"
+            $kerberosEncrTypes += 'RC4-HMAC-MD5'
         }
 
         ## Check AES128-CTS-HMAC-SHA1-96
         if (($kerberosEncrTypesValue -band 8) -eq 8)
         {
-            $kerberosEncrTypes += "AES128-HMAC-SHA1"
+            $kerberosEncrTypes += 'AES128-HMAC-SHA1'
         }
 
         ## Check AES256-CTS-HMAC-SHA1-96
         if (($kerberosEncrTypesValue -band 16) -eq 16)
         {
-            $kerberosEncrTypes += "AES256-HMAC-SHA1"
+            $kerberosEncrTypes += 'AES256-HMAC-SHA1'
         }
     }
 
@@ -223,31 +223,31 @@ function Get-TargetResource
         ## Check SSL 2.0
         if (($winhttp64Value -band 8) -eq 8)
         {
-            $winhttp64Protocols += "SSL2.0"
+            $winhttp64Protocols += 'SSL2.0'
         }
 
         ## Check SSL 3.0
         if (($winhttp64Value -band 32) -eq 32)
         {
-            $winhttp64Protocols += "SSL3.0"
+            $winhttp64Protocols += 'SSL3.0'
         }
 
         ## Check TLS1.0
         if (($winhttp64Value -band 128) -eq 128)
         {
-            $winhttp64Protocols += "TLS1.0"
+            $winhttp64Protocols += 'TLS1.0'
         }
 
         ## Check TLS1.1
         if (($winhttp64Value -band 512) -eq 512)
         {
-            $winhttp64Protocols += "TLS1.1"
+            $winhttp64Protocols += 'TLS1.1'
         }
 
         ## Check TLS1.2
         if (($winhttp64Value -band 2048) -eq 2048)
         {
-            $winhttp64Protocols += "TLS1.2"
+            $winhttp64Protocols += 'TLS1.2'
         }
     }
 
@@ -257,31 +257,31 @@ function Get-TargetResource
         ## Check SSL 2.0
         if (($winhttp32Value -band 8) -eq 8)
         {
-            $winhttp32Protocols += "SSL2.0"
+            $winhttp32Protocols += 'SSL2.0'
         }
 
         ## Check SSL 3.0
         if (($winhttp32Value -band 32) -eq 32)
         {
-            $winhttp32Protocols += "SSL3.0"
+            $winhttp32Protocols += 'SSL3.0'
         }
 
         ## Check TLS1.0
         if (($winhttp32Value -band 128) -eq 128)
         {
-            $winhttp32Protocols += "TLS1.0"
+            $winhttp32Protocols += 'TLS1.0'
         }
 
         ## Check TLS1.1
         if (($winhttp32Value -band 512) -eq 512)
         {
-            $winhttp32Protocols += "TLS1.1"
+            $winhttp32Protocols += 'TLS1.1'
         }
 
         ## Check TLS1.2
         if (($winhttp32Value -band 2048) -eq 2048)
         {
-            $winhttp32Protocols += "TLS1.2"
+            $winhttp32Protocols += 'TLS1.2'
         }
     }
 
@@ -342,7 +342,7 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Yes")]
+        [ValidateSet('Yes')]
         [System.String]
         $IsSingleInstance,
 
@@ -380,7 +380,7 @@ function Set-TargetResource
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message "Setting SChannel configuration settings"
+    Write-Verbose -Message 'Setting SChannel configuration settings'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -559,7 +559,7 @@ function Set-TargetResource
 
             if ($null -eq $kerberosEncrTypesValue -or ($kerberosEncrTypesValue -band $ketValue) -ne $ketValue)
             {
-                Write-Verbose -Message ($script:localizedData.ConfigureKerbEncrTypes -f ($KerberosSupportedEncryptionType -join ", "))
+                Write-Verbose -Message ($script:localizedData.ConfigureKerbEncrTypes -f ($KerberosSupportedEncryptionType -join ', '))
                 if ($null -eq $kerberosEncrTypesValue)
                 {
                     $newValue = $ketValue
@@ -596,8 +596,8 @@ function Set-TargetResource
             $hotfix = Get-Hotfix -Id KB3140245 -ErrorAction SilentlyContinue
             if ($null -eq $hotfix)
             {
-                throw ("Hotfix KB3140245 is not installed. Setting these registry keys will not do anything. " + `
-                        "Please install the hotfix first!")
+                throw ('Hotfix KB3140245 is not installed. Setting these registry keys will not do anything. ' + `
+                        'Please install the hotfix first!')
             }
         }
 
@@ -632,7 +632,7 @@ function Set-TargetResource
                 $winhttpValue += 2048
             }
 
-            Write-Verbose -Message ($script:localizedData.ConfigureWinHTTPSecProt -f ($WinHttpDefaultSecureProtocols -join ", "))
+            Write-Verbose -Message ($script:localizedData.ConfigureWinHTTPSecProt -f ($WinHttpDefaultSecureProtocols -join ', '))
             Set-SChannelRegKeyValue -Key $winhttp64Key `
                 -SubKey 'WinHttp' `
                 -Name 'DefaultSecureProtocols' `
@@ -692,7 +692,7 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Yes")]
+        [ValidateSet('Yes')]
         [System.String]
         $IsSingleInstance,
 
@@ -730,7 +730,7 @@ function Test-TargetResource
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message "Testing SChannel configuration settings"
+    Write-Verbose -Message 'Testing SChannel configuration settings'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $compliant = $false
@@ -760,5 +760,3 @@ function Test-TargetResource
     }
     return $compliant
 }
-
-Export-ModuleMember -Function *-TargetResource

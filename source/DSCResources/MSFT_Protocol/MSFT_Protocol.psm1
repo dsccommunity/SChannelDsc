@@ -233,5 +233,3 @@ function Test-TargetResource
 
     return $Compliant
 }
-
-Export-ModuleMember -Function *-TargetResource
