@@ -1,13 +1,14 @@
 <#
     .SYNOPSIS
-        Converts a friendly protocol identifier to the SCHANNEL registry key name.
+        Converts a protocol identifier to the SCHANNEL registry key name.
 
     .DESCRIPTION
-        Maps user-friendly protocol names accepted by the public commands
-        (e.g. Tls12) to the actual SCHANNEL registry key names (e.g. 'TLS 1.2').
+        Maps protocol values from the `[System.Security.Authentication.SslProtocols]`
+        enum to the actual SCHANNEL registry key names (e.g. 'TLS 1.2').
 
     .PARAMETER Protocol
-        The protocol identifier, e.g. 'Tls12', 'Ssl3', 'Tls'.
+        The protocol value from the `[System.Security.Authentication.SslProtocols]`
+        enum, e.g. `Tls12`, `Ssl3`, `Tls`.
 
     .OUTPUTS
         System.String
@@ -24,47 +25,47 @@ function ConvertTo-TlsProtocolRegistryKeyName
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
+        [System.Security.Authentication.SslProtocols]
         $Protocol
     )
 
-    $protocolRegistryKeyName = switch ($Protocol.ToLower())
+    $protocolRegistryKeyName = switch ($Protocol)
     {
-        'ssl2'
+        ([System.Security.Authentication.SslProtocols]::Ssl2)
         {
             'SSL 2.0'
         }
 
-        'ssl3'
+        ([System.Security.Authentication.SslProtocols]::Ssl3)
         {
             'SSL 3.0'
         }
 
-        'tls'
+        ([System.Security.Authentication.SslProtocols]::Tls)
         {
             'TLS 1.0'
         }
 
-        'tls11'
+        ([System.Security.Authentication.SslProtocols]::Tls11)
         {
             'TLS 1.1'
         }
 
-        'tls12'
+        ([System.Security.Authentication.SslProtocols]::Tls12)
         {
             'TLS 1.2'
         }
 
-        'tls13'
+        ([System.Security.Authentication.SslProtocols]::Tls13)
         {
             'TLS 1.3'
         }
 
         default
         {
-            $message = "Unknown protocol '$Protocol'. Valid values: Ssl2, Ssl3, Tls, Tls11, Tls12, Tls13."
-            $exception = New-Exception -Message $message
-            $errorRecord = New-ErrorRecord -Exception $exception -ErrorId 'InvalidProtocol' -ErrorCategory ([System.Management.Automation.ErrorCategory]::InvalidArgument) -TargetObject $Protocol
+            $errorMessage = $script:localizedData.ConvertTo_TlsProtocolRegistryKeyName_UnknownProtocol -f $Protocol
+            $exception = New-Exception -Message $errorMessage
+            $errorRecord = New-ErrorRecord -Exception $exception -ErrorId 'CTTPRKN0001' -ErrorCategory ([System.Management.Automation.ErrorCategory]::InvalidArgument) -TargetObject $Protocol
             $PSCmdlet.ThrowTerminatingError($errorRecord)
         }
     }

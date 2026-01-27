@@ -8,7 +8,9 @@
         to determine whether the protocol is enabled for server-side connections.
 
     .PARAMETER Protocol
-        One or more protocol names to check. Valid values: Ssl2, Ssl3, Tls, Tls11, Tls12, Tls13.
+        One or more protocol names to check. Accepts values from the
+        `[System.Security.Authentication.SslProtocols]` enum such as `Ssl2`,
+        `Ssl3`, `Tls`, `Tls11`, `Tls12`, `Tls13`.
 
     .PARAMETER Client
         When specified, will check the protocol `Client` registry
@@ -37,10 +39,8 @@ function Test-TlsProtocol
     [OutputType([System.Boolean])]
     param
     (
-        # TODO: Should use enum [System.Security.Authentication.SslProtocols]
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13', IgnoreCase = $true)]
-        [System.String[]]
+        [System.Security.Authentication.SslProtocols[]]
         $Protocol,
 
         [Parameter()]

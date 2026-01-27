@@ -43,7 +43,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should not throw an error' {
-            $null = Assert-TlsProtocol -Protocol 'Tls12'
+            $null = Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
         }
     }
 
@@ -53,7 +53,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should not throw an error and pass Client switch' {
-            $null = Assert-TlsProtocol -Protocol 'Tls12' -Client
+            $null = Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client
 
             Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Client -eq $true } -Times 1
         }
@@ -66,7 +66,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
             }
 
             It 'Should not throw an error and pass Disabled switch' {
-                $null = Assert-TlsProtocol -Protocol 'Tls12' -Disabled
+                $null = Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled
 
                 Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Disabled -eq $true } -Times 1
             }
@@ -78,7 +78,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
             }
 
             It 'Should throw an error and pass Disabled switch' {
-                { Assert-TlsProtocol -Protocol 'Tls12' -Disabled } | Should -Throw
+                { Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled } | Should -Throw
 
                 Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Disabled -eq $true } -Times 1
             }
@@ -91,7 +91,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should throw an error' {
-            { Assert-TlsProtocol -Protocol 'Tls12' } | Should -Throw
+            { Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) } | Should -Throw
         }
     }
 
@@ -101,7 +101,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should throw an error and pass Client switch' {
-            { Assert-TlsProtocol -Protocol 'Tls12' -Client } | Should -Throw
+            { Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client } | Should -Throw
 
             Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Client -eq $true } -Times 1
         }

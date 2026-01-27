@@ -37,48 +37,48 @@ AfterAll {
 }
 
 Describe 'ConvertTo-TlsProtocolRegistryKeyName' -Tag 'Private' {
-    Context 'When converting known friendly protocol names' {
+    Context 'When converting known protocol enum values' {
         It 'Maps Tls12 to TLS 1.2' {
             InModuleScope -ScriptBlock {
-                ConvertTo-TlsProtocolRegistryKeyName -Protocol 'Tls12' | Should -Be 'TLS 1.2'
+                ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) | Should -Be 'TLS 1.2'
             }
         }
 
         It 'Maps Tls11 to TLS 1.1' {
             InModuleScope -ScriptBlock {
-                ConvertTo-TlsProtocolRegistryKeyName -Protocol 'Tls11' | Should -Be 'TLS 1.1'
+                ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Tls11) | Should -Be 'TLS 1.1'
             }
         }
 
         It 'Maps Tls to TLS 1.0' {
             InModuleScope -ScriptBlock {
-                ConvertTo-TlsProtocolRegistryKeyName -Protocol 'Tls' | Should -Be 'TLS 1.0'
+                ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Tls) | Should -Be 'TLS 1.0'
             }
         }
 
         It 'Maps Ssl3 to SSL 3.0' {
             InModuleScope -ScriptBlock {
-                ConvertTo-TlsProtocolRegistryKeyName -Protocol 'Ssl3' | Should -Be 'SSL 3.0'
+                ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) | Should -Be 'SSL 3.0'
             }
         }
 
         It 'Maps Ssl2 to SSL 2.0' {
             InModuleScope -ScriptBlock {
-                ConvertTo-TlsProtocolRegistryKeyName -Protocol 'Ssl2' | Should -Be 'SSL 2.0'
+                ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Ssl2) | Should -Be 'SSL 2.0'
             }
         }
 
         It 'Maps Tls13 to TLS 1.3' {
             InModuleScope -ScriptBlock {
-                ConvertTo-TlsProtocolRegistryKeyName -Protocol 'Tls13' | Should -Be 'TLS 1.3'
+                ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Tls13) | Should -Be 'TLS 1.3'
             }
         }
     }
 
-    Context 'When given an unknown protocol' {
+    Context 'When given an unsupported protocol enum value' {
         It 'Should throw a terminating error' {
             InModuleScope -ScriptBlock {
-                { ConvertTo-TlsProtocolRegistryKeyName -Protocol 'NoSuchProto' } | Should -Throw -ErrorId 'InvalidProtocol,ConvertTo-TlsProtocolRegistryKeyName'
+                { ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::None) } | Should -Throw -ErrorId 'CTTPRKN0001,ConvertTo-TlsProtocolRegistryKeyName'
             }
         }
     }

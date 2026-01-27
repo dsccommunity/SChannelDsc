@@ -13,8 +13,9 @@
         also write `DisabledByDefault = 1` (opt-in only).
 
     .PARAMETER Protocol
-        One or more protocol names to disable. Valid values: Ssl2, Ssl3, Tls,
-        Tls11, Tls12, Tls13.
+        One or more protocol names to disable. Accepts values from the
+        `[System.Security.Authentication.SslProtocols]` enum such as `Ssl2`,
+        `Ssl3`, `Tls`, `Tls11`, `Tls12`, `Tls13`.
 
     .PARAMETER Client
         When specified, operate on the protocol `Client` registry key instead of
@@ -34,8 +35,7 @@ function Disable-TlsProtocol
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13', IgnoreCase = $true)]
-        [System.String[]]
+        [System.Security.Authentication.SslProtocols[]]
         $Protocol,
 
         [Parameter()]
