@@ -1,200 +1,177 @@
-[CmdletBinding()]
+<#
+    .SYNOPSIS
+        Unit test for MSFT_Cipher DSC resource.
+#>
+
+# Suppressing this rule because Script Analyzer does not understand Pester's syntax.
+[System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', '')]
 param ()
-return
 
-$script:DSCModuleName = 'SChannelDsc'
-$script:DSCResourceName = 'MSFT_Cipher'
-
-function Invoke-TestSetup
-{
+BeforeDiscovery {
     try
     {
-        Import-Module -Name DscResource.Test -Force -ErrorAction 'Stop'
+        if (-not (Get-Module -Name 'DscResource.Test'))
+        {
+            # Assumes dependencies has been resolved, so if this module is not available, run 'noop' task.
+            if (-not (Get-Module -Name 'DscResource.Test' -ListAvailable))
+            {
+                # Redirect all streams to $null, except the error stream (stream 2)
+                & "$PSScriptRoot/../../build.ps1" -Tasks 'noop' 3>&1 4>&1 5>&1 6>&1 > $null
+            }
+
+            # If the dependencies has not been resolved, this will throw an error.
+            Import-Module -Name 'DscResource.Test' -Force -ErrorAction 'Stop'
+        }
     }
     catch [System.IO.FileNotFoundException]
     {
-        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -Tasks build" first.'
+        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -ResolveDependency -Tasks build" first.'
     }
+}
+
+BeforeAll {
+    $script:dscModuleName = 'SChannelDsc'
+    $script:dscResourceName = 'MSFT_Cipher'
 
     $script:testEnvironment = Initialize-TestEnvironment `
         -DSCModuleName $script:dscModuleName `
         -DSCResourceName $script:dscResourceName `
         -ResourceType 'Mof' `
         -TestType 'Unit'
+
+    $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:dscResourceName
+    $PSDefaultParameterValues['Mock:ModuleName'] = $script:dscResourceName
+    $PSDefaultParameterValues['Should:ModuleName'] = $script:dscResourceName
 }
 
-function Invoke-TestCleanup
-{
+AfterAll {
+    $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
+    $PSDefaultParameterValues.Remove('Mock:ModuleName')
+    $PSDefaultParameterValues.Remove('Should:ModuleName')
+
     Restore-TestEnvironment -TestEnvironment $script:testEnvironment
+
+    # Unload the module being tested so that it doesn't impact any other tests.
+    Get-Module -Name $script:dscResourceName -All | Remove-Module -Force
 }
 
-Invoke-TestSetup
-
-try
-{
-    InModuleScope $script:dscResourceName {
-        # Initialize tests
-
-        # Mocks for all contexts
-
-        # Test contexts
-        Context -Name "When the cipher is enabled and should be" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Cipher = "AES 128/128"
-                    State  = "Enabled"
-                }
-
-
-                Mock -CommandName Get-SChannelItem -MockWith {
-                    return 'Enabled'
-                }
-            }
-
-            It "Should return Enabled from the Get method" {
-                (Get-TargetResource @testParams).State | Should -Be "Enabled"
-            }
-
-            It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should -Be $true
+Describe 'MSFT_Cipher\Get-TargetResource' -Tag 'Get' {
+    Context 'When the resource is in the desired state' {
+        BeforeAll {
+            Mock -CommandName Get-SChannelItem -MockWith {
+                return 'Enabled'
             }
         }
 
-        Context -Name "When the cipher is enabled and shouldn't be" -Fixture {
-            BeforeAll {
+        It 'Should return the correct result' {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 $testParams = @{
-                    Cipher             = "AES 128/128"
-                    State              = "Disabled"
-                    RebootWhenRequired = $true
+                    Cipher = 'AES 128/128'
+                    State  = 'Enabled'
                 }
 
-                Mock -CommandName Get-SChannelItem -MockWith {
-                    return 'Enabled'
-                }
+                $result = Get-TargetResource @testParams
 
-                Mock -CommandName Set-SChannelItem -MockWith { }
-            }
-
-            It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).State | Should -Be "Enabled"
-            }
-
-            It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It "Should disable the cipher in the set method" {
-                $global:DSCMachineStatus = 0
-                Set-TargetResource @testParams
-                Assert-MockCalled Set-SChannelItem
-                $global:DSCMachineStatus | Should -Be 1
-            }
-        }
-
-        Context -Name "When the cipher is default and should be" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Cipher = "AES 128/128"
-                    State  = "Default"
-                }
-
-                Mock -CommandName Get-SChannelItem -MockWith {
-                    return 'Default'
-                }
-            }
-
-            It "Should return Enabled from the Get method" {
-                (Get-TargetResource @testParams).State | Should -Be "Default"
-            }
-
-            It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should -Be $true
-            }
-        }
-
-        Context -Name "When the cipher should be default, but isn't" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Cipher = "AES 128/128"
-                    State  = "Default"
-                }
-
-                Mock -CommandName Get-SChannelItem -MockWith {
-                    return 'Disabled'
-                }
-
-                Mock -CommandName Set-SChannelItem -MockWith { }
-            }
-
-            It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).State | Should -Be "Disabled"
-            }
-
-            It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It "Should disable the cipher in the set method" {
-                Set-TargetResource @testParams
-                Assert-MockCalled Set-SChannelItem
-            }
-        }
-
-        Context -Name "When the cipher isn't enabled and should be" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Cipher = "AES 128/128"
-                    State  = "Enabled"
-                }
-
-                Mock -CommandName Get-SChannelItem -MockWith {
-                    return 'Disabled'
-                }
-
-                Mock -CommandName Set-SChannelItem -MockWith { }
-            }
-
-            It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).State | Should -Be "Disabled"
-            }
-
-            It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It "Should disable the cipher in the set method" {
-                Set-TargetResource @testParams
-                Assert-MockCalled Set-SChannelItem
-            }
-        }
-
-        Context -Name "When the cipher isn't enabled and shouldn't be" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Cipher = "AES 128/128"
-                    State  = "Disabled"
-                }
-
-                Mock -CommandName Get-SChannelItem -MockWith {
-                    return 'Disabled'
-                }
-            }
-
-            It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).State | Should -Be "Disabled"
-            }
-
-            It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should -Be $true
+                $result | Should -BeOfType 'System.Collections.Hashtable'
+                $result.Cipher | Should -Be $testParams.Cipher
+                $result.State | Should -Be 'Enabled'
             }
         }
     }
 }
-finally
-{
-    Invoke-TestCleanup
+
+Describe 'MSFT_Cipher\Test-TargetResource' -Tag 'Test' {
+    Context 'When the resource is in the desired state' {
+        BeforeAll {
+            Mock -CommandName Get-TargetResource -MockWith {
+                @{
+                    Cipher = 'AES 128/128'
+                    State  = 'Enabled'
+                }
+            }
+        }
+
+        It 'Should return true' {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
+                $testParams = @{
+                    Cipher = 'AES 128/128'
+                    State  = 'Enabled'
+                }
+
+                Test-TargetResource @testParams | Should -BeTrue
+            }
+
+            Should -Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
+        }
+    }
+
+    Context 'When the resource is not in the desired state' {
+        BeforeAll {
+            Mock -CommandName Get-TargetResource -MockWith {
+                @{
+                    Cipher = 'AES 128/128'
+                    State  = 'Disabled'
+                }
+            }
+        }
+
+        It 'Should return false' {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
+                $testParams = @{
+                    Cipher = 'AES 128/128'
+                    State  = 'Enabled'
+                }
+
+                Test-TargetResource @testParams | Should -BeFalse
+            }
+
+            Should -Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
+        }
+    }
 }
 
-Import-Module -Name (Join-Path -Path $PSScriptRoot `
-        -ChildPath "UnitTestHelper.psm1" `
-        -Resolve)
+Describe 'MSFT_Cipher\Set-TargetResource' -Tag 'Set' {
+    Context 'When the resource is not in the desired state' {
+        BeforeDiscovery {
+            $testCases = @(
+                @{
+                    State = 'Enabled'
+                }
+                @{
+                    State = 'Disabled'
+                }
+                @{
+                    State = 'Default'
+                }
+            )
+        }
+
+        BeforeAll {
+            Mock -CommandName Set-SChannelItem
+            Mock -CommandName Set-DscMachineRebootRequired
+        }
+
+        It 'Should call the correct mocks for state ''<State>''' -ForEach $testCases {
+            InModuleScope -Parameters $_ -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
+                $testParams = @{
+                    Cipher              = 'AES 128/128'
+                    State               = $State
+                    RebootWhenRequired  = $true
+                }
+
+                $null = Set-TargetResource @testParams
+            }
+
+            Should -Invoke -CommandName Set-SChannelItem -Exactly -Times 1 -Scope It
+            Should -Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
+        }
+    }
+}

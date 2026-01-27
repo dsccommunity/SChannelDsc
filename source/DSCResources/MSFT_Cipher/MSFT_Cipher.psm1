@@ -27,10 +27,9 @@ function Get-TargetResource
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message "Getting configuration for cipher $Cipher"
+    Write-Verbose -Message ($script:localizedData.GettingConfiguration -f $Cipher)
 
-    $rootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers'
-    $key = $rootKey + '\' + $Cipher
+    $key = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\' + $Cipher
     $result = Get-SChannelItem -ItemKey $key
 
     $returnValue = @{
@@ -61,9 +60,13 @@ function Set-TargetResource
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message "Setting configuration for cipher $Cipher"
+    Write-Verbose -Message ($script:localizedData.SettingConfiguration -f $Cipher)
 
-    $rootKey = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers'
+    $setItemParams = @{
+        ItemKey    = 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers'
+        ItemSubKey = $Cipher
+        State      = $State
+    }
 
     switch ($State)
     {
@@ -80,7 +83,8 @@ function Set-TargetResource
             Write-Verbose -Message ($script:localizedData.ItemEnable -f 'Cipher', $Cipher)
         }
     }
-    Set-SChannelItem -ItemKey $rootKey -ItemSubKey $Cipher -State $State
+
+    Set-SChannelItem @setItemParams
 
     if ($RebootWhenRequired)
     {
@@ -109,27 +113,14 @@ function Test-TargetResource
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message "Testing configuration for cipher $Cipher"
+    Write-Verbose -Message ($script:localizedData.TestingConfiguration -f $Cipher)
 
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-    $compliant = $false
-
-    Write-Verbose -Message "Current Values: $(Convert-SCDscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-SCDscHashtableToString -Hashtable $PSBoundParameters)"
-
-    $ErrorActionPreference = 'SilentlyContinue'
-    if ($CurrentValues.State -eq $State)
-    {
-        $compliant = $true
+    $compareDscParameterStateParameters = @{
+        CurrentValues       = Get-TargetResource @PSBoundParameters
+        DesiredValues       = $PSBoundParameters
+        ExcludeProperties   = @('RebootWhenRequired')
+        TurnOffTypeChecking = $false
     }
 
-    if ($compliant -eq $true)
-    {
-        Write-Verbose -Message ($script:localizedData.ItemCompliant -f 'Cipher', $Cipher)
-    }
-    else
-    {
-        Write-Verbose -Message ($script:localizedData.ItemNotCompliant -f 'Cipher', $Cipher)
-    }
-    return $compliant
+    Test-DscParameterState @compareDscParameterStateParameters
 }
