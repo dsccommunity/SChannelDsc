@@ -195,5 +195,5 @@ finally
 }
 
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\UnitTestHelper.psm1" `
+        -ChildPath "UnitTestHelper.psm1" `
         -Resolve)
