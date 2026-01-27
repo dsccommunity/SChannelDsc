@@ -13,8 +13,9 @@
         also write `DisabledByDefault = 0` (opt-in only).
 
     .PARAMETER Protocol
-        One or more protocol names to enable. Valid values: Ssl2, Ssl3, Tls,
-        Tls11, Tls12, Tls13.
+        One or more protocol names to enable. Accepts values from the
+        `[System.Security.Authentication.SslProtocols]` enum such as `Ssl2`,
+        `Ssl3`, `Tls`, `Tls11`, `Tls12`, `Tls13`.
 
     .PARAMETER Client
         When specified, operate on the protocol `Client` registry key instead of
@@ -34,8 +35,7 @@ function Enable-TlsProtocol
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13', IgnoreCase = $true)]
-        [System.String[]]
+        [System.Security.Authentication.SslProtocols[]]
         $Protocol,
 
         [Parameter()]
@@ -63,7 +63,6 @@ function Enable-TlsProtocol
         $regPath = Get-TlsProtocolRegistryPath -Protocol $p -Client:$Client
 
         # For ShouldProcess description use the localized template with the key name and target
-        # TODO: This is not localized, so we can't use it.
         $protocolKeyName = ConvertTo-TlsProtocolRegistryKeyName -Protocol $p
 
         $description = ($script:localizedData.Enable_TlsProtocol_ShouldProcessDescription -f $protocolKeyName, $target)

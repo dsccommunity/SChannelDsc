@@ -49,7 +49,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should return $true' {
-            $result = Test-TlsProtocol -Protocol 'Tls12'
+            $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
 
             $result | Should -BeTrue
         }
@@ -61,7 +61,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should return $true' {
-            $result = Test-TlsProtocol -Protocol 'Tls12'
+            $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
 
             $result | Should -BeTrue
         }
@@ -79,7 +79,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should return $false when DisabledByDefault is 1' {
-            $result = Test-TlsProtocol -Protocol 'Tls12'
+            $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
 
             $result | Should -BeFalse
         }
@@ -97,7 +97,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should check the Client registry key' {
-            $result = Test-TlsProtocol -Protocol 'Tls12' -Client
+            $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client
 
             $result | Should -BeTrue
 
@@ -124,7 +124,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
             }
 
             It 'Should return $true for -Disabled' {
-                $result = Test-TlsProtocol -Protocol 'Tls12' -Disabled
+                $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled
 
                 $result | Should -BeTrue
             }
@@ -142,7 +142,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
             }
 
             It 'Should return $false for -Disabled' {
-                $result = Test-TlsProtocol -Protocol 'Tls12' -Disabled
+                $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled
 
                 $result | Should -BeFalse
             }
@@ -154,7 +154,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
             }
 
             It 'Should treat missing keys as enabled for -Disabled' {
-                $result = Test-TlsProtocol -Protocol 'Tls12' -Disabled
+                $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled
 
                 $result | Should -BeFalse
             }

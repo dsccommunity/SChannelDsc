@@ -63,10 +63,10 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should return an object with expected properties and values' {
-            $result = Get-TlsProtocol -Protocol 'Tls12'
+            $result = Get-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
 
             $result | Should -Not -BeNull
-            $result.Protocol | Should -Be 'Tls12'
+            $result.Protocol | Should -Be ([System.Security.Authentication.SslProtocols]::Tls12)
             $result.Target | Should -Be 'Server'
             $result.Enabled | Should -Be 1
             $result.DisabledByDefault | Should -Be 0
@@ -85,7 +85,7 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should return nulls for Enabled and DisabledByDefault' {
-            $result = Get-TlsProtocol -Protocol 'Tls12'
+            $result = Get-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
 
             $result.Enabled | Should -BeNull
             $result.DisabledByDefault | Should -BeNull
@@ -118,7 +118,7 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should cast string numbers to integer types' {
-            $result = Get-TlsProtocol -Protocol 'Tls12'
+            $result = Get-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
 
             $result.Enabled | Should -Be 1
             $result.Enabled.GetType().Name | Should -Be 'Int32'
@@ -153,14 +153,14 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should check Client registry keys and return Client as Target' {
-            $result = Get-TlsProtocol -Protocol 'Tls12' -Client
+            $result = Get-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client
 
             $result.Target | Should -Be 'Client'
             $result.Enabled | Should -Be 1
             $result.DisabledByDefault | Should -Be 0
 
             Should -Invoke -CommandName Get-TlsProtocolRegistryPath -ParameterFilter {
-                $Protocol -eq 'Tls12' -and $Client
+                $Protocol -eq ([System.Security.Authentication.SslProtocols]::Tls12) -and $Client
             } -Exactly -Times 1 -Scope It
 
             Should -Invoke -CommandName Get-TlsProtocolTargetRegistryName -ParameterFilter {

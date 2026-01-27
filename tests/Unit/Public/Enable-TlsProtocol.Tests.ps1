@@ -44,7 +44,7 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should call New-Item and New-ItemProperty' {
-            Enable-TlsProtocol -Protocol 'Tls12' -Force
+            Enable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Force
 
             Should -Invoke -CommandName New-Item -Times 1
             Should -Invoke -CommandName New-ItemProperty -Times 1
@@ -58,7 +58,7 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should write DisabledByDefault and target Client path' {
-            Enable-TlsProtocol -Protocol 'Tls12' -Client -SetDisabledByDefault -Force
+            Enable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client -SetDisabledByDefault -Force
 
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 0 } -Exactly -Times 1
             Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\\Client' } -Exactly -Times 1
@@ -72,7 +72,7 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should NOT write DisabledByDefault' {
-            Enable-TlsProtocol -Protocol 'Tls12' -Force
+            Enable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Force
 
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' } -Exactly -Times 0
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 1
@@ -86,7 +86,7 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should write DisabledByDefault and target Server path' {
-            Enable-TlsProtocol -Protocol 'Tls12' -SetDisabledByDefault -Force
+            Enable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -SetDisabledByDefault -Force
 
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 0 } -Exactly -Times 1
             Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\\Server' } -Exactly -Times 1

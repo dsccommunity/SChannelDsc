@@ -8,8 +8,9 @@
         switch to assert the `Client` key instead of the default `Server` key.
 
     .PARAMETER Protocol
-        One or more protocol names to assert. Valid values: Ssl2, Ssl3, Tls,
-        Tls11, Tls12, Tls13.
+        One or more protocol names to assert. Accepts values from the
+        `[System.Security.Authentication.SslProtocols]` enum such as `Ssl2`,
+        `Ssl3`, `Tls`, `Tls11`, `Tls12`, `Tls13`.
 
     .PARAMETER Client
         When specified, assert the protocol in the `Client` registry key.
@@ -20,8 +21,7 @@ function Assert-TlsProtocol
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13', IgnoreCase = $true)]
-        [System.String[]]
+        [System.Security.Authentication.SslProtocols[]]
         $Protocol,
 
         [Parameter()]

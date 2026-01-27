@@ -7,7 +7,9 @@
         SCHANNEL protocol keys and returns a PSCustomObject with the results.
 
     .PARAMETER Protocol
-        One or more protocol names. Valid values: Ssl2, Ssl3, Tls, Tls11, Tls12, Tls13.
+        One or more protocol names. Accepts values from the
+        `[System.Security.Authentication.SslProtocols]` enum such as `Ssl2`,
+        `Ssl3`, `Tls`, `Tls11`, `Tls12`, `Tls13`.
 
     .PARAMETER Client
         When specified, reads the `Client` key. By default the `Server` key is used.
@@ -22,14 +24,25 @@ function Get-TlsProtocol
     param
     (
         [Parameter()]
-        [ValidateSet('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13', IgnoreCase = $true)]
-        [System.String[]]
-        $Protocol = @('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13'),
+        [System.Security.Authentication.SslProtocols[]]
+        $Protocol,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Client
     )
+
+    if (-not $PSBoundParameters.ContainsKey('Protocol'))
+    {
+        $Protocol = @(
+            [System.Security.Authentication.SslProtocols]::Ssl2,
+            [System.Security.Authentication.SslProtocols]::Ssl3,
+            [System.Security.Authentication.SslProtocols]::Tls,
+            [System.Security.Authentication.SslProtocols]::Tls11,
+            [System.Security.Authentication.SslProtocols]::Tls12,
+            [System.Security.Authentication.SslProtocols]::Tls13
+        )
+    }
 
     foreach ($p in $Protocol)
     {
