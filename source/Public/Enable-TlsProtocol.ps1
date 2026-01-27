@@ -28,10 +28,40 @@
 
     .PARAMETER Force
         Suppresses confirmation prompts.
+
+    .INPUTS
+        None.
+
+    .OUTPUTS
+        None.
+
+    .EXAMPLE
+        Enable-TlsProtocol -Protocol Tls12
+
+        Enables TLS 1.2 for server-side connections by setting the `Enabled`
+        registry value to 1.
+
+    .EXAMPLE
+        Enable-TlsProtocol -Protocol Tls13 -Client
+
+        Enables TLS 1.3 for client-side connections.
+
+    .EXAMPLE
+        Enable-TlsProtocol -Protocol Tls12, Tls13 -SetDisabledByDefault
+
+        Enables TLS 1.2 and TLS 1.3 for server-side connections and also sets
+        the `DisabledByDefault` registry value to 0.
+
+    .EXAMPLE
+        Enable-TlsProtocol -Protocol Tls12 -Force
+
+        Enables TLS 1.2 for server-side connections without prompting for
+        confirmation.
 #>
 function Enable-TlsProtocol
 {
     [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
+    [OutputType()]
     param
     (
         [Parameter(Mandatory = $true)]

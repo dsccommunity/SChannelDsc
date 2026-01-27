@@ -28,10 +28,40 @@
 
     .PARAMETER Force
         Suppresses confirmation prompts.
+
+    .INPUTS
+        None.
+
+    .OUTPUTS
+        None.
+
+    .EXAMPLE
+        Disable-TlsProtocol -Protocol Ssl3
+
+        Disables SSL 3.0 for server-side connections by setting the `Enabled`
+        registry value to 0.
+
+    .EXAMPLE
+        Disable-TlsProtocol -Protocol Tls -Client
+
+        Disables TLS 1.0 for client-side connections.
+
+    .EXAMPLE
+        Disable-TlsProtocol -Protocol Ssl2, Ssl3 -SetDisabledByDefault
+
+        Disables SSL 2.0 and SSL 3.0 for server-side connections and also sets
+        the `DisabledByDefault` registry value to 1.
+
+    .EXAMPLE
+        Disable-TlsProtocol -Protocol Tls -Force
+
+        Disables TLS 1.0 for server-side connections without prompting for
+        confirmation.
 #>
 function Disable-TlsProtocol
 {
     [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
+    [OutputType()]
     param
     (
         [Parameter(Mandatory = $true)]
