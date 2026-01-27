@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - SChannelDsc
   - Changed the build pipeline to use the build worked image `windows-latest`.
+  - Update module to latest DSCCommunity format.
+  - Rename SChannelDsc.Utils to SChannelDsc.Common.
+  - Convert SChannelDsc.Common a buildable nested module.
+  - Update case on resource README files.
 - Protocol
   - Setting `State` to `Enabled` exclusively uses '1', instead of '4294967295', when assessing the associated
     registry key value ([issue 32](https://github.com/dsccommunity/SChannelDsc/issues/32) and
