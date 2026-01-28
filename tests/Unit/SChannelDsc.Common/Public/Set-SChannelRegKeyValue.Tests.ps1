@@ -73,7 +73,7 @@ Describe 'SChannelDsc.Common\Set-SChannelRegKeyValue' {
             $null = New-ItemProperty -Path 'TestRegistry:\SChannel\Protocols\SSL 3.0' -Name 'Enabled' -Value 0 -Force
         }
 
-        It 'Should remove the registry key' {
+        It 'Should set the key to the correct value' {
             Set-SChannelRegKeyValue -Key 'TestRegistry:\SCHANNEL\Protocols' -SubKey 'SSL 3.0' -Name 'Enabled' -Value 1
             (Get-ItemPropertyValue -Path 'TestRegistry:\SChannel\Protocols\SSL 3.0' -Name 'Enabled') | Should -Be 1
         }
@@ -84,7 +84,7 @@ Describe 'SChannelDsc.Common\Set-SChannelRegKeyValue' {
             $null = New-Item -Path 'TestRegistry:\SCHANNEL\Protocols\' -Force
         }
 
-        It 'Should remove the registry key' {
+        It 'Should set the key to the correct value' {
             Set-SChannelRegKeyValue -Key 'TestRegistry:\SCHANNEL\Protocols' -SubKey 'SSL 3.0' -Name 'Enabled' -Value 1
             (Get-ItemPropertyValue -Path 'TestRegistry:\SChannel\Protocols\SSL 3.0' -Name 'Enabled') | Should -Be 1
         }
