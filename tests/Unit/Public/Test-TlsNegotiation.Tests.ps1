@@ -111,6 +111,13 @@ Describe 'Test-TlsNegotiation' {
             # At least one should be successful
             ($results | Where-Object { $_.Success } | Measure-Object).Count | Should -BeGreaterThan 0
         }
+
+        It 'Should return results when Protocol parameter is not provided (uses defaults)' {
+            $results = Test-TlsNegotiation -HostName 'www.google.se' -Port 443 -TimeoutSeconds 10
+
+            $results | Should -Not -BeNullOrEmpty
+            ($results | Where-Object { $_.Success } | Measure-Object).Count | Should -BeGreaterThan 0
+        }
     }
 
     Context 'When validating parameters' {
