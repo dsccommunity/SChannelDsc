@@ -86,8 +86,8 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present')
     {
-        Write-Verbose -Message ($script:localizedData.ItemEnable -f $Ensure)
         $cipherSuitesAsString = [string]::join(',', $cipherSuitesOrder)
+        Write-Verbose -Message ($script:localizedData.ItemEnable -f $cipherSuitesAsString)
         New-Item $itemKey -Force
         $null = New-ItemProperty -Path $itemKey -Name 'Functions' -Value $cipherSuitesAsString -PropertyType 'String' -Force
         $shouldReboot = $true
