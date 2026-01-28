@@ -14,6 +14,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Update case on resource README files.
   - Converted Unit tests to Pester 5 [issue #42](https://github.com/dsccommunity/SChannelDsc/issues/42).
   - Renamed MSFT prefix to DSC [issue #43](https://github.com/dsccommunity/SChannelDsc/issues/43).
+  - Unit test on both 2022 and 2025.
+
+### Removed
+
+- SChannelDsc.Common
+  - Convert-SCDscArrayToString
+  - Convert-SCDscCIMInstanceToString
+  - Convert-SCDscHashtableToString
+  - Test-SCDscObjectHasProperty
 
 ## [1.5.0] - 2026-01-27
 
