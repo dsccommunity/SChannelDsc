@@ -5,9 +5,9 @@ ConvertFrom-StringData @'
     ItemDisable                    = Disabling Protocol {0}
     ItemDefault                    = Defaulting Protocol {0}
 
-    GettingConfiguration = Getting configuration for protocol {0}
-    TestingConfiguration = Testing configuration for protocol {0}
-    SettingConfiguration = Setting configuration for protocol {0}
+    GettingConfiguration = Getting the current state of protocol {0}
+    TestingConfiguration = Determining the current state of protocol {0}
+    SettingConfiguration = Setting the desired state of protocol {0}
 
     OSVersionNotSupported          = You can only use TLS 1.3 with Windows Server 2022 or later.
 '@

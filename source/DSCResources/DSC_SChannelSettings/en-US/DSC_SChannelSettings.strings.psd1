@@ -13,7 +13,7 @@ ConvertFrom-StringData @'
     RemoveKerbEncrTypes     = Removing Kerberos Supported Encryption Types
     RemoveWinHTTPDefSecProt = Removing WinHTTP Default Secure Protocols
 
-    GettingConfiguration = Getting SChannel configuration settings
-    TestingConfiguration = Testing SChannel configuration settings
-    SettingConfiguration = Setting SChannel configuration settings
+    GettingConfiguration = Getting the current state of SChannel configuration settings
+    TestingConfiguration = Determining the current state of SChannel configuration settings
+    SettingConfiguration = Setting the desired state of SChannel configuration settings
 '@

@@ -3,7 +3,7 @@ ConvertFrom-StringData @'
     ItemDisable                    = Disabling KeyExchangeAlgorithm {0}
     ItemDefault                    = Defaulting KeyExchangeAlgorithm {0}
 
-    GettingConfiguration = Getting configuration for key exchange algorithm {0}
-    TestingConfiguration = Testing configuration for key exchange algorithm {0}
-    SettingConfiguration = Setting configuration for key exchange algorithm {0}
+    GettingConfiguration = Getting the current state of key exchange algorithm {0}
+    TestingConfiguration = Determining the current state of key exchange algorithm {0}
+    SettingConfiguration = Setting the desired state of key exchange algorithm {0}
 '@
