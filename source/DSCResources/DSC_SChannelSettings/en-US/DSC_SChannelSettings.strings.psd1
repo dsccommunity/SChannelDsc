@@ -12,6 +12,8 @@ ConvertFrom-StringData @'
     ConfigureWinHTTPSecProt = Configuring WinHTTP Default Secure Protocols: {0}
     RemoveKerbEncrTypes     = Removing Kerberos Supported Encryption Types
     RemoveWinHTTPDefSecProt = Removing WinHTTP Default Secure Protocols
-    ItemNotCompliant        = {0} not compliant.
-    ItemCompliant           = {0} compliant.
+
+    GettingConfiguration = Getting SChannel configuration settings
+    TestingConfiguration = Testing SChannel configuration settings
+    SettingConfiguration = Setting SChannel configuration settings
 '@

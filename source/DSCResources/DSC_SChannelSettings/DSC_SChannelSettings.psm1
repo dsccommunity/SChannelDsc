@@ -51,7 +51,7 @@ function Get-TargetResource
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message 'Getting SChannel configuration settings'
+    Write-Verbose -Message $script:localizedData.GettingConfiguration
 
     # TLS v1.2 state for the .Net Framework
     Write-Verbose -Message ($script:localizedData.GetTLS12)
@@ -68,14 +68,10 @@ function Get-TargetResource
     $dotnet2Key = 'HKLM:\SOFTWARE\Microsoft\.NETFramework\v2.0.50727'
     $dotnet4Key = 'HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319'
 
-    $net2DefaultTLSVersions = Get-SChannelRegKeyValue -Key $dotnet2Key `
-        -Name 'SystemDefaultTlsVersions'
-    $net2StrongCrypto = Get-SChannelRegKeyValue -Key $dotnet2Key `
-        -Name 'SchUseStrongCrypto'
-    $net4DefaultTLSVersions = Get-SChannelRegKeyValue -Key $dotnet4Key `
-        -Name 'SystemDefaultTlsVersions'
-    $net4StrongCrypto = Get-SChannelRegKeyValue -Key $dotnet4Key `
-        -Name 'SchUseStrongCrypto'
+    $net2DefaultTLSVersions = Get-SChannelRegKeyValue -Key $dotnet2Key -Name 'SystemDefaultTlsVersions'
+    $net2StrongCrypto = Get-SChannelRegKeyValue -Key $dotnet2Key -Name 'SchUseStrongCrypto'
+    $net4DefaultTLSVersions = Get-SChannelRegKeyValue -Key $dotnet4Key -Name 'SystemDefaultTlsVersions'
+    $net4StrongCrypto = Get-SChannelRegKeyValue -Key $dotnet4Key -Name 'SchUseStrongCrypto'
 
     if (Test-Path -Path 'HKLM:\SOFTWARE\Wow6432Node')
     {
@@ -83,14 +79,10 @@ function Get-TargetResource
         $dotnet2Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v2.0.50727'
         $dotnet4Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319'
 
-        $net2DefaultTLSVersions32 = Get-SChannelRegKeyValue -Key $dotnet2Key `
-            -Name 'SystemDefaultTlsVersions'
-        $net2StrongCrypto32 = Get-SChannelRegKeyValue -Key $dotnet2Key `
-            -Name 'SchUseStrongCrypto'
-        $net4DefaultTLSVersions32 = Get-SChannelRegKeyValue -Key $dotnet4Key `
-            -Name 'SystemDefaultTlsVersions'
-        $net4StrongCrypto32 = Get-SChannelRegKeyValue -Key $dotnet4Key `
-            -Name 'SchUseStrongCrypto'
+        $net2DefaultTLSVersions32 = Get-SChannelRegKeyValue -Key $dotnet2Key -Name 'SystemDefaultTlsVersions'
+        $net2StrongCrypto32 = Get-SChannelRegKeyValue -Key $dotnet2Key -Name 'SchUseStrongCrypto'
+        $net4DefaultTLSVersions32 = Get-SChannelRegKeyValue -Key $dotnet4Key -Name 'SystemDefaultTlsVersions'
+        $net4StrongCrypto32 = Get-SChannelRegKeyValue -Key $dotnet4Key -Name 'SchUseStrongCrypto'
 
         if ($null -eq $net2DefaultTLSVersions -and
             $null -eq $net2StrongCrypto -and
@@ -159,17 +151,14 @@ function Get-TargetResource
     Write-Verbose -Message ($script:localizedData.GetDGKeySize)
 
     $dhMinKeySizeKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman'
-    $dhMinClientKeySizeValue = Get-SChannelRegKeyValue -Key $dhMinKeySizeKey `
-        -Name 'ClientMinKeyBitLength'
-    $dhMinServerKeySizeValue = Get-SChannelRegKeyValue -Key $dhMinKeySizeKey `
-        -Name 'ServerMinKeyBitLength'
+    $dhMinClientKeySizeValue = Get-SChannelRegKeyValue -Key $dhMinKeySizeKey -Name 'ClientMinKeyBitLength'
+    $dhMinServerKeySizeValue = Get-SChannelRegKeyValue -Key $dhMinKeySizeKey -Name 'ServerMinKeyBitLength'
 
     # Kerberos Supported Encryption Type
     Write-Verbose -Message ($script:localizedData.GetKerbEncrTypes)
 
     $kerberosEncrTypesKey = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters'
-    $kerberosEncrTypesValue = Get-SChannelRegKeyValue -Key $kerberosEncrTypesKey `
-        -Name 'SupportedEncryptionTypes'
+    $kerberosEncrTypesValue = Get-SChannelRegKeyValue -Key $kerberosEncrTypesKey -Name 'SupportedEncryptionTypes'
 
     $kerberosEncrTypes = @()
     if ($null -ne $kerberosEncrTypesValue)
@@ -211,11 +200,9 @@ function Get-TargetResource
     $winhttp64Key = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
     $winhttp32Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
 
-    $winhttp64Value = Get-SChannelRegKeyValue -Key $winhttp64Key `
-        -Name 'DefaultSecureProtocols'
+    $winhttp64Value = Get-SChannelRegKeyValue -Key $winhttp64Key -Name 'DefaultSecureProtocols'
 
-    $winhttp32Value = Get-SChannelRegKeyValue -Key $winhttp32Key `
-        -Name 'DefaultSecureProtocols'
+    $winhttp32Value = Get-SChannelRegKeyValue -Key $winhttp32Key -Name 'DefaultSecureProtocols'
 
     $winhttp64Protocols = @()
     if ($null -ne $winhttp64Value)
@@ -301,8 +288,7 @@ function Get-TargetResource
     Write-Verbose -Message ($script:localizedData.GetFIPS)
 
     $fipsKey = 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy'
-    $fipsAlgorithmPolicyValue = Get-SChannelRegKeyValue -Key $fipsKey `
-        -Name 'Enabled'
+    $fipsAlgorithmPolicyValue = Get-SChannelRegKeyValue -Key $fipsKey -Name 'Enabled'
 
     if ($null -eq $fipsAlgorithmPolicyValue)
     {
@@ -326,10 +312,10 @@ function Get-TargetResource
     $returnValue = @{
         IsSingleInstance                = 'Yes'
         TLS12State                      = $currentTls12State
-        DiffieHellmanMinClientKeySize   = $dhMinClientKeySizeValue
-        DiffieHellmanMinServerKeySize   = $dhMinServerKeySizeValue
-        KerberosSupportedEncryptionType = $kerberosEncrTypes
-        WinHttpDefaultSecureProtocols   = $winhttpProtocols
+        DiffieHellmanMinClientKeySize   = [System.UInt32] $dhMinClientKeySizeValue
+        DiffieHellmanMinServerKeySize   = [System.UInt32] $dhMinServerKeySizeValue
+        KerberosSupportedEncryptionType = [System.String[]] $kerberosEncrTypes
+        WinHttpDefaultSecureProtocols   = [System.String[]] $winhttpProtocols
         EnableFIPSAlgorithmPolicy       = $fipsValue
     }
 
@@ -380,7 +366,7 @@ function Set-TargetResource
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message 'Setting SChannel configuration settings'
+    Write-Verbose -Message $script:localizedData.SettingConfiguration
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -554,8 +540,7 @@ function Set-TargetResource
                 $ketValue += 16
             }
 
-            $kerberosEncrTypesValue = Get-SChannelRegKeyValue -Key "$kerberosEncrTypesKey\Parameters" `
-                -Name 'SupportedEncryptionTypes'
+            $kerberosEncrTypesValue = Get-SChannelRegKeyValue -Key "$kerberosEncrTypesKey\Parameters" -Name 'SupportedEncryptionTypes'
 
             if ($null -eq $kerberosEncrTypesValue -or ($kerberosEncrTypesValue -band $ketValue) -ne $ketValue)
             {
@@ -579,8 +564,7 @@ function Set-TargetResource
             if ($CurrentValues.KerberosSupportedEncryptionType.Count -ne 0)
             {
                 Write-Verbose -Message ($script:localizedData.RemoveKerbEncrTypes)
-                Remove-ItemProperty -Path "$kerberosEncrTypesKey\Parameters" `
-                    -Name 'SupportedEncryptionTypes'
+                Remove-ItemProperty -Path "$kerberosEncrTypesKey\Parameters" -Name 'SupportedEncryptionTypes'
             }
         }
     }
@@ -730,33 +714,15 @@ function Test-TargetResource
         $RebootWhenRequired = $false
     )
 
-    Write-Verbose -Message 'Testing SChannel configuration settings'
+    Write-Verbose -Message $script:localizedData.TestingConfiguration
 
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-    $compliant = $false
-
-    Write-Verbose -Message "Current Values: $(Convert-SCDscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-SCDscHashtableToString -Hashtable $PSBoundParameters)"
-
-    $ErrorActionPreference = 'SilentlyContinue'
-
-    $compliant = Test-DscParameterState -TurnOffTypeChecking `
-        -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @('DiffieHellmanMinClientKeySize', `
-            'DiffieHellmanMinServerKeySize', `
-            'EnableFIPSAlgorithmPolicy', `
-            'TLS12State', `
-            'KerberosSupportedEncryptionType', `
-            'WinHttpDefaultSecureProtocols')
-
-    if ($compliant -eq $true)
-    {
-        Write-Verbose -Message ($script:localizedData.ItemCompliant -f 'SChannel settings')
+    $compareDscParameterStateParameters = @{
+        CurrentValues       = Get-TargetResource @PSBoundParameters
+        DesiredValues       = $PSBoundParameters
+        ExcludeProperties   = @('IsSingleInstance', 'RebootWhenRequired')
+        SortArrayValues     = $true
+        TurnOffTypeChecking = $false
     }
-    else
-    {
-        Write-Verbose -Message ($script:localizedData.ItemNotCompliant -f 'SChannel settings ')
-    }
-    return $compliant
+
+    Test-DscParameterState @compareDscParameterStateParameters
 }
