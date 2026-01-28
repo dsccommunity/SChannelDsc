@@ -110,6 +110,17 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
         }
     }
 
+    Context 'When New-Item fails to create the registry key' {
+        BeforeAll {
+            Mock -CommandName New-Item -MockWith { throw 'Failed to create registry key' }
+            Mock -CommandName New-ItemProperty
+        }
+
+        It 'Should throw a terminating error when New-Item fails' {
+            { Enable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Force } | Should -Throw -ErrorId 'ETP0001,Enable-TlsProtocol'
+        }
+    }
+
     Context 'When validating parameters' {
         BeforeAll {
             $script:commandInfo = Get-Command -Name 'Enable-TlsProtocol'
