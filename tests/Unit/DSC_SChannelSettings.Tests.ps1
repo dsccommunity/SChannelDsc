@@ -163,20 +163,20 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                 # WinHTTP
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+                    $Key -eq 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp' -and
                     $Name -eq 'DefaultSecureProtocols'
                 } -MockWith {
                     return 2728
                 }
 
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+                    $Key -eq 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp' -and
                     $Name -eq 'DefaultSecureProtocols'
                 }
 
                 #FIPS
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy'
+                    $Key -eq 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy' -and
                     $Name -eq 'Enabled'
                 } -MockWith {
                     return 1
@@ -324,20 +324,20 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                 # WinHTTP
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+                    $Key -eq 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp' -and
                     $Name -eq 'DefaultSecureProtocols'
                 } -MockWith {
                     return 2728
                 }
 
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+                    $Key -eq 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp' -and
                     $Name -eq 'DefaultSecureProtocols'
                 }
 
                 #FIPS
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy'
+                    $Key -eq 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy' -and
                     $Name -eq 'Enabled'
                 } -MockWith {
                     return 1
@@ -485,20 +485,20 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                 # WinHTTP
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+                    $Key -eq 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp' -and
                     $Name -eq 'DefaultSecureProtocols'
                 } -MockWith {
                     return 2728
                 }
 
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+                    $Key -eq 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp' -and
                     $Name -eq 'DefaultSecureProtocols'
                 }
 
                 #FIPS
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy'
+                    $Key -eq 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy' -and
                     $Name -eq 'Enabled'
                 } -MockWith {
                     return 1
@@ -658,14 +658,14 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                 # WinHTTP
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+                    $Key -eq 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp' -and
                     $Name -eq 'DefaultSecureProtocols'
                 } -MockWith {
                     return 2728
                 }
 
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+                    $Key -eq 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp' -and
                     $Name -eq 'DefaultSecureProtocols'
                 } -MockWith {
                     return 2728
@@ -673,7 +673,7 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                 #FIPS
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy'
+                    $Key -eq 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy' -and
                     $Name -eq 'Enabled'
                 } -MockWith {
                     return 1
@@ -836,14 +836,14 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                 # WinHTTP
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+                    $Key -eq 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp' -and
                     $Name -eq 'DefaultSecureProtocols'
                 } -MockWith {
                     return 2728
                 }
 
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+                    $Key -eq 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp' -and
                     $Name -eq 'DefaultSecureProtocols'
                 } -MockWith {
                     return 2728
@@ -851,7 +851,7 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                 #FIPS
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy'
+                    $Key -eq 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy' -and
                     $Name -eq 'Enabled'
                 } -MockWith {
                     return 1
@@ -1014,14 +1014,14 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                 # WinHTTP
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+                    $Key -eq 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp' -and
                     $Name -eq 'DefaultSecureProtocols'
                 } -MockWith {
                     return 2728
                 }
 
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+                    $Key -eq 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp' -and
                     $Name -eq 'DefaultSecureProtocols'
                 } -MockWith {
                     return 2728
@@ -1029,7 +1029,7 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                 #FIPS
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy'
+                    $Key -eq 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy' -and
                     $Name -eq 'Enabled'
                 } -MockWith {
                     return 1
@@ -1186,14 +1186,14 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                 # WinHTTP
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+                    $Key -eq 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp' -and
                     $Name -eq 'DefaultSecureProtocols'
                 } -MockWith {
                     return 2728
                 }
 
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+                    $Key -eq 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp' -and
                     $Name -eq 'DefaultSecureProtocols'
                 } -MockWith {
                     return 2728
@@ -1201,7 +1201,7 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                 #FIPS
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy'
+                    $Key -eq 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy' -and
                     $Name -eq 'Enabled'
                 } -MockWith {
                     return 0
@@ -1358,14 +1358,14 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                 # WinHTTP
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+                    $Key -eq 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp' -and
                     $Name -eq 'DefaultSecureProtocols'
                 } -MockWith {
                     return 2728
                 }
 
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp'
+                    $Key -eq 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp' -and
                     $Name -eq 'DefaultSecureProtocols'
                 } -MockWith {
                     return 2728
@@ -1373,7 +1373,7 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                 #FIPS
                 Mock -CommandName Get-SChannelRegKeyValue -ParameterFilter {
-                    $Key = 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy'
+                    $Key -eq 'HKLM:SYSTEM\CurrentControlSet\Control\LSA\FIPSAlgorithmPolicy' -and
                     $Name -eq 'Enabled'
                 }
             }
@@ -1724,17 +1724,17 @@ Describe 'DSC_SChannelSettings\Set-TargetResource' -Tag 'Set' {
                 Set-StrictMode -Version 1.0
 
                 $mockParams = @{
-                    IsSingleInstance                = 'Yes'
-                    TLS12State                      = 'Enabled'
-                    DiffieHellmanMinClientKeySize   = 4096
-                    DiffieHellmanMinServerKeySize   = 4096
-                    WinHttpDefaultSecureProtocols   = @('TLS1.2')
-                    EnableFIPSAlgorithmPolicy       = $true
-                    RebootWhenRequired              = $true
+                    IsSingleInstance              = 'Yes'
+                    TLS12State                    = 'Enabled'
+                    DiffieHellmanMinClientKeySize = 4096
+                    DiffieHellmanMinServerKeySize = 4096
+                    WinHttpDefaultSecureProtocols = @('TLS1.2')
+                    EnableFIPSAlgorithmPolicy     = $true
+                    RebootWhenRequired            = $true
                 }
 
                 $mockErrorMessage = 'Hotfix KB3140245 is not installed. Setting these registry keys will not do anything. ' + `
-                        'Please install the hotfix first!'
+                    'Please install the hotfix first!'
 
                 { Set-TargetResource @mockParams } | Should -Throw -ExpectedMessage $mockErrorMessage
             }
