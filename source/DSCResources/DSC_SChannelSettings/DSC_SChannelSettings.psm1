@@ -58,9 +58,6 @@ function Get-TargetResource
 
     $currentTls12State = $null
 
-    # $dotnetKey = 'HKLM:SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full'
-    # $keyExists = Get-ItemProperty -Path $dotnetKey -ErrorAction SilentlyContinue
-
     # 64 bit keys
     Write-Verbose -Message ($script:localizedData.NetFramework45Detected)
 
@@ -369,9 +366,6 @@ function Set-TargetResource
     Write-Verbose -Message $script:localizedData.SettingConfiguration
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    # $dotnetKey = 'HKLM:SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full'
-    # $keyExists = Get-ItemProperty -Path $dotnetKey -ErrorAction SilentlyContinue
 
     if ($TLS12State -ne $CurrentValues.TLS12State)
     {
