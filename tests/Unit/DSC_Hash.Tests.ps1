@@ -116,16 +116,16 @@ Describe 'DSC_Hash\Set-TargetResource' -Tag 'Set' {
         BeforeDiscovery {
             $testCases = @(
                 @{
-                    Hash  = 'MD5'
-                    State = 'Enabled'
+                    MockHash  = 'MD5'
+                    MockState = 'Enabled'
                 },
                 @{
-                    Hash  = 'SHA256'
-                    State = 'Disabled'
+                    MockHash  = 'SHA256'
+                    MockState = 'Disabled'
                 },
                 @{
-                    Hash  = 'SHA512'
-                    State = 'Default'
+                    MockHash  = 'SHA512'
+                    MockState = 'Default'
                 }
             )
         }
@@ -135,13 +135,13 @@ Describe 'DSC_Hash\Set-TargetResource' -Tag 'Set' {
             Mock -CommandName Set-DscMachineRebootRequired
         }
 
-        It 'Should call the correct mocks for state ''<State>''' -ForEach $testCases {
+        It 'Should call the correct mocks for state ''<MockState>''' -ForEach $testCases {
             InModuleScope -Parameters $_ -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
                 $testParams = @{
                     Hash               = $Hash
-                    State              = $State
+                    State              = $MockState
                     RebootWhenRequired = $true
                 }
 
@@ -149,8 +149,8 @@ Describe 'DSC_Hash\Set-TargetResource' -Tag 'Set' {
             }
 
             Should -Invoke Set-SChannelItem -Exactly -Times 1 -Scope It -ParameterFilter {
-                $ItemSubKey -eq $Hash -and
-                $State -eq $State
+                $ItemSubKey -eq $MockHash -and
+                $State -eq $MockState
             }
 
             Should -Invoke Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
