@@ -138,9 +138,9 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
             $result = Get-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
 
             $result.Enabled | Should -Be 1
-            $result.Enabled.GetType().Name | Should -Be 'Int32'
+            $result.Enabled.GetType().Name | Should -Be 'UInt32'
             $result.DisabledByDefault | Should -Be 0
-            $result.DisabledByDefault.GetType().Name | Should -Be 'Int32'
+            $result.DisabledByDefault.GetType().Name | Should -Be 'UInt32'
         }
     }
 
