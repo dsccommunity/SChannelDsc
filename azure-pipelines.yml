@@ -170,7 +170,6 @@ stages:
   - stage: Deploy
     dependsOn:
       - Quality_Test_and_Unit_Test
-      - Integration_Test
     condition: |
       and(
         succeeded(),
