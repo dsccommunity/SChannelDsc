@@ -186,6 +186,41 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
         }
     }
 
+    Context 'When Protocol parameter is omitted' {
+        BeforeAll {
+            # Return a predictable registry path for any protocol
+            Mock -CommandName Get-TlsProtocolRegistryPath -MockWith {
+                return "HKLM:\\Software\\Test\\$Protocol\\Server"
+            }
+
+            Mock -CommandName Get-TlsProtocolTargetRegistryName -MockWith {
+                return 'Server'
+            } -ParameterFilter {
+                -not $Client
+            }
+
+            Mock -CommandName Get-RegistryPropertyValue -MockWith {
+                return 1
+            } -ParameterFilter {
+                $Name -eq 'Enabled'
+            }
+
+            Mock -CommandName Get-RegistryPropertyValue -MockWith {
+                return 0
+            } -ParameterFilter {
+                $Name -eq 'DisabledByDefault'
+            }
+        }
+
+        It 'Should return entries for all supported protocols' {
+            $result = Get-TlsProtocol
+
+            $result | Should -Not -BeNull
+            $result.Count | Should -Be 6
+            $result.Target | Should -Not -Contain $null
+        }
+    }
+
     Context 'When validating parameters' {
         BeforeAll {
             $script:commandInfo = Get-Command -Name 'Get-TlsProtocol'
