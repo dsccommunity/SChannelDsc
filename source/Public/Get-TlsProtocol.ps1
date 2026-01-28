@@ -85,7 +85,7 @@ function Get-TlsProtocol
 
         $protocolEnabled = if ($null -ne $protocolEnabled)
         {
-            [System.Int32] $protocolEnabled
+            [System.UInt32] $protocolEnabled
         }
         else
         {
@@ -94,7 +94,7 @@ function Get-TlsProtocol
 
         $protocolDisabled = if ($null -ne $protocolDisabled)
         {
-            [System.Int32] $protocolDisabled
+            [System.UInt32] $protocolDisabled
         }
         else
         {

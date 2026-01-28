@@ -15,6 +15,9 @@
         When specified, return the path for the `Client` subkey, otherwise
         return the `Server` subkey path.
 
+    .INPUTS
+        None.
+
     .OUTPUTS
         System.String
 
