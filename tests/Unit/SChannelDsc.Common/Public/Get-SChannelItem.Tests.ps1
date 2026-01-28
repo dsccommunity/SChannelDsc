@@ -78,7 +78,7 @@ Describe 'SChannelDsc.Common\Get-SChannelItem' {
             Mock -CommandName Get-ItemPropertyValue -MockWith { return $MockValue }
         }
 
-        It 'It should return ''<ExpectedResult>''' {
+        It 'Should return ''<ExpectedResult>''' {
             Get-SChannelItem -ItemKey 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols' | Should -Be $ExpectedResult
         }
     }
