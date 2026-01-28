@@ -106,7 +106,21 @@ function Test-TlsNegotiation
 
     # Equivalent to: (sender, certificate, chain, sslPolicyErrors) => true
     $certValidationCallback = [System.Net.Security.RemoteCertificateValidationCallback] {
-        param($sender, $certificate, $chain, $sslPolicyErrors)
+        param
+        (
+            [Parameter()]
+            $sender,
+
+            [Parameter()]
+            $certificate,
+
+            [Parameter()]
+            $chain,
+
+            [Parameter()]
+            $sslPolicyErrors
+        )
+
         return $true
     }
 
