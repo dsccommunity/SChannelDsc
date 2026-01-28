@@ -110,6 +110,17 @@ Describe 'Disable-TlsProtocol' -Tag 'Public' {
         }
     }
 
+    Context 'When New-Item fails to create the registry key' {
+        BeforeAll {
+            Mock -CommandName New-Item -MockWith { throw 'Failed to create registry key' }
+            Mock -CommandName New-ItemProperty
+        }
+
+        It 'Should throw a terminating error when New-Item fails' {
+            { Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Force } | Should -Throw -ErrorId 'DTP0002,Disable-TlsProtocol'
+        }
+    }
+
     Context 'When validating parameters' {
         BeforeAll {
             $script:commandInfo = Get-Command -Name 'Disable-TlsProtocol'
