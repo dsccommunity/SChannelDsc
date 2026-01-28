@@ -140,7 +140,7 @@ Describe 'DSC_Hash\Set-TargetResource' -Tag 'Set' {
                 Set-StrictMode -Version 1.0
 
                 $testParams = @{
-                    Hash               = $Hash
+                    Hash               = $MockHash
                     State              = $MockState
                     RebootWhenRequired = $true
                 }
