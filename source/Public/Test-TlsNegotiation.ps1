@@ -124,12 +124,19 @@ function Test-TlsNegotiation
             # Timeout logic (TcpClient.Connect() has no built-in timeout)
             $iar = $client.BeginConnect($HostName, $Port, $null, $null)
 
-            if (-not $iar.AsyncWaitHandle.WaitOne([System.TimeSpan]::FromSeconds($TimeoutSeconds), $false))
+            try
             {
-                $message = $script:localizedData.Test_TlsNegotiation_ConnectTimeout -f $TimeoutSeconds
-                $exception = New-Exception -Message $message
-                $errorRecord = New-ErrorRecord -Exception $exception -ErrorId 'TTN0002' -ErrorCategory 'OperationTimeout' -TargetObject $HostName
-                $PSCmdlet.ThrowTerminatingError($errorRecord)
+                if (-not $iar.AsyncWaitHandle.WaitOne([System.TimeSpan]::FromSeconds($TimeoutSeconds), $false))
+                {
+                    $message = $script:localizedData.Test_TlsNegotiation_ConnectTimeout -f $TimeoutSeconds
+                    $exception = New-Exception -Message $message
+                    $errorRecord = New-ErrorRecord -Exception $exception -ErrorId 'TTN0002' -ErrorCategory 'OperationTimeout' -TargetObject $HostName
+                    $PSCmdlet.ThrowTerminatingError($errorRecord)
+                }
+            }
+            finally
+            {
+                $iar.AsyncWaitHandle.Dispose()
             }
 
             $client.EndConnect($iar)
