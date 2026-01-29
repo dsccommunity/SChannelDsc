@@ -132,7 +132,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
         It 'Should have Protocol as a mandatory parameter' {
             $parameterInfo = $script:commandInfo.Parameters['Protocol']
 
-            $parameterInfo.Attributes.Mandatory | Should -Contain $true
+            $parameterInfo.Attributes.Mandatory | Should -BeTrue
         }
 
         It 'Should have Protocol declared as an array type' {

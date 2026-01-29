@@ -134,11 +134,11 @@ function Set-TlsProtocolRegistryValue
             }
             catch
             {
-                $errorMessage = ($script:localizedData.$errorMessageKey -f $currentProtocol)
+                $errorMessage = $script:localizedData.$errorMessageKey -f $currentProtocol
 
                 $exception = New-Exception -Message $errorMessage -ErrorRecord $_
                 $errorRecord = New-ErrorRecord -Exception $exception -ErrorId $errorId -ErrorCategory 'InvalidOperation' -TargetObject $currentProtocol
-                $Cmdlet.ThrowTerminatingError($errorRecord)
+                $PSCmdlet.ThrowTerminatingError($errorRecord)
             }
         }
     }
