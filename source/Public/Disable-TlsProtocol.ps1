@@ -81,43 +81,6 @@ function Disable-TlsProtocol
         $Force
     )
 
-    if ($Force.IsPresent -and -not $Confirm)
-    {
-        $ConfirmPreference = 'None'
-    }
-
-    foreach ($p in $Protocol)
-    {
-        $target = Get-TlsProtocolTargetRegistryName -Client:$Client
-
-        $regPath = Get-TlsProtocolRegistryPath -Protocol $p -Client:$Client
-
-        # For ShouldProcess description use the localized template with the key name and target
-        $protocolKeyName = ConvertTo-TlsProtocolRegistryKeyName -Protocol $p
-
-        $descriptionMessage = $script:localizedData.Disable_TlsProtocol_ShouldProcessDescription -f $protocolKeyName, $target
-        $confirmationMessage = $script:localizedData.Disable_TlsProtocol_ShouldProcessConfirmation -f $protocolKeyName
-        $captionMessage = $script:localizedData.Disable_TlsProtocol_ShouldProcessCaption
-
-        if ($PSCmdlet.ShouldProcess($descriptionMessage, $confirmationMessage, $captionMessage))
-        {
-            try
-            {
-                $null = New-Item -Path $regPath -Force -ErrorAction 'Stop'
-                $null = New-ItemProperty -Path $regPath -Name 'Enabled' -Value 0 -PropertyType DWord -Force -ErrorAction 'Stop'
-                if ($SetDisabledByDefault.IsPresent)
-                {
-                    $null = New-ItemProperty -Path $regPath -Name 'DisabledByDefault' -Value 1 -PropertyType DWord -Force -ErrorAction 'Stop'
-                }
-            }
-            catch
-            {
-                $errorMessage = ($script:localizedData.Disable_TlsProtocol_FailedToDisable -f $p, $_.Exception.Message)
-
-                $exception = New-Exception -Message $errorMessage -ErrorRecord $_
-                $errorRecord = New-ErrorRecord -Exception $exception -ErrorId 'DTP0002' -ErrorCategory 'InvalidOperation' -TargetObject $p
-                $PSCmdlet.ThrowTerminatingError($errorRecord)
-            }
-        }
-    }
+    # ShouldProcess is handled in Set-TlsProtocolRegistryValue
+    Set-TlsProtocolRegistryValue @PSBoundParameters -Disable
 }

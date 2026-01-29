@@ -60,7 +60,7 @@
 #>
 function Enable-TlsProtocol
 {
-    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
+    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     [OutputType()]
     param
     (
@@ -81,43 +81,6 @@ function Enable-TlsProtocol
         $Force
     )
 
-    if ($Force.IsPresent -and -not $Confirm)
-    {
-        $ConfirmPreference = 'None'
-    }
-
-    foreach ($currentProtocol in $Protocol)
-    {
-        $target = Get-TlsProtocolTargetRegistryName -Client:$Client
-
-        $regPath = Get-TlsProtocolRegistryPath -Protocol $currentProtocol -Client:$Client
-
-        # For ShouldProcess description use the localized template with the key name and target
-        $protocolKeyName = ConvertTo-TlsProtocolRegistryKeyName -Protocol $currentProtocol
-
-        $descriptionMessage = $script:localizedData.Enable_TlsProtocol_ShouldProcessDescription -f $protocolKeyName, $target
-        $confirmationMessage = $script:localizedData.Enable_TlsProtocol_ShouldProcessConfirmation -f $protocolKeyName
-        $captionMessage = $script:localizedData.Enable_TlsProtocol_ShouldProcessCaption
-
-        if ($PSCmdlet.ShouldProcess($descriptionMessage, $confirmationMessage, $captionMessage))
-        {
-            try
-            {
-                $null = New-Item -Path $regPath -Force -ErrorAction 'Stop'
-                $null = New-ItemProperty -Path $regPath -Name 'Enabled' -Value 1 -PropertyType DWord -Force -ErrorAction 'Stop'
-                if ($SetDisabledByDefault.IsPresent)
-                {
-                    $null = New-ItemProperty -Path $regPath -Name 'DisabledByDefault' -Value 0 -PropertyType DWord -Force -ErrorAction 'Stop'
-                }
-            }
-            catch
-            {
-                $errorMessage = ($script:localizedData.Enable_TlsProtocol_FailedToEnable -f $currentProtocol, $_.Exception.Message)
-
-                $exception = New-Exception -Message $errorMessage -ErrorRecord $_
-                $errorRecord = New-ErrorRecord -Exception $exception -ErrorId 'ETP0001' -ErrorCategory 'InvalidOperation' -TargetObject $currentProtocol
-                $PSCmdlet.ThrowTerminatingError($errorRecord)
-            }
-        }
-    }
+    # ShouldProcess is handled in Set-TlsProtocolRegistryValue
+    Set-TlsProtocolRegistryValue @PSBoundParameters -Enable
 }
