@@ -60,6 +60,7 @@
 #>
 function Enable-TlsProtocol
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSShouldProcess', '', Justification = 'Because ShouldProcess is used in the called function Set-TlsProtocolRegistryValue')]
     [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     [OutputType()]
     param

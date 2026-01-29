@@ -56,68 +56,53 @@ Describe 'Disable-TlsProtocol' -Tag 'Public' {
 
     Context 'When disabling a protocol' {
         BeforeAll {
-            Mock -CommandName New-Item
-            Mock -CommandName New-ItemProperty
+            Mock -CommandName Set-TlsProtocolRegistryValue
         }
 
-        It 'Should call New-Item and New-ItemProperty' {
-            $null = Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Force
+        It 'Should call Set-TlsProtocolRegistryValue with Disable switch' {
+            $null = Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Force
 
-            Should -Invoke -CommandName New-Item -Times 1
-            Should -Invoke -CommandName New-ItemProperty -Times 1
-        }
-    }
-
-    Context 'When disabling without SetDisabledByDefault' {
-        BeforeAll {
-            Mock -CommandName New-Item
-            Mock -CommandName New-ItemProperty
-        }
-
-        It 'Should not write DisabledByDefault' {
-            $null = Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Force
-
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' } -Exactly -Times 0
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 1
+            Should -Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {
+                $Protocol -contains [System.Security.Authentication.SslProtocols]::Ssl3 -and
+                $Disable -eq $true -and
+                $Force -eq $true
+            } -Exactly -Times 1
         }
     }
 
     Context 'When disabling a protocol for Client and setting DisabledByDefault' {
         BeforeAll {
-            Mock -CommandName New-Item
-            Mock -CommandName New-ItemProperty
+            Mock -CommandName Set-TlsProtocolRegistryValue
         }
 
-        It 'Should write DisabledByDefault to 1 and target Client path' {
-            $null = Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client -SetDisabledByDefault -Force
+        It 'Should pass Client and SetDisabledByDefault to Set-TlsProtocolRegistryValue' {
+            $null = Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Client -SetDisabledByDefault -Force
 
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 1 } -Exactly -Times 1
-            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\\Client' } -Exactly -Times 1
-        }
-    }
-
-    Context 'When disabling a protocol for Server and setting DisabledByDefault' {
-        BeforeAll {
-            Mock -CommandName New-Item
-            Mock -CommandName New-ItemProperty
-        }
-
-        It 'Should write DisabledByDefault to 1 and target Server path' {
-            $null = Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -SetDisabledByDefault -Force
-
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 1 } -Exactly -Times 1
-            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\\Server' } -Exactly -Times 1
+            Should -Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {
+                $Protocol -contains [System.Security.Authentication.SslProtocols]::Ssl3 -and
+                $Disable -eq $true -and
+                $Client -eq $true -and
+                $SetDisabledByDefault -eq $true -and
+                $Force -eq $true
+            } -Exactly -Times 1
         }
     }
 
-    Context 'When New-Item fails to create the registry key' {
+    Context 'When disabling multiple protocols' {
         BeforeAll {
-            Mock -CommandName New-Item -MockWith { throw 'Failed to create registry key' }
-            Mock -CommandName New-ItemProperty
+            Mock -CommandName Set-TlsProtocolRegistryValue
         }
 
-        It 'Should throw a terminating error when New-Item fails' {
-            { Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Force } | Should -Throw -ErrorId 'DTP0002,Disable-TlsProtocol'
+        It 'Should pass all protocols to Set-TlsProtocolRegistryValue' {
+            $null = Disable-TlsProtocol -Protocol @(
+                [System.Security.Authentication.SslProtocols]::Ssl2,
+                [System.Security.Authentication.SslProtocols]::Ssl3
+            ) -Force
+
+            Should -Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {
+                $Protocol.Count -eq 2 -and
+                $Disable -eq $true
+            } -Exactly -Times 1
         }
     }
 
