@@ -58,11 +58,11 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         BeforeAll {
             Mock -CommandName Get-RegistryPropertyValue -MockWith {
                 return 1
-            } -ParameterFilter { $Path -like '*\\Server' -and $Name -eq 'Enabled' }
+            } -ParameterFilter { $Path -like '*\Server' -and $Name -eq 'Enabled' }
 
             Mock -CommandName Get-RegistryPropertyValue -MockWith {
                 return 0
-            } -ParameterFilter { $Path -like '*\\Server' -and $Name -eq 'DisabledByDefault' }
+            } -ParameterFilter { $Path -like '*\Server' -and $Name -eq 'DisabledByDefault' }
         }
 
         It 'Should return $true' {
@@ -88,11 +88,11 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         BeforeAll {
             Mock -CommandName Get-RegistryPropertyValue -MockWith {
                 return 1
-            } -ParameterFilter { $Path -like '*\\Server' -and $Name -eq 'Enabled' }
+            } -ParameterFilter { $Path -like '*\Server' -and $Name -eq 'Enabled' }
 
             Mock -CommandName Get-RegistryPropertyValue -MockWith {
                 return 1
-            } -ParameterFilter { $Path -like '*\\Server' -and $Name -eq 'DisabledByDefault' }
+            } -ParameterFilter { $Path -like '*\Server' -and $Name -eq 'DisabledByDefault' }
         }
 
         It 'Should return false' {
@@ -106,11 +106,11 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         BeforeAll {
             Mock -CommandName Get-RegistryPropertyValue -MockWith {
                 return 1
-            } -ParameterFilter { $Path -like '*\\Client' -and $Name -eq 'Enabled' }
+            } -ParameterFilter { $Path -like '*\Client' -and $Name -eq 'Enabled' }
 
             Mock -CommandName Get-RegistryPropertyValue -MockWith {
                 return 0
-            } -ParameterFilter { $Path -like '*\\Client' -and $Name -eq 'DisabledByDefault' }
+            } -ParameterFilter { $Path -like '*\Client' -and $Name -eq 'DisabledByDefault' }
         }
 
         It 'Should check the Client registry key' {
@@ -119,11 +119,11 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
             $result | Should -BeTrue
 
             Should -Invoke -CommandName Get-RegistryPropertyValue -ParameterFilter {
-                 $Path -like '*\\Client' -and $Name -eq 'Enabled'
+                 $Path -like '*\Client' -and $Name -eq 'Enabled'
             } -Exactly -Times 1 -Scope It
 
             Should -Invoke -CommandName Get-RegistryPropertyValue -ParameterFilter {
-                 $Path -like '*\\Client' -and $Name -eq 'DisabledByDefault'
+                 $Path -like '*\Client' -and $Name -eq 'DisabledByDefault'
             } -Exactly -Times 1 -Scope It
         }
     }
@@ -133,11 +133,11 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
             BeforeAll {
                 Mock -CommandName Get-RegistryPropertyValue -MockWith {
                     return 0
-                } -ParameterFilter { $Path -like '*\\Server' -and $Name -eq 'Enabled' }
+                } -ParameterFilter { $Path -like '*\Server' -and $Name -eq 'Enabled' }
 
                 Mock -CommandName Get-RegistryPropertyValue -MockWith {
                     return 1
-                } -ParameterFilter { $Path -like '*\\Server' -and $Name -eq 'DisabledByDefault' }
+                } -ParameterFilter { $Path -like '*\Server' -and $Name -eq 'DisabledByDefault' }
             }
 
             It 'Should return true' {
@@ -151,11 +151,11 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
             BeforeAll {
                 Mock -CommandName Get-RegistryPropertyValue -MockWith {
                     return 1
-                } -ParameterFilter { $Path -like '*\\Server' -and $Name -eq 'Enabled' }
+                } -ParameterFilter { $Path -like '*\Server' -and $Name -eq 'Enabled' }
 
                 Mock -CommandName Get-RegistryPropertyValue -MockWith {
                     return 0
-                } -ParameterFilter { $Path -like '*\\Server' -and $Name -eq 'DisabledByDefault' }
+                } -ParameterFilter { $Path -like '*\Server' -and $Name -eq 'DisabledByDefault' }
             }
 
             It 'Should return false' {
@@ -214,3 +214,4 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         }
     }
 }
+
