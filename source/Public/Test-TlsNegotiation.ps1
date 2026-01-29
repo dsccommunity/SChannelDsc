@@ -39,6 +39,13 @@
         Each output object contains: HostName, Port, AttemptedProtocol, Success,
         NegotiatedProtocol, NegotiatedCipherSuite, Error, and InnerError.
 
+
+        .EXAMPLE
+        Test-TlsNegotiation -HostName localhost
+
+        Attempts each protocol against localhost using default port 443 and returns
+        the results.
+
     .EXAMPLE
         Test-TlsNegotiation -HostName localhost -Port 1433
 
@@ -80,7 +87,7 @@ function Test-TlsNegotiation
         [Parameter(Position = 1)]
         [ValidateRange(1, 65535)]
         [System.UInt16]
-        $Port = 1433,
+        $Port = 443,
 
         [Parameter()]
         [System.Security.Authentication.SslProtocols[]]
@@ -143,6 +150,7 @@ function Test-TlsNegotiation
                 if (-not $iar.AsyncWaitHandle.WaitOne([System.TimeSpan]::FromSeconds($TimeoutSeconds), $false))
                 {
                     $message = $script:localizedData.Test_TlsNegotiation_ConnectTimeout -f $TimeoutSeconds
+
                     $exception = New-Exception -Message $message
                     $errorRecord = New-ErrorRecord -Exception $exception -ErrorId 'TTN0002' -ErrorCategory 'OperationTimeout' -TargetObject $HostName
                     $PSCmdlet.ThrowTerminatingError($errorRecord)
