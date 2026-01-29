@@ -19,7 +19,7 @@
         The DNS name or IP address of the target host. Default is 'localhost'.
 
     .PARAMETER Port
-        The TCP port to connect to. Default is 1433.
+        The TCP port to connect to. Default is 443.
 
     .PARAMETER Protocol
         One or more protocol names to attempt. Accepts values from the
