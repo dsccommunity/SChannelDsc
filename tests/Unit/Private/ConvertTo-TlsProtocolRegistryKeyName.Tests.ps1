@@ -37,40 +37,39 @@ AfterAll {
 }
 
 Describe 'ConvertTo-TlsProtocolRegistryKeyName' -Tag 'Private' {
+    BeforeDiscovery {
+        $script:knownProtocolTestCases = @(
+            @{
+                Protocol = [System.Security.Authentication.SslProtocols]::Tls12
+                Expected = 'TLS 1.2'
+            }
+            @{
+                Protocol = [System.Security.Authentication.SslProtocols]::Tls11
+                Expected = 'TLS 1.1'
+            }
+            @{
+                Protocol = [System.Security.Authentication.SslProtocols]::Tls
+                Expected = 'TLS 1.0'
+            }
+            @{
+                Protocol = [System.Security.Authentication.SslProtocols]::Ssl3
+                Expected = 'SSL 3.0'
+            }
+            @{
+                Protocol = [System.Security.Authentication.SslProtocols]::Ssl2
+                Expected = 'SSL 2.0'
+            }
+            @{
+                Protocol = [System.Security.Authentication.SslProtocols]::Tls13
+                Expected = 'TLS 1.3'
+            }
+        )
+    }
+
     Context 'When converting known protocol enum values' {
-        It 'Should map Tls12 to TLS 1.2' {
-            InModuleScope -ScriptBlock {
-                ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) | Should -Be 'TLS 1.2'
-            }
-        }
-
-        It 'Should map Tls11 to TLS 1.1' {
-            InModuleScope -ScriptBlock {
-                ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Tls11) | Should -Be 'TLS 1.1'
-            }
-        }
-
-        It 'Should map Tls to TLS 1.0' {
-            InModuleScope -ScriptBlock {
-                ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Tls) | Should -Be 'TLS 1.0'
-            }
-        }
-
-        It 'Should map Ssl3 to SSL 3.0' {
-            InModuleScope -ScriptBlock {
-                ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) | Should -Be 'SSL 3.0'
-            }
-        }
-
-        It 'Should map Ssl2 to SSL 2.0' {
-            InModuleScope -ScriptBlock {
-                ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Ssl2) | Should -Be 'SSL 2.0'
-            }
-        }
-
-        It 'Should map Tls13 to TLS 1.3' {
-            InModuleScope -ScriptBlock {
-                ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::Tls13) | Should -Be 'TLS 1.3'
+        It 'Should map <Protocol> to <Expected>' -ForEach $script:knownProtocolTestCases {
+            InModuleScope -Parameters $_ -ScriptBlock {
+                ConvertTo-TlsProtocolRegistryKeyName -Protocol $Protocol | Should -Be $Expected
             }
         }
     }
