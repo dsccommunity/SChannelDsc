@@ -45,10 +45,12 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
 
         It 'Should call New-Item and New-ItemProperty with correct values' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -Force
             }
 
-            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\\TLS 1.2\\Server' } -Exactly -Times 1
+            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\TLS 1.2\Server' } -Exactly -Times 1
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 1
         }
     }
@@ -61,10 +63,12 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
 
         It 'Should target the Client registry path' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -Client -Force
             }
 
-            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\\TLS 1.2\\Client' } -Exactly -Times 1
+            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\TLS 1.2\Client' } -Exactly -Times 1
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 1
         }
     }
@@ -77,6 +81,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
 
         It 'Should set DisabledByDefault to 0' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -SetDisabledByDefault -Force
             }
 
@@ -93,6 +99,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
 
         It 'Should not set DisabledByDefault' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -Force
             }
 
@@ -108,10 +116,12 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
 
         It 'Should call New-Item and New-ItemProperty with correct values' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Disable -Force
             }
 
-            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\\SSL 3.0\\Server' } -Exactly -Times 1
+            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\SSL 3.0\Server' } -Exactly -Times 1
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 1
         }
     }
@@ -124,10 +134,12 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
 
         It 'Should target the Client registry path' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Disable -Client -Force
             }
 
-            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\\SSL 3.0\\Client' } -Exactly -Times 1
+            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\SSL 3.0\Client' } -Exactly -Times 1
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 1
         }
     }
@@ -140,6 +152,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
 
         It 'Should set DisabledByDefault to 1' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Disable -SetDisabledByDefault -Force
             }
 
@@ -156,6 +170,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
 
         It 'Should not set DisabledByDefault' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Disable -Force
             }
 
@@ -171,6 +187,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
 
         It 'Should process each protocol' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 Set-TlsProtocolRegistryValue -Protocol @(
                     [System.Security.Authentication.SslProtocols]::Tls12,
                     [System.Security.Authentication.SslProtocols]::Tls13
@@ -190,6 +208,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
 
         It 'Should process each protocol' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 Set-TlsProtocolRegistryValue -Protocol @(
                     [System.Security.Authentication.SslProtocols]::Ssl2,
                     [System.Security.Authentication.SslProtocols]::Ssl3
@@ -209,12 +229,16 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
 
         It 'Should throw a terminating error with error id STPRV0001 when enabling' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 { Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -Force } | Should -Throw -ErrorId 'STPRV0001,Set-TlsProtocolRegistryValue'
             }
         }
 
         It 'Should throw a terminating error with error id STPRV0002 when disabling' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 { Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disable -Force } | Should -Throw -ErrorId 'STPRV0002,Set-TlsProtocolRegistryValue'
             }
         }
@@ -228,12 +252,16 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
 
         It 'Should throw a terminating error with error id STPRV0001 when enabling' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 { Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -Force } | Should -Throw -ErrorId 'STPRV0001,Set-TlsProtocolRegistryValue'
             }
         }
 
         It 'Should throw a terminating error with error id STPRV0002 when disabling' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 { Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disable -Force } | Should -Throw -ErrorId 'STPRV0002,Set-TlsProtocolRegistryValue'
             }
         }
@@ -247,6 +275,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
 
         It 'Should not make any changes' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -WhatIf
             }
 

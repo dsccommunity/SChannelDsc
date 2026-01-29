@@ -45,9 +45,11 @@ Describe 'Get-TlsProtocolRegistryPath' -Tag 'Private' {
 
         It 'Should return server registry path for Tls12 by default' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 $result = Get-TlsProtocolRegistryPath -Protocol 'Tls12'
 
-                $expected = 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\Tls12\\Server'
+                $expected = 'HKLM:\\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\Tls12\Server'
                 $result | Should -Be $expected
             }
         }
@@ -61,9 +63,11 @@ Describe 'Get-TlsProtocolRegistryPath' -Tag 'Private' {
 
         It 'Should return client registry path' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 $result = Get-TlsProtocolRegistryPath -Protocol 'Tls12' -Client
 
-                $expected = 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\Tls12\\Client'
+                $expected = 'HKLM:\\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\Tls12\Client'
                 $result | Should -Be $expected
             }
         }

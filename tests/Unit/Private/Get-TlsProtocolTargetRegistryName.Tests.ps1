@@ -40,6 +40,8 @@ Describe 'Get-TlsProtocolTargetRegistryName' -Tag 'Private' {
     Context 'When Client switch is present' {
         It 'Should return Client' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 (Get-TlsProtocolTargetRegistryName -Client) | Should -Be 'Client'
             }
         }
@@ -48,6 +50,8 @@ Describe 'Get-TlsProtocolTargetRegistryName' -Tag 'Private' {
     Context 'When Client switch is not present' {
         It 'Should return Server' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 (Get-TlsProtocolTargetRegistryName) | Should -Be 'Server'
             }
         }

@@ -69,6 +69,8 @@ Describe 'ConvertTo-TlsProtocolRegistryKeyName' -Tag 'Private' {
     Context 'When converting known protocol enum values' {
         It 'Should map <Protocol> to <Expected>' -ForEach $script:knownProtocolTestCases {
             InModuleScope -Parameters $_ -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 ConvertTo-TlsProtocolRegistryKeyName -Protocol $Protocol | Should -Be $Expected
             }
         }
@@ -77,6 +79,8 @@ Describe 'ConvertTo-TlsProtocolRegistryKeyName' -Tag 'Private' {
     Context 'When given an unsupported protocol enum value' {
         It 'Should throw a terminating error' {
             InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
                 { ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::None) } | Should -Throw -ErrorId 'CTTPRKN0001,ConvertTo-TlsProtocolRegistryKeyName'
             }
         }

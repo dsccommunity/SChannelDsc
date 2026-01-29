@@ -190,7 +190,7 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
         BeforeAll {
             # Return a predictable registry path for any protocol
             Mock -CommandName Get-TlsProtocolRegistryPath -MockWith {
-                return "HKLM:\\Software\\Test\\$Protocol\\Server"
+                return "HKLM:\\Software\Test\$Protocol\Server"
             }
 
             Mock -CommandName Get-TlsProtocolTargetRegistryName -MockWith {

@@ -91,7 +91,8 @@ function Set-TlsProtocolRegistryValue
         $Force
     )
 
-    if ($Force.IsPresent -and -not $Confirm)
+    # Need to do this check with Get-Variable instead of $Confirm due to strict mode.
+    if ($Force.IsPresent -and -not (Get-Variable -Name 'Confirm' -ValueOnly -ErrorAction SilentlyContinue))
     {
         $ConfirmPreference = 'None'
     }
