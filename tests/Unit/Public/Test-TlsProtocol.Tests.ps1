@@ -198,7 +198,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         It 'Should have Client as a non-mandatory parameter' {
             $parameterInfo = $script:commandInfo.Parameters['Client']
 
-            $parameterInfo.Attributes.Mandatory | Should -Not -Contain $true
+            $parameterInfo.Attributes.Mandatory | Should -BeFalse
         }
 
         It 'Should have Client defined as a switch parameter' {

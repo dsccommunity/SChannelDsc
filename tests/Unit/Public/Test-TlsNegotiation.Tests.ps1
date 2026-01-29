@@ -128,19 +128,19 @@ Describe 'Test-TlsNegotiation' {
         It 'Should have HostName as a non-mandatory parameter' {
             $parameterInfo = $script:commandInfo.Parameters['HostName']
 
-            $parameterInfo.Attributes.Mandatory | Should -Not -Contain $true
+            $parameterInfo.Attributes.Mandatory | Should -BeFalse
         }
 
         It 'Should have Port as a non-mandatory parameter' {
             $parameterInfo = $script:commandInfo.Parameters['Port']
 
-            $parameterInfo.Attributes.Mandatory | Should -Not -Contain $true
+            $parameterInfo.Attributes.Mandatory | Should -BeFalse
         }
 
         It 'Should have Protocol as a non-mandatory parameter' {
             $parameterInfo = $script:commandInfo.Parameters['Protocol']
 
-            $parameterInfo.Attributes.Mandatory | Should -Not -Contain $true
+            $parameterInfo.Attributes.Mandatory | Should -BeFalse
         }
 
         It 'Should have Protocol declared as an array type' {
@@ -152,7 +152,7 @@ Describe 'Test-TlsNegotiation' {
         It 'Should have TimeoutSeconds as a non-mandatory parameter' {
             $parameterInfo = $script:commandInfo.Parameters['TimeoutSeconds']
 
-            $parameterInfo.Attributes.Mandatory | Should -Not -Contain $true
+            $parameterInfo.Attributes.Mandatory | Should -BeFalse
         }
     }
 }
