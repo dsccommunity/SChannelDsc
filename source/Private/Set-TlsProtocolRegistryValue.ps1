@@ -29,6 +29,10 @@
     .PARAMETER SetDisabledByDefault
         When specified, also set the DisabledByDefault registry value.
 
+    .PARAMETER Force
+        When specified, bypasses confirmation prompts and suppresses
+        ShouldProcess confirmations.
+
     .PARAMETER Cmdlet
         The PSCmdlet object from the calling command, used to perform
         ShouldProcess confirmation.
