@@ -71,9 +71,14 @@ function Get-TlsProtocol
             [System.Security.Authentication.SslProtocols]::Ssl3,
             [System.Security.Authentication.SslProtocols]::Tls,
             [System.Security.Authentication.SslProtocols]::Tls11,
-            [System.Security.Authentication.SslProtocols]::Tls12,
-            [System.Security.Authentication.SslProtocols]::Tls13
+            [System.Security.Authentication.SslProtocols]::Tls12
         )
+
+        # Handle older .NET versions that do not have Tls13 defined
+        if ([System.Enum]::GetNames([System.Security.Authentication.SslProtocols]) -contains 'Tls13')
+        {
+            $Protocol += [System.Security.Authentication.SslProtocols]::Tls13
+        }
     }
 
     foreach ($currentProtocol in $Protocol)
