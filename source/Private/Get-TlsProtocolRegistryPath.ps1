@@ -53,5 +53,5 @@ function Get-TlsProtocolRegistryPath
 
     $target = Get-TlsProtocolTargetRegistryName -Client:$Client
 
-    return "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\$protocolKeyName\\$target"
+    return ('HKLM:\\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\{0}\{1}' -f $protocolKeyName, $target)
 }
