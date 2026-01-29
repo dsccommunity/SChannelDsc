@@ -61,7 +61,7 @@ Describe 'Disable-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should call New-Item and New-ItemProperty' {
-            Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Force
+            $null = Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Force
 
             Should -Invoke -CommandName New-Item -Times 1
             Should -Invoke -CommandName New-ItemProperty -Times 1
@@ -75,7 +75,7 @@ Describe 'Disable-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should not write DisabledByDefault' {
-            Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Force
+            $null = Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Force
 
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' } -Exactly -Times 0
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 1
@@ -89,7 +89,7 @@ Describe 'Disable-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should write DisabledByDefault to 1 and target Client path' {
-            Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client -SetDisabledByDefault -Force
+            $null = Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client -SetDisabledByDefault -Force
 
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 1 } -Exactly -Times 1
             Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\\Client' } -Exactly -Times 1
@@ -103,7 +103,7 @@ Describe 'Disable-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should write DisabledByDefault to 1 and target Server path' {
-            Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -SetDisabledByDefault -Force
+            $null = Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -SetDisabledByDefault -Force
 
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 1 } -Exactly -Times 1
             Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\\Server' } -Exactly -Times 1
