@@ -76,9 +76,9 @@ function Get-TlsProtocol
         )
     }
 
-    foreach ($p in $Protocol)
+    foreach ($currentProtocol in $Protocol)
     {
-        $regPath = Get-TlsProtocolRegistryPath -Protocol $p -Client:$Client
+        $regPath = Get-TlsProtocolRegistryPath -Protocol $currentProtocol -Client:$Client
 
         $protocolEnabled = Get-RegistryPropertyValue -Path $regPath -Name 'Enabled' -ErrorAction SilentlyContinue
         $protocolDisabled = Get-RegistryPropertyValue -Path $regPath -Name 'DisabledByDefault' -ErrorAction SilentlyContinue
@@ -101,8 +101,8 @@ function Get-TlsProtocol
             $null
         }
 
-        [PSCustomObject]@{
-            Protocol          = $p
+        [PSCustomObject] @{
+            Protocol          = $currentProtocol
             Target            = Get-TlsProtocolTargetRegistryName -Client:$Client
             Enabled           = $protocolEnabled
             DisabledByDefault = $protocolDisabled

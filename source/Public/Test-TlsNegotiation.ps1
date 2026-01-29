@@ -131,9 +131,9 @@ function Test-TlsNegotiation
         return $true
     }
 
-    foreach ($p in $Protocol)
+    foreach ($currentProtocol in $Protocol)
     {
-        Write-Verbose -Message ($script:localizedData.Test_TlsNegotiation_TryingProtocol -f $p)
+        Write-Verbose -Message ($script:localizedData.Test_TlsNegotiation_TryingProtocol -f $currentProtocol)
 
         $client = $null
         $sslStream = $null
@@ -174,14 +174,14 @@ function Test-TlsNegotiation
             $opts = [System.Net.Security.SslClientAuthenticationOptions]::new()
 
             $opts.TargetHost = $HostName
-            $opts.EnabledSslProtocols = $p
+            $opts.EnabledSslProtocols = $currentProtocol
 
             $sslStream.AuthenticateAsClient($opts)
 
             [PSCustomObject] @{
                 HostName              = $HostName
                 Port                  = $Port
-                AttemptedProtocol     = $p
+                AttemptedProtocol     = $currentProtocol
                 Success               = $true
                 NegotiatedProtocol    = $sslStream.SslProtocol
                 NegotiatedCipherSuite = $sslStream.NegotiatedCipherSuite
@@ -203,7 +203,7 @@ function Test-TlsNegotiation
             [PSCustomObject] @{
                 HostName              = $HostName
                 Port                  = $Port
-                AttemptedProtocol     = $p
+                AttemptedProtocol     = $currentProtocol
                 Success               = $false
                 NegotiatedProtocol    = $null
                 NegotiatedCipherSuite = $null
