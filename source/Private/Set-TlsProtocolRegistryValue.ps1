@@ -104,7 +104,7 @@ function Set-TlsProtocolRegistryValue
             $descriptionMessage = $script:localizedData.Set_TlsProtocolRegistryValue_Enable_ShouldProcessDescription -f $protocolKeyName, $target
             $confirmationMessage = $script:localizedData.Set_TlsProtocolRegistryValue_Enable_ShouldProcessConfirmation -f $protocolKeyName
             $captionMessage = $script:localizedData.Set_TlsProtocolRegistryValue_Enable_ShouldProcessCaption
-            $errorMessageKey = 'Set_TlsProtocolRegistryValue_FailedToEnable'
+            $errorMessage = $script:localizedData.Set_TlsProtocolRegistryValue_FailedToEnable
             $errorId = 'STPRV0001'
         }
         else
@@ -114,7 +114,7 @@ function Set-TlsProtocolRegistryValue
             $descriptionMessage = $script:localizedData.Set_TlsProtocolRegistryValue_Disable_ShouldProcessDescription -f $protocolKeyName, $target
             $confirmationMessage = $script:localizedData.Set_TlsProtocolRegistryValue_Disable_ShouldProcessConfirmation -f $protocolKeyName
             $captionMessage = $script:localizedData.Set_TlsProtocolRegistryValue_Disable_ShouldProcessCaption
-            $errorMessageKey = 'Set_TlsProtocolRegistryValue_FailedToDisable'
+            $errorMessage = $script:localizedData.Set_TlsProtocolRegistryValue_FailedToDisable
             $errorId = 'STPRV0002'
         }
 
@@ -134,7 +134,7 @@ function Set-TlsProtocolRegistryValue
             }
             catch
             {
-                $errorMessage = $script:localizedData.$errorMessageKey -f $currentProtocol
+                $errorMessage = $errorMessage -f $currentProtocol
 
                 $exception = New-Exception -Message $errorMessage -ErrorRecord $_
                 $errorRecord = New-ErrorRecord -Exception $exception -ErrorId $errorId -ErrorCategory 'InvalidOperation' -TargetObject $currentProtocol
