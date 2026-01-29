@@ -44,6 +44,9 @@
     "cSpell.ignorePaths": [
         ".git"
     ],
+    "cSpell.ignoreRegExpList": [
+        "/\\b[A-Za-z]{2,}\\d{4}\\b/g"
+    ],
     "[markdown]": {
         "files.trimTrailingWhitespace": false,
         "files.encoding": "utf8"
