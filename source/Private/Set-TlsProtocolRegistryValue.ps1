@@ -44,18 +44,18 @@
         None.
 
     .EXAMPLE
-        Set-TlsProtocolRegistryValue -Protocol Tls12 -Enable -SetDisabledByDefault -Cmdlet $PSCmdlet
+        Set-TlsProtocolRegistryValue -Protocol Tls12 -Enable -SetDisabledByDefault
 
         Enables TLS 1.2 for server-side connections by setting the Enabled
         registry value to 1 and DisabledByDefault to 0.
 
     .EXAMPLE
-        Set-TlsProtocolRegistryValue -Protocol Tls12, Tls13 -Enable -Cmdlet $PSCmdlet
+        Set-TlsProtocolRegistryValue -Protocol Tls12, Tls13 -Enable
 
         Enables TLS 1.2 and TLS 1.3 for server-side connections.
 
     .EXAMPLE
-        Set-TlsProtocolRegistryValue -Protocol Ssl3 -Disable -Client -Cmdlet $PSCmdlet
+        Set-TlsProtocolRegistryValue -Protocol Ssl3 -Disable -Client
 
         Disables SSL 3.0 for client-side connections by setting the Enabled
         registry value to 0.
