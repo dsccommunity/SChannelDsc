@@ -40,7 +40,7 @@ Describe 'Test-TlsNegotiation' {
     It 'Should have the correct parameters in parameter set <ExpectedParameterSetName>' -ForEach @(
         @{
             ExpectedParameterSetName = '__AllParameterSets'
-            ExpectedParameters = '[[-HostName] <string>] [[-Port] <ushort>] [-Protocol <SslProtocols[]>] [-TimeoutSeconds <uint>] [<CommonParameters>]'
+            ExpectedParameters       = '[[-HostName] <string>] [[-Port] <ushort>] [-Protocol <SslProtocols[]>] [-TimeoutSeconds <uint>] [<CommonParameters>]'
         }
     ) {
         $result = (Get-Command -Name 'Test-TlsNegotiation').ParameterSets |
@@ -79,37 +79,46 @@ Describe 'Test-TlsNegotiation' {
 
             $results = Test-TlsNegotiation -HostName 'www.google.se' -Port 443 -Protocol $protocols -TimeoutSeconds 10
 
-            # Ensure we have a result for each attempted protocol
-            foreach ($p in $protocols) {
-                $r = $results | Where-Object { $_.AttemptedProtocol -eq $p }
-                $r | Should -Not -BeNullOrEmpty
-                $r | Should -BeOfType PSCustomObject
-            }
-
             # At least one should be successful (Tls/Tls11/Tls12 commonly)
             ($results | Where-Object { $_.Success } | Measure-Object).Count | Should -BeGreaterThan 0
         }
 
-        It 'Should return result objects for specific protocols' {
-            $protocols = @(
-                [System.Security.Authentication.SslProtocols]::Tls12,
-                [System.Security.Authentication.SslProtocols]::Tls13
+        BeforeDiscovery {
+            $script:individualProtocols = @(
+                @{ Protocol = [System.Security.Authentication.SslProtocols]::Ssl2 }
+                @{ Protocol = [System.Security.Authentication.SslProtocols]::Ssl3 }
+                @{ Protocol = [System.Security.Authentication.SslProtocols]::Tls }
+                @{ Protocol = [System.Security.Authentication.SslProtocols]::Tls11 }
+                @{ Protocol = [System.Security.Authentication.SslProtocols]::Tls12 }
+                @{ Protocol = [System.Security.Authentication.SslProtocols]::Tls13 }
             )
 
-            $results = Test-TlsNegotiation -HostName 'www.google.se' -Port 443 -Protocol $protocols -TimeoutSeconds 10
+            $script:multiProtocols = @(
+                @{ Protocol = [System.Security.Authentication.SslProtocols]::Tls12, [System.Security.Authentication.SslProtocols]::Tls13 }
+            )
+        }
 
-            $results | Should -Not -BeNullOrEmpty
-            $results | Should -HaveCount 2
+        It 'Should return a result object for protocol <Protocol>' -ForEach $individualProtocols {
+            $results = Test-TlsNegotiation -HostName 'www.google.se' -Port 443 -Protocol $Protocol -TimeoutSeconds 10
 
-            # Ensure we have a result for each attempted protocol
-            foreach ($p in $protocols) {
-                $r = $results | Where-Object { $_.AttemptedProtocol -eq $p }
-                $r | Should -Not -BeNullOrEmpty
-                $r | Should -BeOfType PSCustomObject
-            }
+            $result = $results | Where-Object { $_.AttemptedProtocol -eq $Protocol }
 
-            # At least one should be successful
-            ($results | Where-Object { $_.Success } | Measure-Object).Count | Should -BeGreaterThan 0
+            $result | Should -Not -BeNullOrEmpty
+            $result | Should -BeOfType PSCustomObject
+        }
+
+        BeforeDiscovery {
+            $script:multiProtocols = @(
+                @{ Protocol = [System.Security.Authentication.SslProtocols]::Tls12, [System.Security.Authentication.SslProtocols]::Tls13 }
+            )
+        }
+
+        It 'Should return a result object for specific protocol <Protocol>' -ForEach $multiProtocols {
+            $result = Test-TlsNegotiation -HostName 'www.google.se' -Port 443 -Protocol $Protocol -TimeoutSeconds 10
+
+            $result | Should -Not -BeNullOrEmpty
+            $result | Should -BeOfType PSCustomObject
+            $result | Should -HaveCount $Protocol.Count
         }
 
         It 'Should return results when Protocol parameter is not provided (uses defaults)' {
