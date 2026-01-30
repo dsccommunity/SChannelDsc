@@ -102,25 +102,28 @@ function Test-TlsProtocol
         {
             # Missing keys imply the protocol is enabled by default, so -Disabled should fail
             if ($null -eq $protocolEnabled -and $null -eq $protocolDisabled)
-            {                return $false
+            {
+                return $false
             }
 
             # Consider protocol disabled when Enabled != 1 or DisabledByDefault == 1
             if (($null -ne $protocolEnabled -and $protocolEnabled -ne 1) -or ($null -ne $protocolDisabled -and $protocolDisabled -eq 1))
-            {                continue
+            {
+                continue
             }
             else
-            {                return $false
+            {
+                return $false
             }
         }
         else
         {
             if ($null -eq $protocolEnabled -and $null -eq $protocolDisabled)
-            {                continue
+            {
+                continue
             }
 
-            if ((($protocolEnabled -eq 1 -and ($protocolDisabled -eq 0 -or $null -eq $protocolDisabled)) -or
-                 ($null -eq $protocolEnabled -and $protocolDisabled -eq 0)))
+            if ((($protocolEnabled -eq 1 -and ($protocolDisabled -eq 0 -or $null -eq $protocolDisabled)) -or ($null -eq $protocolEnabled -and $protocolDisabled -eq 0)))
             {
                 continue
             }
