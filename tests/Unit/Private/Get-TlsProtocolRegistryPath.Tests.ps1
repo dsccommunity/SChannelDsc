@@ -49,7 +49,7 @@ Describe 'Get-TlsProtocolRegistryPath' -Tag 'Private' {
 
                 $result = Get-TlsProtocolRegistryPath -Protocol 'Tls12'
 
-                $expected = 'HKLM:\\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\Tls12\Server'
+                $expected = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\Tls12\Server'
                 $result | Should -Be $expected
             }
         }
@@ -67,7 +67,7 @@ Describe 'Get-TlsProtocolRegistryPath' -Tag 'Private' {
 
                 $result = Get-TlsProtocolRegistryPath -Protocol 'Tls12' -Client
 
-                $expected = 'HKLM:\\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\Tls12\Client'
+                $expected = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\Tls12\Client'
                 $result | Should -Be $expected
             }
         }
