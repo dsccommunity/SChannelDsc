@@ -50,8 +50,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -Force
             }
 
-            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\TLS 1.2\Server' } -Exactly -Times 1
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 1
+            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\TLS 1.2\Server' } -Exactly -Times 1 -Scope It
+            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 1 -Scope It
         }
     }
 
@@ -68,8 +68,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -Client -Force
             }
 
-            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\TLS 1.2\Client' } -Exactly -Times 1
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 1
+            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\TLS 1.2\Client' } -Exactly -Times 1 -Scope It
+            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 1 -Scope It
         }
     }
 
@@ -86,8 +86,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -SetDisabledByDefault -Force
             }
 
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 0 } -Exactly -Times 1
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 1
+            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 0 } -Exactly -Times 1 -Scope It
+            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 1 -Scope It
         }
     }
 
@@ -104,7 +104,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -Force
             }
 
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' } -Exactly -Times 0
+            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' } -Exactly -Times 0 -Scope It
         }
     }
 
@@ -121,8 +121,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Disable -Force
             }
 
-            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\SSL 3.0\Server' } -Exactly -Times 1
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 1
+            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\SSL 3.0\Server' } -Exactly -Times 1 -Scope It
+            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 1 -Scope It
         }
     }
 
@@ -139,8 +139,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Disable -Client -Force
             }
 
-            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\SSL 3.0\Client' } -Exactly -Times 1
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 1
+            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\SSL 3.0\Client' } -Exactly -Times 1 -Scope It
+            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 1 -Scope It
         }
     }
 
@@ -157,8 +157,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Disable -SetDisabledByDefault -Force
             }
 
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 1 } -Exactly -Times 1
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 1
+            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 1 } -Exactly -Times 1 -Scope It
+            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 1 -Scope It
         }
     }
 
@@ -175,7 +175,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Disable -Force
             }
 
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' } -Exactly -Times 0
+            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' } -Exactly -Times 0 -Scope It
         }
     }
 
@@ -195,8 +195,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 ) -Enable -Force
             }
 
-            Should -Invoke -CommandName New-Item -Exactly -Times 2
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 2
+            Should -Invoke -CommandName New-Item -Exactly -Times 2 -Scope It
+            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 2 -Scope It
         }
     }
 
@@ -216,8 +216,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 ) -Disable -Force
             }
 
-            Should -Invoke -CommandName New-Item -Exactly -Times 2
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 2
+            Should -Invoke -CommandName New-Item -Exactly -Times 2 -Scope It
+            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 2 -Scope It
         }
     }
 
@@ -280,8 +280,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -WhatIf
             }
 
-            Should -Invoke -CommandName New-Item -Exactly -Times 0
-            Should -Invoke -CommandName New-ItemProperty -Exactly -Times 0
+            Should -Invoke -CommandName New-Item -Exactly -Times 0 -Scope It
+            Should -Invoke -CommandName New-ItemProperty -Exactly -Times 0 -Scope It
         }
     }
 }

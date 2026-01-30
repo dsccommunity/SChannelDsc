@@ -72,7 +72,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
         It 'Should not throw and pass Client switch to Test-TlsProtocol' {
             $null = Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client
 
-            Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Client -eq $true } -Times 1
+            Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Client -eq $true } -Exactly -Times 1 -Scope It
         }
     }
 
@@ -85,7 +85,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
             It 'Should not throw and pass Disabled switch to Test-TlsProtocol' {
                 $null = Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled
 
-                Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Disabled -eq $true } -Times 1
+                Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Disabled -eq $true } -Exactly -Times 1 -Scope It
             }
         }
 
@@ -97,7 +97,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
             It 'Should throw and pass Disabled switch to Test-TlsProtocol' {
                 { Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled } | Should -Throw
 
-                Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Disabled -eq $true } -Times 1
+                Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Disabled -eq $true } -Exactly -Times 1 -Scope It
             }
         }
     }
@@ -120,7 +120,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
         It 'Should throw and pass Client switch to Test-TlsProtocol' {
             { Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client } | Should -Throw
 
-            Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Client -eq $true } -Times 1
+            Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Client -eq $true } -Exactly -Times 1 -Scope It
         }
     }
 

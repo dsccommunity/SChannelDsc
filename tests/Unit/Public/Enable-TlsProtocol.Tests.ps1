@@ -66,7 +66,7 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
                 $Protocol -contains [System.Security.Authentication.SslProtocols]::Tls12 -and
                 $Enable -eq $true -and
                 $Force -eq $true
-            } -Exactly -Times 1
+            } -Exactly -Times 1 -Scope It
         }
     }
 
@@ -84,7 +84,7 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
                 $Client -eq $true -and
                 $SetDisabledByDefault -eq $true -and
                 $Force -eq $true
-            } -Exactly -Times 1
+            } -Exactly -Times 1 -Scope It
         }
     }
 
@@ -102,7 +102,7 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
             Should -Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {
                 $Protocol.Count -eq 2 -and
                 $Enable -eq $true
-            } -Exactly -Times 1
+            } -Exactly -Times 1 -Scope It
         }
     }
 
