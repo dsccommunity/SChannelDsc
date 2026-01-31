@@ -223,29 +223,29 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
 
     Context 'When validating parameters' {
         BeforeAll {
-            $script:commandInfo = Get-Command -Name 'Get-TlsProtocol'
+            $commandInfo = Get-Command -Name 'Get-TlsProtocol'
         }
 
         It 'Should have Protocol as a non-mandatory parameter' {
-            $parameterInfo = $script:commandInfo.Parameters['Protocol']
+            $parameterInfo = $commandInfo.Parameters['Protocol']
 
             $parameterInfo.Attributes.Mandatory | Should -BeFalse
         }
 
         It 'Should have Protocol declared as an array type' {
-            $parameterInfo = $script:commandInfo.Parameters['Protocol']
+            $parameterInfo = $commandInfo.Parameters['Protocol']
 
             $parameterInfo.ParameterType.IsArray | Should -BeTrue
         }
 
         It 'Should have Client as a non-mandatory parameter' {
-            $parameterInfo = $script:commandInfo.Parameters['Client']
+            $parameterInfo = $commandInfo.Parameters['Client']
 
             $parameterInfo.Attributes.Mandatory | Should -BeFalse
         }
 
         It 'Should have Client defined as a switch parameter' {
-            $parameterInfo = $script:commandInfo.Parameters['Client']
+            $parameterInfo = $commandInfo.Parameters['Client']
 
             $parameterInfo.ParameterType.Name | Should -Be 'SwitchParameter'
         }

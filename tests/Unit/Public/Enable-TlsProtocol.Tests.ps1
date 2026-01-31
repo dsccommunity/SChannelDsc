@@ -108,41 +108,41 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
 
     Context 'When validating parameters' {
         BeforeAll {
-            $script:commandInfo = Get-Command -Name 'Enable-TlsProtocol'
+            $commandInfo = Get-Command -Name 'Enable-TlsProtocol'
         }
 
         It 'Should have Protocol as a mandatory parameter' {
-            $parameterInfo = $script:commandInfo.Parameters['Protocol']
+            $parameterInfo = $commandInfo.Parameters['Protocol']
 
             $parameterInfo.Attributes.Mandatory | Should -BeTrue
         }
 
         It 'Should have Protocol declared as an array type' {
-            $parameterInfo = $script:commandInfo.Parameters['Protocol']
+            $parameterInfo = $commandInfo.Parameters['Protocol']
 
             $parameterInfo.ParameterType.IsArray | Should -BeTrue
         }
 
         It 'Should have Client as a non-mandatory parameter' {
-            $parameterInfo = $script:commandInfo.Parameters['Client']
+            $parameterInfo = $commandInfo.Parameters['Client']
 
             $parameterInfo.Attributes.Mandatory | Should -BeFalse
         }
 
         It 'Should have Client defined as a switch parameter' {
-            $parameterInfo = $script:commandInfo.Parameters['Client']
+            $parameterInfo = $commandInfo.Parameters['Client']
 
             $parameterInfo.ParameterType.Name | Should -Be 'SwitchParameter'
         }
 
         It 'Should have SetDisabledByDefault defined as a switch parameter' {
-            $parameterInfo = $script:commandInfo.Parameters['SetDisabledByDefault']
+            $parameterInfo = $commandInfo.Parameters['SetDisabledByDefault']
 
             $parameterInfo.ParameterType.Name | Should -Be 'SwitchParameter'
         }
 
         It 'Should have Force defined as a switch parameter' {
-            $parameterInfo = $script:commandInfo.Parameters['Force']
+            $parameterInfo = $commandInfo.Parameters['Force']
 
             $parameterInfo.ParameterType.Name | Should -Be 'SwitchParameter'
         }

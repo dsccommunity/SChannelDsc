@@ -131,35 +131,35 @@ Describe 'Test-TlsNegotiation' {
 
     Context 'When validating parameters' {
         BeforeAll {
-            $script:commandInfo = Get-Command -Name 'Test-TlsNegotiation'
+            $commandInfo = Get-Command -Name 'Test-TlsNegotiation'
         }
 
         It 'Should have HostName as a non-mandatory parameter' {
-            $parameterInfo = $script:commandInfo.Parameters['HostName']
+            $parameterInfo = $commandInfo.Parameters['HostName']
 
             $parameterInfo.Attributes.Mandatory | Should -BeFalse
         }
 
         It 'Should have Port as a non-mandatory parameter' {
-            $parameterInfo = $script:commandInfo.Parameters['Port']
+            $parameterInfo = $commandInfo.Parameters['Port']
 
             $parameterInfo.Attributes.Mandatory | Should -BeFalse
         }
 
         It 'Should have Protocol as a non-mandatory parameter' {
-            $parameterInfo = $script:commandInfo.Parameters['Protocol']
+            $parameterInfo = $commandInfo.Parameters['Protocol']
 
             $parameterInfo.Attributes.Mandatory | Should -BeFalse
         }
 
         It 'Should have Protocol declared as an array type' {
-            $parameterInfo = $script:commandInfo.Parameters['Protocol']
+            $parameterInfo = $commandInfo.Parameters['Protocol']
 
             $parameterInfo.ParameterType.IsArray | Should -BeTrue
         }
 
         It 'Should have TimeoutSeconds as a non-mandatory parameter' {
-            $parameterInfo = $script:commandInfo.Parameters['TimeoutSeconds']
+            $parameterInfo = $commandInfo.Parameters['TimeoutSeconds']
 
             $parameterInfo.Attributes.Mandatory | Should -BeFalse
         }
