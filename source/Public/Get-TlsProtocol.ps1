@@ -66,18 +66,18 @@ function Get-TlsProtocol
 
     if (-not $PSBoundParameters.ContainsKey('Protocol'))
     {
-        $Protocol = @(
+        $Protocol = [System.Collections.ArrayList] @(
             [System.Security.Authentication.SslProtocols]::Ssl2,
             [System.Security.Authentication.SslProtocols]::Ssl3,
             [System.Security.Authentication.SslProtocols]::Tls,
             [System.Security.Authentication.SslProtocols]::Tls11,
-            [System.Security.Authentication.SslProtocols]::Tls12
+            [System.Security.Authentication.SslProtocols]::Tls12,
+            [System.Security.Authentication.SslProtocols]::Tls13
         )
 
-        # Handle older .NET versions that do not have Tls13 defined
-        if ([System.Enum]::GetNames([System.Security.Authentication.SslProtocols]) -contains 'Tls13')
+        if ([System.Enum]::GetNames([System.Security.Authentication.SslProtocols]) -notcontains 'Tls13')
         {
-            $Protocol += [System.Security.Authentication.SslProtocols]::Tls13
+            $Protocol.Remove([System.Security.Authentication.SslProtocols]::Tls13)
         }
     }
 
