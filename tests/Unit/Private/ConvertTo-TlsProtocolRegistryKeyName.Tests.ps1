@@ -38,7 +38,7 @@ AfterAll {
 
 Describe 'ConvertTo-TlsProtocolRegistryKeyName' -Tag 'Private' {
     BeforeDiscovery {
-        $script:knownProtocolTestCases = @(
+        $knownProtocolTestCases = @(
             @{
                 Protocol = [System.Security.Authentication.SslProtocols]::Tls12
                 Expected = 'TLS 1.2'
@@ -67,7 +67,7 @@ Describe 'ConvertTo-TlsProtocolRegistryKeyName' -Tag 'Private' {
     }
 
     Context 'When converting known protocol enum values' {
-        It 'Should map <Protocol> to <Expected>' -ForEach $script:knownProtocolTestCases {
+        It 'Should map <Protocol> to <Expected>' -ForEach $knownProtocolTestCases {
             InModuleScope -Parameters $_ -ScriptBlock {
                 Set-StrictMode -Version 1.0
 

@@ -84,7 +84,7 @@ Describe 'Test-TlsNegotiation' {
         }
 
         BeforeDiscovery {
-            $script:individualProtocols = @(
+            $individualProtocols = @(
                 @{ Protocol = [System.Security.Authentication.SslProtocols]::Ssl2 }
                 @{ Protocol = [System.Security.Authentication.SslProtocols]::Ssl3 }
                 @{ Protocol = [System.Security.Authentication.SslProtocols]::Tls }
@@ -93,7 +93,7 @@ Describe 'Test-TlsNegotiation' {
                 @{ Protocol = [System.Security.Authentication.SslProtocols]::Tls13 }
             )
 
-            $script:multiProtocols = @(
+            $multiProtocols = @(
                 @{ Protocol = [System.Security.Authentication.SslProtocols]::Tls12, [System.Security.Authentication.SslProtocols]::Tls13 }
             )
         }
@@ -108,7 +108,7 @@ Describe 'Test-TlsNegotiation' {
         }
 
         BeforeDiscovery {
-            $script:multiProtocols = @(
+            $multiProtocols = @(
                 @{ Protocol = [System.Security.Authentication.SslProtocols]::Tls12, [System.Security.Authentication.SslProtocols]::Tls13 }
             )
         }
