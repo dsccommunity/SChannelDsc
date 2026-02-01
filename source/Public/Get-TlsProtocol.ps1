@@ -66,7 +66,7 @@ function Get-TlsProtocol
 
     if (-not $PSBoundParameters.ContainsKey('Protocol'))
     {
-        $Protocol = @(
+        $Protocol = [System.Collections.ArrayList] @(
             [SChannelSslProtocols]::Ssl2,
             [SChannelSslProtocols]::Ssl3,
             [SChannelSslProtocols]::Tls,
