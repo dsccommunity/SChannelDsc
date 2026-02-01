@@ -11,9 +11,6 @@ ConvertFrom-StringData @'
     Assert_TlsProtocol_NotEnabled = One or more specified protocols are not enabled: {0}. (ATP0001)
     Assert_TlsProtocol_NotDisabled = One or more specified protocols are not disabled: {0}. (ATP0002)
 
-    ## ConvertTo-TlsProtocolRegistryKeyName
-    ConvertTo_TlsProtocolRegistryKeyName_UnknownProtocol = Unknown protocol '{0}'. Valid values are Ssl2, Ssl3, Tls, Tls11, Tls12, Tls13. (CTTPRKN0001)
-
     ## Set-TlsProtocolRegistryValue
     Set_TlsProtocolRegistryValue_Enable_ShouldProcessDescription = Enable TLS protocol: {0} ({1}). (STPRV0003)
     Set_TlsProtocolRegistryValue_Enable_ShouldProcessConfirmation = Enable TLS protocol {0}? (STPRV0004)
