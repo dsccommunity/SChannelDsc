@@ -39,7 +39,9 @@
         "steppable",
         "HKLM",
         "Diffie",
-        "FIPS"
+        "FIPS",
+        "SCHANNEL",
+        "DTLS"
     ],
     "cSpell.ignorePaths": [
         ".git"
