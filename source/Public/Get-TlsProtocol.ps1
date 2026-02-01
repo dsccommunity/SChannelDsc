@@ -66,7 +66,7 @@ function Get-TlsProtocol
 
     if (-not $PSBoundParameters.ContainsKey('Protocol'))
     {
-        $Protocol = [System.Collections.ArrayList] @(
+        $Protocol = @(
             [SChannelSslProtocols]::Ssl2,
             [SChannelSslProtocols]::Ssl3,
             [SChannelSslProtocols]::Tls,
@@ -76,11 +76,6 @@ function Get-TlsProtocol
             [SChannelSslProtocols]::DTls1,
             [SChannelSslProtocols]::DTls12
         )
-
-        if ([System.Enum]::GetNames([System.Security.Authentication.SslProtocols]) -notcontains 'Tls13')
-        {
-            $Protocol.Remove([SChannelSslProtocols]::Tls13)
-        }
     }
 
     foreach ($currentProtocol in $Protocol)
