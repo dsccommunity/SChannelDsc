@@ -34,34 +34,47 @@ AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
     $PSDefaultParameterValues.Remove('Should:ModuleName')
+
+    # Unload the module being tested so that it doesn't impact any other tests.
+    Get-Module -Name $script:moduleName -All | Remove-Module -Force
 }
 
 Describe 'ConvertTo-TlsProtocolRegistryKeyName' -Tag 'Private' {
     BeforeDiscovery {
+        . "$PSScriptRoot/../../../source/Enum/005.SChannelSslProtocols.ps1"
+
         $knownProtocolTestCases = @(
             @{
-                Protocol = [System.Security.Authentication.SslProtocols]::Tls12
-                Expected = 'TLS 1.2'
-            }
-            @{
-                Protocol = [System.Security.Authentication.SslProtocols]::Tls11
-                Expected = 'TLS 1.1'
-            }
-            @{
-                Protocol = [System.Security.Authentication.SslProtocols]::Tls
-                Expected = 'TLS 1.0'
-            }
-            @{
-                Protocol = [System.Security.Authentication.SslProtocols]::Ssl3
-                Expected = 'SSL 3.0'
-            }
-            @{
-                Protocol = [System.Security.Authentication.SslProtocols]::Ssl2
+                Protocol = [SChannelSslProtocols]::Ssl2
                 Expected = 'SSL 2.0'
             }
             @{
-                Protocol = [System.Security.Authentication.SslProtocols]::Tls13
+                Protocol = [SChannelSslProtocols]::Ssl3
+                Expected = 'SSL 3.0'
+            }
+            @{
+                Protocol = [SChannelSslProtocols]::Tls
+                Expected = 'TLS 1.0'
+            }
+            @{
+                Protocol = [SChannelSslProtocols]::Tls11
+                Expected = 'TLS 1.1'
+            }
+            @{
+                Protocol = [SChannelSslProtocols]::Tls12
+                Expected = 'TLS 1.2'
+            }
+            @{
+                Protocol = [SChannelSslProtocols]::Tls13
                 Expected = 'TLS 1.3'
+            }
+            @{
+                Protocol = [SChannelSslProtocols]::DTls1
+                Expected = 'DTLS 1.0'
+            }
+            @{
+                Protocol = [SChannelSslProtocols]::DTls12
+                Expected = 'DTLS 1.2'
             }
         )
     }
@@ -71,17 +84,9 @@ Describe 'ConvertTo-TlsProtocolRegistryKeyName' -Tag 'Private' {
             InModuleScope -Parameters $_ -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                ConvertTo-TlsProtocolRegistryKeyName -Protocol $Protocol | Should -Be $Expected
-            }
-        }
-    }
+                $result = ConvertTo-TlsProtocolRegistryKeyName -Protocol $Protocol
 
-    Context 'When given an unsupported protocol enum value' {
-        It 'Should throw a terminating error' {
-            InModuleScope -ScriptBlock {
-                Set-StrictMode -Version 1.0
-
-                { ConvertTo-TlsProtocolRegistryKeyName -Protocol ([System.Security.Authentication.SslProtocols]::None) } | Should -Throw -ErrorId 'CTTPRKN0001,ConvertTo-TlsProtocolRegistryKeyName'
+                $result | Should -Be $Expected
             }
         }
     }

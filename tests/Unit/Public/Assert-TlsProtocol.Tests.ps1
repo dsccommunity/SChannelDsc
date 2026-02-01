@@ -34,13 +34,16 @@ AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
     $PSDefaultParameterValues.Remove('Should:ModuleName')
+
+    # Unload the module being tested so that it doesn't impact any other tests.
+    Get-Module -Name $script:moduleName -All | Remove-Module -Force
 }
 
 Describe 'Assert-TlsProtocol' -Tag 'Public' {
     It 'Should have the correct parameters in parameter set <ExpectedParameterSetName>' -ForEach @(
         @{
             ExpectedParameterSetName = '__AllParameterSets'
-            ExpectedParameters = '[-Protocol] <SslProtocols[]> [-Client] [-Disabled] [<CommonParameters>]'
+            ExpectedParameters       = '[-Protocol] <SChannelSslProtocols[]> [-Client] [-Disabled] [<CommonParameters>]'
         }
     ) {
         $result = (Get-Command -Name 'Assert-TlsProtocol').ParameterSets |
@@ -60,7 +63,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should not throw' {
-            $null = Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
+            $null = Assert-TlsProtocol -Protocol Tls12
         }
     }
 
@@ -70,7 +73,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should not throw and pass Client switch to Test-TlsProtocol' {
-            $null = Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client
+            $null = Assert-TlsProtocol -Protocol Tls12 -Client
 
             Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Client -eq $true } -Exactly -Times 1 -Scope It
         }
@@ -83,7 +86,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
             }
 
             It 'Should not throw and pass Disabled switch to Test-TlsProtocol' {
-                $null = Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled
+                $null = Assert-TlsProtocol -Protocol Tls12 -Disabled
 
                 Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Disabled -eq $true } -Exactly -Times 1 -Scope It
             }
@@ -95,7 +98,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
             }
 
             It 'Should throw and pass Disabled switch to Test-TlsProtocol' {
-                { Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled } | Should -Throw
+                { Assert-TlsProtocol -Protocol Tls12 -Disabled } | Should -Throw
 
                 Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Disabled -eq $true } -Exactly -Times 1 -Scope It
             }
@@ -108,7 +111,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should throw' {
-            { Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) } | Should -Throw
+            { Assert-TlsProtocol -Protocol Tls12 } | Should -Throw
         }
     }
 
@@ -118,7 +121,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should throw and pass Client switch to Test-TlsProtocol' {
-            { Assert-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client } | Should -Throw
+            { Assert-TlsProtocol -Protocol Tls12 -Client } | Should -Throw
 
             Should -Invoke -CommandName Test-TlsProtocol -ParameterFilter { $Client -eq $true } -Exactly -Times 1 -Scope It
         }
@@ -126,7 +129,7 @@ Describe 'Assert-TlsProtocol' -Tag 'Public' {
 
     Context 'When validating parameters' {
         BeforeAll {
-           $commandInfo  = Get-Command -Name 'Assert-TlsProtocol'
+            $commandInfo = Get-Command -Name 'Assert-TlsProtocol'
         }
 
         It 'Should have Protocol as a mandatory parameter' {

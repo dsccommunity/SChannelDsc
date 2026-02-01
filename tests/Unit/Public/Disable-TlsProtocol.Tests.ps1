@@ -34,13 +34,16 @@ AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
     $PSDefaultParameterValues.Remove('Should:ModuleName')
+
+    # Unload the module being tested so that it doesn't impact any other tests.
+    Get-Module -Name $script:moduleName -All | Remove-Module -Force
 }
 
 Describe 'Disable-TlsProtocol' -Tag 'Public' {
     It 'Should have the correct parameters in parameter set <ExpectedParameterSetName>' -ForEach @(
         @{
             ExpectedParameterSetName = '__AllParameterSets'
-            ExpectedParameters = '[-Protocol] <SslProtocols[]> [-Client] [-SetDisabledByDefault] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]'
+            ExpectedParameters       = '[-Protocol] <SChannelSslProtocols[]> [-Client] [-SetDisabledByDefault] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]'
         }
     ) {
         $result = (Get-Command -Name 'Disable-TlsProtocol').ParameterSets |
@@ -60,10 +63,10 @@ Describe 'Disable-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should call Set-TlsProtocolRegistryValue with Disable switch' {
-            $null = Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Force
+            $null = Disable-TlsProtocol -Protocol Ssl3 -Force
 
             Should -Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {
-                $Protocol -contains [System.Security.Authentication.SslProtocols]::Ssl3 -and
+                $Protocol -contains 'Ssl3' -and
                 $Disable -eq $true -and
                 $Force -eq $true
             } -Exactly -Times 1 -Scope It
@@ -76,10 +79,10 @@ Describe 'Disable-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should pass Client and SetDisabledByDefault to Set-TlsProtocolRegistryValue' {
-            $null = Disable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Client -SetDisabledByDefault -Force
+            $null = Disable-TlsProtocol -Protocol Ssl3 -Client -SetDisabledByDefault -Force
 
             Should -Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {
-                $Protocol -contains [System.Security.Authentication.SslProtocols]::Ssl3 -and
+                $Protocol -contains 'Ssl3' -and
                 $Disable -eq $true -and
                 $Client -eq $true -and
                 $SetDisabledByDefault -eq $true -and
@@ -95,8 +98,8 @@ Describe 'Disable-TlsProtocol' -Tag 'Public' {
 
         It 'Should pass all protocols to Set-TlsProtocolRegistryValue' {
             $null = Disable-TlsProtocol -Protocol @(
-                [System.Security.Authentication.SslProtocols]::Ssl2,
-                [System.Security.Authentication.SslProtocols]::Ssl3
+                'Ssl2'
+                'Ssl3'
             ) -Force
 
             Should -Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {

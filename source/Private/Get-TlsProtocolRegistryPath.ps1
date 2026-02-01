@@ -41,7 +41,7 @@ function Get-TlsProtocolRegistryPath
     (
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        [System.Security.Authentication.SslProtocols]
+        [SChannelSslProtocols]
         $Protocol,
 
         [Parameter()]

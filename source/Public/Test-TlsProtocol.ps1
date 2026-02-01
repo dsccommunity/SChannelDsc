@@ -11,8 +11,8 @@
 
     .PARAMETER Protocol
         One or more protocol names to check. Accepts values from the
-        `[System.Security.Authentication.SslProtocols]` enum such as `Ssl2`,
-        `Ssl3`, `Tls`, `Tls11`, `Tls12`, `Tls13`.
+        `[SChannelSslProtocols]` enum such as `Ssl2`,
+        `Ssl3`, `Tls`, `Tls11`, `Tls12`, `Tls13`, `Dtls1`, `Dtls12`.
 
     .PARAMETER Client
         When specified, checks the protocol `Client` registry key instead of the
@@ -64,7 +64,7 @@ function Test-TlsProtocol
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.Security.Authentication.SslProtocols[]]
+        [SChannelSslProtocols[]]
         $Protocol,
 
         [Parameter()]

@@ -13,8 +13,8 @@
 
     .PARAMETER Protocol
         One or more protocol names to reset. Accepts values from the
-        `[System.Security.Authentication.SslProtocols]` enum such as `Ssl2`,
-        `Ssl3`, `Tls`, `Tls11`, `Tls12`, `Tls13`. If not specified, all
+        `[SChannelSslProtocols]` enum such as `Ssl2`,
+        `Ssl3`, `Tls`, `Tls11`, `Tls12`, `Tls13`, `Dtls1`, `Dtls12`. If not specified, all
         supported protocols are reset.
 
     .PARAMETER Client
@@ -72,7 +72,7 @@ function Reset-TlsProtocol
     param
     (
         [Parameter()]
-        [System.Security.Authentication.SslProtocols[]]
+        [SChannelSslProtocols[]]
         $Protocol,
 
         [Parameter()]

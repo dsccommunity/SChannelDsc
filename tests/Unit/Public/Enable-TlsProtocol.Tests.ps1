@@ -34,13 +34,16 @@ AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
     $PSDefaultParameterValues.Remove('Should:ModuleName')
+
+    # Unload the module being tested so that it doesn't impact any other tests.
+    Get-Module -Name $script:moduleName -All | Remove-Module -Force
 }
 
 Describe 'Enable-TlsProtocol' -Tag 'Public' {
     It 'Should have the correct parameters in parameter set <ExpectedParameterSetName>' -ForEach @(
         @{
             ExpectedParameterSetName = '__AllParameterSets'
-            ExpectedParameters = '[-Protocol] <SslProtocols[]> [-Client] [-SetDisabledByDefault] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]'
+            ExpectedParameters       = '[-Protocol] <SChannelSslProtocols[]> [-Client] [-SetDisabledByDefault] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]'
         }
     ) {
         $result = (Get-Command -Name 'Enable-TlsProtocol').ParameterSets |
@@ -60,10 +63,10 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should call Set-TlsProtocolRegistryValue with Enable switch' {
-            $null = Enable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Force
+            $null = Enable-TlsProtocol -Protocol Tls12 -Force
 
             Should -Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {
-                $Protocol -contains [System.Security.Authentication.SslProtocols]::Tls12 -and
+                $Protocol -contains 'Tls12' -and
                 $Enable -eq $true -and
                 $Force -eq $true
             } -Exactly -Times 1 -Scope It
@@ -76,10 +79,10 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should pass Client and SetDisabledByDefault to Set-TlsProtocolRegistryValue' {
-            $null = Enable-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client -SetDisabledByDefault -Force
+            $null = Enable-TlsProtocol -Protocol Tls12 -Client -SetDisabledByDefault -Force
 
             Should -Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {
-                $Protocol -contains [System.Security.Authentication.SslProtocols]::Tls12 -and
+                $Protocol -contains 'Tls12' -and
                 $Enable -eq $true -and
                 $Client -eq $true -and
                 $SetDisabledByDefault -eq $true -and
@@ -95,8 +98,8 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
 
         It 'Should pass all protocols to Set-TlsProtocolRegistryValue' {
             $null = Enable-TlsProtocol -Protocol @(
-                [System.Security.Authentication.SslProtocols]::Tls12,
-                [System.Security.Authentication.SslProtocols]::Tls13
+                'Tls12',
+                'Tls13'
             ) -Force
 
             Should -Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {

@@ -14,8 +14,8 @@
 
     .PARAMETER Protocol
         One or more protocol names to disable. Accepts values from the
-        `[System.Security.Authentication.SslProtocols]` enum such as `Ssl2`,
-        `Ssl3`, `Tls`, `Tls11`, `Tls12`, `Tls13`.
+        `[SChannelSslProtocols]` enum such as `Ssl2`,
+        `Ssl3`, `Tls`, `Tls11`, `Tls12`, `Tls13`, `Dtls1`, `Dtls12`.
 
     .PARAMETER Client
         When specified, operate on the protocol `Client` registry key instead of
@@ -66,7 +66,7 @@ function Disable-TlsProtocol
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.Security.Authentication.SslProtocols[]]
+        [SChannelSslProtocols[]]
         $Protocol,
 
         [Parameter()]

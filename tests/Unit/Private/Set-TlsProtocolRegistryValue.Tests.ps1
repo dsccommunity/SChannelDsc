@@ -34,6 +34,9 @@ AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
     $PSDefaultParameterValues.Remove('Should:ModuleName')
+
+    # Unload the module being tested so that it doesn't impact any other tests.
+    Get-Module -Name $script:moduleName -All | Remove-Module -Force
 }
 
 Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
@@ -47,7 +50,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -Force
+                Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Enable -Force
             }
 
             Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\TLS 1.2\Server' } -Exactly -Times 1 -Scope It
@@ -65,7 +68,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -Client -Force
+                Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Enable -Client -Force
             }
 
             Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\TLS 1.2\Client' } -Exactly -Times 1 -Scope It
@@ -83,7 +86,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -SetDisabledByDefault -Force
+                Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Enable -SetDisabledByDefault -Force
             }
 
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 0 } -Exactly -Times 1 -Scope It
@@ -101,7 +104,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -Force
+                Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Enable -Force
             }
 
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' } -Exactly -Times 0 -Scope It
@@ -118,7 +121,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Disable -Force
+                Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Ssl3) -Disable -Force
             }
 
             Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\SSL 3.0\Server' } -Exactly -Times 1 -Scope It
@@ -136,7 +139,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Disable -Client -Force
+                Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Ssl3) -Disable -Client -Force
             }
 
             Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\SSL 3.0\Client' } -Exactly -Times 1 -Scope It
@@ -154,7 +157,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Disable -SetDisabledByDefault -Force
+                Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Ssl3) -Disable -SetDisabledByDefault -Force
             }
 
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 1 } -Exactly -Times 1 -Scope It
@@ -172,7 +175,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Disable -Force
+                Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Ssl3) -Disable -Force
             }
 
             Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' } -Exactly -Times 0 -Scope It
@@ -190,8 +193,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 Set-StrictMode -Version 1.0
 
                 Set-TlsProtocolRegistryValue -Protocol @(
-                    [System.Security.Authentication.SslProtocols]::Tls12,
-                    [System.Security.Authentication.SslProtocols]::Tls13
+                    [SChannelSslProtocols]::Tls12,
+                    [SChannelSslProtocols]::Tls13
                 ) -Enable -Force
             }
 
@@ -211,8 +214,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 Set-StrictMode -Version 1.0
 
                 Set-TlsProtocolRegistryValue -Protocol @(
-                    [System.Security.Authentication.SslProtocols]::Ssl2,
-                    [System.Security.Authentication.SslProtocols]::Ssl3
+                    [SChannelSslProtocols]::Ssl2,
+                    [SChannelSslProtocols]::Ssl3
                 ) -Disable -Force
             }
 
@@ -231,7 +234,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                { Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -Force } | Should -Throw -ErrorId 'STPRV0001,Set-TlsProtocolRegistryValue'
+                { Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Enable -Force } | Should -Throw -ErrorId 'STPRV0001,Set-TlsProtocolRegistryValue'
             }
         }
 
@@ -239,7 +242,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                { Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disable -Force } | Should -Throw -ErrorId 'STPRV0002,Set-TlsProtocolRegistryValue'
+                { Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Disable -Force } | Should -Throw -ErrorId 'STPRV0002,Set-TlsProtocolRegistryValue'
             }
         }
     }
@@ -254,7 +257,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                { Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -Force } | Should -Throw -ErrorId 'STPRV0001,Set-TlsProtocolRegistryValue'
+                { Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Enable -Force } | Should -Throw -ErrorId 'STPRV0001,Set-TlsProtocolRegistryValue'
             }
         }
 
@@ -262,7 +265,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                { Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disable -Force } | Should -Throw -ErrorId 'STPRV0002,Set-TlsProtocolRegistryValue'
+                { Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Disable -Force } | Should -Throw -ErrorId 'STPRV0002,Set-TlsProtocolRegistryValue'
             }
         }
     }
@@ -277,7 +280,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                Set-TlsProtocolRegistryValue -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Enable -WhatIf
+                Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Enable -WhatIf
             }
 
             Should -Invoke -CommandName New-Item -Exactly -Times 0 -Scope It

@@ -13,8 +13,8 @@
 
     .PARAMETER Protocol
         One or more protocol names to set registry values for. Accepts values
-        from the `[System.Security.Authentication.SslProtocols]` enum such as
-        `Ssl2`, `Ssl3`, `Tls`, `Tls11`, `Tls12`, `Tls13`.
+        from the `[SChannelSslProtocols]` enum such as
+        `Ssl2`, `Ssl3`, `Tls`, `Tls11`, `Tls12`, `Tls13`, `Dtls1`, `Dtls12`.
 
     .PARAMETER Enable
         Enables the protocol by setting Enabled to 1 and DisabledByDefault to 0.
@@ -67,7 +67,7 @@ function Set-TlsProtocolRegistryValue
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.Security.Authentication.SslProtocols[]]
+        [SChannelSslProtocols[]]
         $Protocol,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Enable')]

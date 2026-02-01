@@ -34,13 +34,16 @@ AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
     $PSDefaultParameterValues.Remove('Should:ModuleName')
+
+    # Unload the module being tested so that it doesn't impact any other tests.
+    Get-Module -Name $script:moduleName -All | Remove-Module -Force
 }
 
 Describe 'Reset-TlsProtocol' -Tag 'Public' {
     It 'Should have the correct parameters in parameter set <ExpectedParameterSetName>' -ForEach @(
         @{
             ExpectedParameterSetName = '__AllParameterSets'
-            ExpectedParameters = '[[-Protocol] <SslProtocols[]>] [-Client] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]'
+            ExpectedParameters       = '[[-Protocol] <SChannelSslProtocols[]>] [-Client] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]'
         }
     ) {
         $result = (Get-Command -Name 'Reset-TlsProtocol').ParameterSets |
@@ -70,10 +73,10 @@ Describe 'Reset-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should call Remove-Item to remove registry key' {
-            $null = Reset-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Ssl3) -Force
+            $null = Reset-TlsProtocol -Protocol Ssl3 -Force
 
             Should -Invoke -CommandName ConvertTo-TlsProtocolRegistryKeyName -ParameterFilter {
-                $Protocol -eq [System.Security.Authentication.SslProtocols]::Ssl3
+                $Protocol -eq 'Ssl3'
             } -Exactly -Times 1 -Scope It
 
             Should -Invoke -CommandName Get-TlsProtocolTargetRegistryName -ParameterFilter {
@@ -81,7 +84,7 @@ Describe 'Reset-TlsProtocol' -Tag 'Public' {
             } -Exactly -Times 1 -Scope It
 
             Should -Invoke -CommandName Get-TlsProtocolRegistryPath -ParameterFilter {
-                $Protocol -eq [System.Security.Authentication.SslProtocols]::Ssl3 -and
+                $Protocol -eq 'Ssl3' -and
                 $Client -eq $false
             } -Exactly -Times 1 -Scope It
 
@@ -108,7 +111,7 @@ Describe 'Reset-TlsProtocol' -Tag 'Public' {
                 $script:localizedData.Reset_TlsProtocol_FailedToReset
             }
 
-            { Reset-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Force } |
+            { Reset-TlsProtocol -Protocol Tls12 -Force } |
                 Should -Throw -ExpectedMessage ($mockErrorMessage -f 'Tls12') -ErrorId 'RTP0001*'
         }
     }
@@ -125,7 +128,7 @@ Describe 'Reset-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should not call Remove-Item when registry key does not exist' {
-            $null = Reset-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Force
+            $null = Reset-TlsProtocol -Protocol Tls12 -Force
 
             Should -Invoke -CommandName Test-Path -Exactly -Times 1 -Scope It
             Should -Invoke -CommandName Remove-Item -Exactly -Times 0 -Scope It
@@ -148,7 +151,7 @@ Describe 'Reset-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should pass Client to helper functions' {
-            $null = Reset-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client -Force
+            $null = Reset-TlsProtocol -Protocol Tls12 -Client -Force
 
             Should -Invoke -CommandName Get-TlsProtocolTargetRegistryName -ParameterFilter {
                 $Client -eq $true
@@ -177,8 +180,8 @@ Describe 'Reset-TlsProtocol' -Tag 'Public' {
 
         It 'Should call Remove-Item for each protocol' {
             $null = Reset-TlsProtocol -Protocol @(
-                [System.Security.Authentication.SslProtocols]::Ssl2,
-                [System.Security.Authentication.SslProtocols]::Ssl3
+                'Ssl2',
+                'Ssl3'
             ) -Force
 
             Should -Invoke -CommandName Remove-Item -Exactly -Times 2 -Scope It
@@ -189,8 +192,8 @@ Describe 'Reset-TlsProtocol' -Tag 'Public' {
         BeforeAll {
             Mock -CommandName Get-TlsProtocol -MockWith {
                 return @(
-                    [PSCustomObject] @{ Protocol = [System.Security.Authentication.SslProtocols]::Tls12 },
-                    [PSCustomObject] @{ Protocol = [System.Security.Authentication.SslProtocols]::Tls13 }
+                    [PSCustomObject] @{ Protocol = 'Tls12' },
+                    [PSCustomObject] @{ Protocol = 'Tls13' }
                 )
             }
             Mock -CommandName ConvertTo-TlsProtocolRegistryKeyName -MockWith { return 'MockProtocol' }
@@ -244,35 +247,35 @@ Describe 'Reset-TlsProtocol' -Tag 'Public' {
 
             # Mock Get-TlsProtocolRegistryPath to return TestRegistry path for TLS 1.2 Server
             Mock -CommandName Get-TlsProtocolRegistryPath -ParameterFilter {
-                $Protocol -eq [System.Security.Authentication.SslProtocols]::Tls12 -and -not $Client
+                $Protocol -eq 'Tls12' -and -not $Client
             } -MockWith {
                 return 'TestRegistry:\SCHANNEL\Protocols\TLS 1.2\Server'
             }
 
             # Mock Get-TlsProtocolRegistryPath to return TestRegistry path for TLS 1.2 Client
             Mock -CommandName Get-TlsProtocolRegistryPath -ParameterFilter {
-                $Protocol -eq [System.Security.Authentication.SslProtocols]::Tls12 -and $Client
+                $Protocol -eq 'Tls12' -and $Client
             } -MockWith {
                 return 'TestRegistry:\SCHANNEL\Protocols\TLS 1.2\Client'
             }
 
             # Mock Get-TlsProtocolRegistryPath to return TestRegistry path for TLS 1.3 Server
             Mock -CommandName Get-TlsProtocolRegistryPath -ParameterFilter {
-                $Protocol -eq [System.Security.Authentication.SslProtocols]::Tls13 -and -not $Client
+                $Protocol -eq 'Tls13' -and -not $Client
             } -MockWith {
                 return 'TestRegistry:\SCHANNEL\Protocols\TLS 1.3\Server'
             }
 
             # Mock Get-TlsProtocolRegistryPath to return TestRegistry path for TLS 1.3 Client
             Mock -CommandName Get-TlsProtocolRegistryPath -ParameterFilter {
-                $Protocol -eq [System.Security.Authentication.SslProtocols]::Tls13 -and $Client
+                $Protocol -eq 'Tls13' -and $Client
             } -MockWith {
                 return 'TestRegistry:\SCHANNEL\Protocols\TLS 1.3\Client'
             }
         }
 
         It 'Should remove only the Server key and preserve the Client key' {
-            $null = Reset-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Force
+            $null = Reset-TlsProtocol -Protocol Tls12 -Force
 
             # Server key should be removed
             Test-Path -Path 'TestRegistry:\SCHANNEL\Protocols\TLS 1.2\Server' | Should -BeFalse
@@ -291,7 +294,7 @@ Describe 'Reset-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should remove only the Client key and preserve the Server key' {
-            $null = Reset-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls13) -Client -Force
+            $null = Reset-TlsProtocol -Protocol Tls13 -Client -Force
 
             # Since TLS 1.3 Client does not exist, nothing should be removed
             # TLS 1.3 Server key should still exist
@@ -301,7 +304,7 @@ Describe 'Reset-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should preserve other protocol keys when resetting a specific protocol' {
-            $null = Reset-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls13) -Force
+            $null = Reset-TlsProtocol -Protocol Tls13 -Force
 
             # TLS 1.3 Server should be removed
             Test-Path -Path 'TestRegistry:\SCHANNEL\Protocols\TLS 1.3\Server' | Should -BeFalse

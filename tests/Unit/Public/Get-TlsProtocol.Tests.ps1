@@ -34,13 +34,16 @@ AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
     $PSDefaultParameterValues.Remove('Should:ModuleName')
+
+    # Unload the module being tested so that it doesn't impact any other tests.
+    Get-Module -Name $script:moduleName -All | Remove-Module -Force
 }
 
 Describe 'Get-TlsProtocol' -Tag 'Public' {
     It 'Should have the correct parameters in parameter set <ExpectedParameterSetName>' -ForEach @(
         @{
             ExpectedParameterSetName = '__AllParameterSets'
-            ExpectedParameters = '[[-Protocol] <SslProtocols[]>] [-Client] [<CommonParameters>]'
+            ExpectedParameters       = '[[-Protocol] <SChannelSslProtocols[]>] [-Client] [<CommonParameters>]'
         }
     ) {
         $result = (Get-Command -Name 'Get-TlsProtocol').ParameterSets |
@@ -80,10 +83,10 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should return object with expected properties and values' {
-            $result = Get-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
+            $result = Get-TlsProtocol -Protocol Tls12
 
             $result | Should -Not -BeNull
-            $result.Protocol | Should -Be ([System.Security.Authentication.SslProtocols]::Tls12)
+            $result.Protocol | Should -Be 'Tls12'
             $result.Target | Should -Be 'Server'
             $result.Enabled | Should -Be 1
             $result.DisabledByDefault | Should -Be 0
@@ -102,7 +105,7 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should return null for Enabled and DisabledByDefault' {
-            $result = Get-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
+            $result = Get-TlsProtocol -Protocol Tls12
 
             $result.Enabled | Should -BeNull
             $result.DisabledByDefault | Should -BeNull
@@ -135,7 +138,7 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should cast string numeric values to integer types' {
-            $result = Get-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
+            $result = Get-TlsProtocol -Protocol Tls12
 
             $result.Enabled | Should -Be 1
             $result.Enabled | Should -BeOfType 'System.UInt32'
@@ -170,14 +173,14 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should check Client registry keys and return Client target' {
-            $result = Get-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client
+            $result = Get-TlsProtocol -Protocol Tls12 -Client
 
             $result.Target | Should -Be 'Client'
             $result.Enabled | Should -Be 1
             $result.DisabledByDefault | Should -Be 0
 
             Should -Invoke -CommandName Get-TlsProtocolRegistryPath -ParameterFilter {
-                $Protocol -eq ([System.Security.Authentication.SslProtocols]::Tls12) -and $Client
+                $Protocol -eq 'Tls12' -and $Client
             } -Exactly -Times 1 -Scope It
 
             Should -Invoke -CommandName Get-TlsProtocolTargetRegistryName -ParameterFilter {
@@ -216,7 +219,7 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
             $result = Get-TlsProtocol
 
             $result | Should -Not -BeNull
-            $result.Count | Should -Be 6
+            $result.Count | Should -Be 8
             $result.Target | Should -Not -Contain $null
         }
     }

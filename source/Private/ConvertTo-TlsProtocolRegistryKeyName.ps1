@@ -3,11 +3,11 @@
         Converts a protocol identifier to the SCHANNEL registry key name.
 
     .DESCRIPTION
-        Maps protocol values from the `[System.Security.Authentication.SslProtocols]`
+        Maps protocol values from the `[SChannelSslProtocols]`
         enum to the actual SCHANNEL registry key names (e.g. 'TLS 1.2').
 
     .PARAMETER Protocol
-        The protocol value from the `[System.Security.Authentication.SslProtocols]`
+        The protocol value from the `[SChannelSslProtocols]`
         enum, e.g. `Tls12`, `Ssl3`, `Tls`.
 
     .OUTPUTS
@@ -25,49 +25,51 @@ function ConvertTo-TlsProtocolRegistryKeyName
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.Security.Authentication.SslProtocols]
+        [SChannelSslProtocols]
         $Protocol
     )
 
     $protocolRegistryKeyName = switch ($Protocol)
     {
-        ([System.Security.Authentication.SslProtocols]::Ssl2)
+        ([SChannelSslProtocols]::Ssl2)
         {
             'SSL 2.0'
         }
 
-        ([System.Security.Authentication.SslProtocols]::Ssl3)
+        ([SChannelSslProtocols]::Ssl3)
         {
             'SSL 3.0'
         }
 
-        ([System.Security.Authentication.SslProtocols]::Tls)
+        ([SChannelSslProtocols]::Tls)
         {
             'TLS 1.0'
         }
 
-        ([System.Security.Authentication.SslProtocols]::Tls11)
+        ([SChannelSslProtocols]::Tls11)
         {
             'TLS 1.1'
         }
 
-        ([System.Security.Authentication.SslProtocols]::Tls12)
+        ([SChannelSslProtocols]::Tls12)
         {
             'TLS 1.2'
         }
 
         # A guard to check if Tls13 is defined in the enum (it may not be in older .NET versions)
-        { [System.Enum]::GetNames([System.Security.Authentication.SslProtocols]) -contains 'Tls13' -and $_ -eq [System.Security.Authentication.SslProtocols]::Tls13 }
+        { [System.Enum]::GetNames([System.Security.Authentication.SslProtocols]) -contains 'Tls13' -and $_ -eq [SChannelSslProtocols]::Tls13 }
         {
             'TLS 1.3'
         }
 
-        default
+        ([SChannelSslProtocols]::DTls1)
         {
-            $errorMessage = $script:localizedData.ConvertTo_TlsProtocolRegistryKeyName_UnknownProtocol -f $Protocol
-            $exception = New-Exception -Message $errorMessage
-            $errorRecord = New-ErrorRecord -Exception $exception -ErrorId 'CTTPRKN0001' -ErrorCategory ([System.Management.Automation.ErrorCategory]::InvalidArgument) -TargetObject $Protocol
-            $PSCmdlet.ThrowTerminatingError($errorRecord)
+            'DTLS 1.0'
+        }
+
+        ([SChannelSslProtocols]::DTls12)
+        {
+            'DTLS 1.2'
         }
     }
 

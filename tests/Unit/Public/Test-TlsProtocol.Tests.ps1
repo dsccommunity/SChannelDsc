@@ -34,13 +34,16 @@ AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
     $PSDefaultParameterValues.Remove('Should:ModuleName')
+
+    # Unload the module being tested so that it doesn't impact any other tests.
+    Get-Module -Name $script:moduleName -All | Remove-Module -Force
 }
 
 Describe 'Test-TlsProtocol' -Tag 'Public' {
     It 'Should have the correct parameters in parameter set <ExpectedParameterSetName>' -ForEach @(
         @{
             ExpectedParameterSetName = '__AllParameterSets'
-            ExpectedParameters = '[-Protocol] <SslProtocols[]> [-Client] [-Disabled] [<CommonParameters>]'
+            ExpectedParameters       = '[-Protocol] <SChannelSslProtocols[]> [-Client] [-Disabled] [<CommonParameters>]'
         }
     ) {
         $result = (Get-Command -Name 'Test-TlsProtocol').ParameterSets |
@@ -66,7 +69,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should return $true' {
-            $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
+            $result = Test-TlsProtocol -Protocol Tls12
 
             $result | Should -BeTrue
         }
@@ -78,7 +81,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should return $true' {
-            $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
+            $result = Test-TlsProtocol -Protocol Tls12
 
             $result | Should -BeTrue
         }
@@ -96,7 +99,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should return false' {
-            $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12)
+            $result = Test-TlsProtocol -Protocol Tls12
 
             $result | Should -BeFalse
         }
@@ -114,16 +117,16 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         }
 
         It 'Should check the Client registry key' {
-            $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Client
+            $result = Test-TlsProtocol -Protocol Tls12 -Client
 
             $result | Should -BeTrue
 
             Should -Invoke -CommandName Get-RegistryPropertyValue -ParameterFilter {
-                 $Path -like '*\Client' -and $Name -eq 'Enabled'
+                $Path -like '*\Client' -and $Name -eq 'Enabled'
             } -Exactly -Times 1 -Scope It
 
             Should -Invoke -CommandName Get-RegistryPropertyValue -ParameterFilter {
-                 $Path -like '*\Client' -and $Name -eq 'DisabledByDefault'
+                $Path -like '*\Client' -and $Name -eq 'DisabledByDefault'
             } -Exactly -Times 1 -Scope It
         }
     }
@@ -141,7 +144,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
             }
 
             It 'Should return true' {
-                $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled
+                $result = Test-TlsProtocol -Protocol Tls12 -Disabled
 
                 $result | Should -BeTrue
             }
@@ -159,7 +162,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
             }
 
             It 'Should return false' {
-                $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled
+                $result = Test-TlsProtocol -Protocol Tls12 -Disabled
 
                 $result | Should -BeFalse
             }
@@ -171,7 +174,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
             }
 
             It 'Should return false' {
-                $result = Test-TlsProtocol -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -Disabled
+                $result = Test-TlsProtocol -Protocol Tls12 -Disabled
 
                 $result | Should -BeFalse
             }
