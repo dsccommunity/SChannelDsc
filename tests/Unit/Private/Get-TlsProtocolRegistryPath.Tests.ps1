@@ -42,7 +42,7 @@ AfterAll {
 Describe 'Get-TlsProtocolRegistryPath' -Tag 'Private' {
     Context 'When building the registry path for Server' {
         BeforeAll {
-            Mock -CommandName ConvertTo-TlsProtocolRegistryKeyName -MockWith { 'Tls12' }
+            Mock -CommandName ConvertTo-TlsProtocolRegistryKeyName -MockWith { 'TLS 1.2' }
             Mock -CommandName Get-TlsProtocolTargetRegistryName -MockWith { 'Server' }
         }
 
@@ -52,7 +52,7 @@ Describe 'Get-TlsProtocolRegistryPath' -Tag 'Private' {
 
                 $result = Get-TlsProtocolRegistryPath -Protocol 'Tls12'
 
-                $expected = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\Tls12\Server'
+                $expected = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Server'
                 $result | Should -Be $expected
             }
         }
@@ -60,7 +60,7 @@ Describe 'Get-TlsProtocolRegistryPath' -Tag 'Private' {
 
     Context 'When building the registry path for Client' {
         BeforeAll {
-            Mock -CommandName ConvertTo-TlsProtocolRegistryKeyName -MockWith { 'Tls12' }
+            Mock -CommandName ConvertTo-TlsProtocolRegistryKeyName -MockWith { 'TLS 1.2' }
             Mock -CommandName Get-TlsProtocolTargetRegistryName -MockWith { 'Client' }
         }
 
@@ -70,7 +70,7 @@ Describe 'Get-TlsProtocolRegistryPath' -Tag 'Private' {
 
                 $result = Get-TlsProtocolRegistryPath -Protocol 'Tls12' -Client
 
-                $expected = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\Tls12\Client'
+                $expected = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client'
                 $result | Should -Be $expected
             }
         }
