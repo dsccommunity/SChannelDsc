@@ -83,7 +83,7 @@ Describe 'SChannelDsc.Common\Set-SChannelItem' {
                 $null = New-ItemProperty -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -Name 'Enabled' -Value 1 -Force
             }
 
-            It 'Should remove the key' {
+            It 'Should be the correct value' {
                 $mockParams = @{
                     ItemKey    = 'TestRegistry:\SCHANNEL\Protocols'
                     ItemSubKey = 'SSL 3.0'
@@ -103,7 +103,7 @@ Describe 'SChannelDsc.Common\Set-SChannelItem' {
                 $null = New-ItemProperty -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -Name 'Enabled' -Value 1 -Force
             }
 
-            It 'Should remove the key' {
+            It 'Should be the correct value' {
                 $mockParams = @{
                     ItemKey    = 'TestRegistry:\SCHANNEL\Protocols'
                     ItemSubKey = 'SSL 3.0'
@@ -144,7 +144,7 @@ Describe 'SChannelDsc.Common\Set-SChannelItem' {
                 $null = New-ItemProperty -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -Name 'Enabled' -Value 4294967295 -Force
             }
 
-            It 'Should remove the key' {
+            It 'Should be the correct value' {
                 $mockParams = @{
                     ItemKey    = 'TestRegistry:\SCHANNEL\Ciphers'
                     ItemSubKey = 'AES128'
@@ -164,7 +164,7 @@ Describe 'SChannelDsc.Common\Set-SChannelItem' {
                 $null = New-ItemProperty -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -Name 'Enabled' -Value 1 -Force
             }
 
-            It 'Should remove the key' {
+            It 'Should be the correct value' {
                 $mockParams = @{
                     ItemKey    = 'TestRegistry:\SCHANNEL\Ciphers'
                     ItemSubKey = 'AES128'
