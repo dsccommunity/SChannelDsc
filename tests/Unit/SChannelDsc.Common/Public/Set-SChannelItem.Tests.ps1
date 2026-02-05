@@ -55,62 +55,126 @@ AfterAll {
 }
 
 Describe 'SChannelDsc.Common\Set-SChannelItem' {
-    Context 'When the state should be Default' {
-        BeforeAll {
-            $null = New-Item -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -Force
-            $null = New-ItemProperty -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -Name 'Enabled' -Value 1 -Force
-        }
-
-        It 'Should remove the key' {
-            $mockParams = @{
-                ItemKey    = 'TestRegistry:\SCHANNEL\Protocols'
-                ItemSubKey = 'SSL 3.0'
-                State      = 'Default'
+    Context 'When testing Protocols' {
+        Context 'When the state should be Default' {
+            BeforeAll {
+                $null = New-Item -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -Force
+                $null = New-ItemProperty -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -Name 'Enabled' -Value 1 -Force
             }
 
-            $null = Set-SChannelItem @mockParams
+            It 'Should remove the key' {
+                $mockParams = @{
+                    ItemKey    = 'TestRegistry:\SCHANNEL\Protocols'
+                    ItemSubKey = 'SSL 3.0'
+                    State      = 'Default'
+                    Protocol   = $true
+                }
 
-            (Get-Item -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -ErrorAction SilentlyContinue) | Should -BeNullOrEmpty
+                $null = Set-SChannelItem @mockParams
+
+                (Get-Item -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -ErrorAction SilentlyContinue) | Should -BeNullOrEmpty
+            }
+        }
+
+        Context 'When the state should be Enabled' {
+
+            BeforeAll {
+                $null = New-Item -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -Force
+                $null = New-ItemProperty -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -Name 'Enabled' -Value 1 -Force
+            }
+
+            It 'Should remove the key' {
+                $mockParams = @{
+                    ItemKey    = 'TestRegistry:\SCHANNEL\Protocols'
+                    ItemSubKey = 'SSL 3.0'
+                    State      = 'Enabled'
+                    Protocol   = $true
+                }
+
+                $null = Set-SChannelItem @mockParams
+
+                (Get-ItemPropertyValue -Path 'TestRegistry:\SChannel\Protocols\SSL 3.0' -Name 'Enabled') | Should -Be 1
+            }
+        }
+
+        Context 'When the state should be Disabled' {
+            BeforeAll {
+                $null = New-Item -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -Force
+                $null = New-ItemProperty -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -Name 'Enabled' -Value 1 -Force
+            }
+
+            It 'Should remove the key' {
+                $mockParams = @{
+                    ItemKey    = 'TestRegistry:\SCHANNEL\Protocols'
+                    ItemSubKey = 'SSL 3.0'
+                    State      = 'Disabled'
+                    Protocol   = $true
+                }
+
+                $null = Set-SChannelItem @mockParams
+
+                (Get-ItemPropertyValue -Path 'TestRegistry:\SChannel\Protocols\SSL 3.0' -Name 'Enabled') | Should -Be 0
+            }
         }
     }
 
-    Context 'When the state should be Enabled' {
-
-        BeforeAll {
-            $null = New-Item -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -Force
-            $null = New-ItemProperty -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -Name 'Enabled' -Value 1 -Force
-        }
-
-        It 'Should remove the key' {
-            $mockParams = @{
-                ItemKey    = 'TestRegistry:\SCHANNEL\Protocols'
-                ItemSubKey = 'SSL 3.0'
-                State      = 'Enabled'
+    Context 'When testing Ciphers' {
+        Context 'When the state should be Default' {
+            BeforeAll {
+                $null = New-Item -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -Force
+                $null = New-ItemProperty -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -Name 'Enabled' -Value 1 -Force
             }
 
-            $null = Set-SChannelItem @mockParams
+            It 'Should remove the key' {
+                $mockParams = @{
+                    ItemKey    = 'TestRegistry:\SCHANNEL\Ciphers'
+                    ItemSubKey = 'AES128'
+                    State      = 'Default'
+                }
 
-            (Get-ItemPropertyValue -Path 'TestRegistry:\SChannel\Protocols\SSL 3.0' -Name 'Enabled') | Should -Be 1
+                $null = Set-SChannelItem @mockParams
+
+                (Get-Item -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -ErrorAction SilentlyContinue) | Should -BeNullOrEmpty
+            }
         }
-    }
 
-    Context 'When the state should be Disabled' {
-
-        BeforeAll {
-            $null = New-Item -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -Force
-            $null = New-ItemProperty -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -Name 'Enabled' -Value 1 -Force
-        }
-
-        It 'Should remove the key' {
-            $mockParams = @{
-                ItemKey    = 'TestRegistry:\SCHANNEL\Protocols'
-                ItemSubKey = 'SSL 3.0'
-                State      = 'Disabled'
+        Context 'When the state should be Enabled' {
+            BeforeAll {
+                $null = New-Item -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -Force
+                $null = New-ItemProperty -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -Name 'Enabled' -Value 4294967295 -Force
             }
 
-            $null = Set-SChannelItem @mockParams
+            It 'Should remove the key' {
+                $mockParams = @{
+                    ItemKey    = 'TestRegistry:\SCHANNEL\Ciphers'
+                    ItemSubKey = 'AES128'
+                    State      = 'Enabled'
+                }
 
-            (Get-ItemPropertyValue -Path 'TestRegistry:\SChannel\Protocols\SSL 3.0' -Name 'Enabled') | Should -Be 0
+                $null = Set-SChannelItem @mockParams
+
+                (Get-ItemPropertyValue -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -Name 'Enabled') | Should -Be 4294967295
+            }
+        }
+
+        Context 'When the state should be Disabled' {
+
+            BeforeAll {
+                $null = New-Item -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -Force
+                $null = New-ItemProperty -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -Name 'Enabled' -Value 1 -Force
+            }
+
+            It 'Should remove the key' {
+                $mockParams = @{
+                    ItemKey    = 'TestRegistry:\SCHANNEL\Ciphers'
+                    ItemSubKey = 'AES128'
+                    State      = 'Disabled'
+                }
+
+                $null = Set-SChannelItem @mockParams
+
+                (Get-ItemPropertyValue -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -Name 'Enabled') | Should -Be 0
+            }
         }
     }
 }

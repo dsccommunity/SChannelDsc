@@ -66,6 +66,10 @@ Describe 'SChannelDsc.Common\Get-SChannelItem' {
                 ExpectedResult = 'Enabled'
             }
             @{
+                MockValue      = 4294967295
+                ExpectedResult = 'Enabled'
+            }
+            @{
                 MockValue      = 0
                 ExpectedResult = 'Disabled'
             }

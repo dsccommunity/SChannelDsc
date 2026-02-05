@@ -140,8 +140,8 @@ function Set-TargetResource
             }
         }
 
-        Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $clientItemKey -State $State -ItemValue 'Enabled'
-        Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $clientItemKey -State $State -ItemValue 'DisabledByDefault'
+        Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $clientItemKey -State $State -ItemValue 'Enabled' -Protocol
+        Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $clientItemKey -State $State -ItemValue 'DisabledByDefault' -Protocol
     }
 
     Write-Verbose -Message ($script:localizedData.SetServerProtocol -f $Protocol, $State)
@@ -163,8 +163,8 @@ function Set-TargetResource
         }
     }
 
-    Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $serverItemKey -State $State -ItemValue 'Enabled'
-    Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $serverItemKey -State $State -ItemValue 'DisabledByDefault'
+    Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $serverItemKey -State $State -ItemValue 'Enabled' -Protocol
+    Set-SChannelItem -ItemKey $itemRoot -ItemSubKey $serverItemKey -State $State -ItemValue 'DisabledByDefault' -Protocol
 
     if ($RebootWhenRequired)
     {

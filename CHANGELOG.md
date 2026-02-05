@@ -29,6 +29,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Renamed MSFT prefix to DSC [issue #43](https://github.com/dsccommunity/SChannelDsc/issues/43).
   - Unit test on both 2022 and 2025.
 
+### Fixed
+
+- Get-SChannelItem/Set-SChannelItem
+  - Set value for Protocol and other setting to the correct value for enabled.
+    Fixes [Issue #73](https://github.com/dsccommunity/SChannelDsc/issues/73).
+
 ### Removed
 
 - SChannelDsc.Common

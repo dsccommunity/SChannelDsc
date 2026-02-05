@@ -18,17 +18,21 @@ function Set-SChannelItem
         [Parameter(Mandatory = $true)]
         [ValidateSet('Enabled', 'Disabled', 'Default')]
         [System.String]
-        $State
+        $State,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Protocol
     )
 
     $fullSubKey = $ItemKey + '\' + $ItemSubKey
 
-    if ($ItemKey -match "(.*:).*")
+    if ($ItemKey -match '(.*:).*')
     {
         $root = $Matches[1]
     }
 
-    $path = ($ItemKey -replace $root, "").TrimStart('\')
+    $path = ($ItemKey -replace $root, '').TrimStart('\')
 
     $regKey = (Get-Item -Path $root).OpenSubKey($path, $true)
 
@@ -82,7 +86,14 @@ function Set-SChannelItem
             }
             else
             {
-                $null = $regKey.SetValue($ItemValue, 1, [Microsoft.Win32.RegistryValueKind]::DWORD)
+                if ($Protocol.IsPresent)
+                {
+                    $null = $regKey.SetValue($ItemValue, 1, [Microsoft.Win32.RegistryValueKind]::DWORD)
+                }
+                else
+                {
+                    $null = $regKey.SetValue($ItemValue, 0xffffffff, [Microsoft.Win32.RegistryValueKind]::DWORD)
+                }
             }
         }
     }
