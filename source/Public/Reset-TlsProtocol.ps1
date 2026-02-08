@@ -72,7 +72,7 @@ function Reset-TlsProtocol
     param
     (
         [Parameter()]
-        [SChannelSslProtocols[]]
+        [SChannelSslProtocols]
         $Protocol,
 
         [Parameter()]
@@ -95,7 +95,7 @@ function Reset-TlsProtocol
         $Protocol = (Get-TlsProtocol -Client:$Client).Protocol
     }
 
-    foreach ($currentProtocol in $Protocol)
+    foreach ($currentProtocol in $Protocol | Get-EnumFlags)
     {
         $protocolKeyName = ConvertTo-TlsProtocolRegistryKeyName -Protocol $currentProtocol
         $target = Get-TlsProtocolTargetRegistryName -Client:$Client

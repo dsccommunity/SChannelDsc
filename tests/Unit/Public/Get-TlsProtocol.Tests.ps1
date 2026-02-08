@@ -43,7 +43,7 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
     It 'Should have the correct parameters in parameter set <ExpectedParameterSetName>' -ForEach @(
         @{
             ExpectedParameterSetName = '__AllParameterSets'
-            ExpectedParameters       = '[[-Protocol] <SChannelSslProtocols[]>] [-Client] [<CommonParameters>]'
+            ExpectedParameters       = '[[-Protocol] <SChannelSslProtocols>] [-Client] [<CommonParameters>]'
         }
     ) {
         $result = (Get-Command -Name 'Get-TlsProtocol').ParameterSets |
@@ -235,10 +235,10 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
             $parameterInfo.Attributes.Mandatory | Should -BeFalse
         }
 
-        It 'Should have Protocol declared as an array type' {
+        It 'Should have Protocol declared as an Enum type' {
             $parameterInfo = $commandInfo.Parameters['Protocol']
 
-            $parameterInfo.ParameterType.IsArray | Should -BeTrue
+            $parameterInfo.ParameterType.IsEnum | Should -BeTrue
         }
 
         It 'Should have Client as a non-mandatory parameter' {

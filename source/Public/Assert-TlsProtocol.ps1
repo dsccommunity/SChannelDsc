@@ -59,7 +59,7 @@ function Assert-TlsProtocol
     param
     (
         [Parameter(Mandatory = $true)]
-        [SChannelSslProtocols[]]
+        [SChannelSslProtocols]
         $Protocol,
 
         [Parameter()]

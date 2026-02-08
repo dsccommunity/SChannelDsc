@@ -56,7 +56,7 @@ function Get-TlsProtocol
     param
     (
         [Parameter()]
-        [SChannelSslProtocols[]]
+        [SChannelSslProtocols]
         $Protocol,
 
         [Parameter()]
@@ -66,7 +66,7 @@ function Get-TlsProtocol
 
     if (-not $PSBoundParameters.ContainsKey('Protocol'))
     {
-        $Protocol = @(
+        $Protocol = [SChannelSslProtocols] @(
             [SChannelSslProtocols]::Ssl2,
             [SChannelSslProtocols]::Ssl3,
             [SChannelSslProtocols]::Tls,
@@ -78,8 +78,13 @@ function Get-TlsProtocol
         )
     }
 
-    foreach ($currentProtocol in $Protocol)
+    foreach ($currentProtocol in [Enum]::GetValues([SChannelSslProtocols]))
     {
+        if (-not $Protocol.HasFlag($currentProtocol))
+        {
+            continue
+        }
+
         $regPath = Get-TlsProtocolRegistryPath -Protocol $currentProtocol -Client:$Client
 
         $protocolEnabled = Get-RegistryPropertyValue -Path $regPath -Name 'Enabled' -ErrorAction SilentlyContinue
