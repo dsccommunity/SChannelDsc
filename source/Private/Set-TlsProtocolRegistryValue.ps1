@@ -67,7 +67,7 @@ function Set-TlsProtocolRegistryValue
     param
     (
         [Parameter(Mandatory = $true)]
-        [SChannelSslProtocols]
+        [SChannelSslProtocols[]]
         $Protocol,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Enable')]
@@ -97,7 +97,7 @@ function Set-TlsProtocolRegistryValue
         $ConfirmPreference = 'None'
     }
 
-    foreach ($currentProtocol in $Protocol | Get-EnumFlags)
+    foreach ($currentProtocol in $Protocol)
     {
         $protocolKeyName = ConvertTo-TlsProtocolRegistryKeyName -Protocol $currentProtocol
         $target = Get-TlsProtocolTargetRegistryName -Client:$Client
