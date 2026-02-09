@@ -3,24 +3,16 @@
         Expands a [Flags] enum value into its individual flags.
 
     .DESCRIPTION
-        Accepts either an enum value or a numeric value with an explicit
-        enum type and returns the individual enum members that are set.
+        Accepts either an enum value returns the individual enum members that are set.
 
     .PARAMETER Value
         The enum value (or numeric value) to expand. Can be a pipeline input.
-
-    .PARAMETER EnumType
-        When passing a numeric value for `Value`, supply the enum `Type`.
 
     .OUTPUTS
         System.Enum
 
     .EXAMPLE
         Get-EnumFlags -Value ([SChannelSslProtocols]::Tls12 -bor [SChannelSslProtocols]::Tls13)
-
-    .EXAMPLE
-        # When you have an integer and know the enum type
-        Get-EnumFlags -Value 48 -EnumType ([type] 'SChannelSslProtocols')
 #>
 function Get-EnumFlags
 {
@@ -37,7 +29,7 @@ function Get-EnumFlags
 
         foreach ($flag in [Enum]::GetValues($enumType))
         {
-            if ([int]$flag -ne 0 -and $Value.HasFlag($flag))
+            if ([System.Int32] $flag -ne 0 -and $Value.HasFlag($flag))
             {
                 $flag
             }
