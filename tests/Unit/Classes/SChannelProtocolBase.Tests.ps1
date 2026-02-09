@@ -96,7 +96,7 @@ Describe 'SChannelProtocolBase\GetCurrentState()' -Tag 'HiddenMember' {
                             'Ssl2'
                             'Ssl3'
                             'Dtls1'
-                             'Tls'
+                            'Tls'
                         )
                         ProtocolsDefault   = @(
                             'Tls11'
@@ -452,6 +452,84 @@ Describe 'SChannelProtocolBase\Modify()' -Tag 'HiddenMember' {
                 } -Exactly -Times 1 -Scope It
 
                 Should -Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
+            }
+        }
+    }
+}
+
+Describe 'SChannelProtocolBase\AssertProperties()' -Tag 'HiddenMember' {
+    Context 'When validating properties' {
+        BeforeAll {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
+                $script:mockInstance = [SChannelProtocolBase] @{
+                    IsSingleInstance   = 'Yes'
+                    RebootWhenRequired = $true
+                }
+            }
+        }
+
+        It 'Should not throw when at least one protocol property is provided' {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
+                $properties = @{
+                    ProtocolsEnabled = @(
+                        'Tls12'
+                    )
+                }
+
+                $null = $script:mockInstance.AssertProperties($properties)
+            }
+        }
+
+        It 'Should throw when no protocol properties are provided' {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
+                $properties = @{
+                    RebootWhenRequired = $true
+                }
+
+                { $script:mockInstance.AssertProperties($properties) } | Should -Throw -ExpectedMessage '*DRC0050*'
+            }
+        }
+    }
+
+    Context 'When validating protocol properties' {
+        BeforeAll {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
+                $script:mockInstance = [SChannelProtocolBase] @{
+                    IsSingleInstance   = 'Yes'
+                    RebootWhenRequired = $true
+                }
+            }
+        }
+
+        Context 'When a protocol is specified in multiple properties' {
+            It 'Should throw the correct error' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $properties = @{
+                        ProtocolsEnabled  = @(
+                            'Tls12'
+                        )
+                        ProtocolsDisabled = @(
+                            'Tls12'
+                        )
+                        ProtocolsDefault = @(
+                            'Tls12'
+                        )
+                    }
+
+                    $errorRecord = Get-InvalidArgumentRecord -Message $script:mockInstance.LocalizedData.DuplicateProtocolValues -ArgumentName ($properties.Keys -join ',')
+
+                    { $script:mockInstance.AssertProperties($properties) } | Should -Throw -ExpectedMessage $errorRecord.Exception.Message
+                }
             }
         }
     }

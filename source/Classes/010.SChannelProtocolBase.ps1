@@ -136,7 +136,36 @@ class SChannelProtocolBase : ResourceBase
     #>
     hidden [void] AssertProperties([System.Collections.Hashtable] $properties)
     {
+        $protocolProperties = @(
+            'ProtocolsEnabled'
+            'ProtocolsDisabled'
+            'ProtocolsDefault'
+        )
+
         # Check that at least one of the protocol properties has values
-        # And that the values are not duplicated across the properties
+        $assertBoundParameterParameters = @{
+            BoundParameterList = $properties
+            RequiredParameter  = $protocolProperties
+            RequiredBehavior   = 'Any'
+        }
+
+        Assert-BoundParameter @assertBoundParameterParameters
+
+        # Get all assigned protocol properties.
+        $assignedProtocolProperty = $properties.Keys.Where({
+                $_ -in $protocolProperties
+            })
+
+        # Get all their values and group them to find duplicates.
+        $assignedPropertyValues = $assignedProtocolProperty.ForEach({
+                $properties[$_]
+            }) | Group-Object -NoElement
+
+        if ($assignedPropertyValues.Count -gt 1)
+        {
+            $errorMessage = $this.localizedData.DuplicateProtocolValues
+
+            New-ArgumentException -ArgumentName ($assignedProtocolProperty -join ',') -Message $errorMessage
+        }
     }
 }
