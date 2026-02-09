@@ -7,8 +7,6 @@
 [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', '')]
 param ()
 
-return
-
 BeforeDiscovery {
     try
     {
@@ -90,16 +88,16 @@ Describe 'SChannelProtocolClient\Get()' -Tag 'Get' {
                     $script:mockInstance = [SChannelProtocolClient] @{
                         IsSingleInstance   = 'Yes'
                         ProtocolsEnabled   = @(
-                            [SChannelSslProtocols]::Tls12,
-                            [SChannelSslProtocols]::Tls13
+                            'Tls12',
+                            'Tls13'
                         )
                         ProtocolsDisabled  = @(
-                            [SChannelSslProtocols]::Ssl2,
-                            [SChannelSslProtocols]::Ssl3
+                            'Ssl2',
+                            'Ssl3'
                         )
                         ProtocolsDefault   = @(
-                            [SChannelSslProtocols]::Tls,
-                            [SChannelSslProtocols]::Tls11
+                            'Tls',
+                            'Tls11'
                         )
                         RebootWhenRequired = $true
                     }
@@ -114,18 +112,18 @@ Describe 'SChannelProtocolClient\Get()' -Tag 'Get' {
                     $script:mockInstance |
                         Add-Member -Force -MemberType 'ScriptMethod' -Name 'GetCurrentState' -Value {
                             return @{
-                                ProtocolsEnabled  = @(
-                                    [SChannelSslProtocols]::Tls12,
-                                    [SChannelSslProtocols]::Tls13
-                                ) | Get-EnumFlags
-                                ProtocolsDisabled = @(
-                                    [SChannelSslProtocols]::Ssl2,
-                                    [SChannelSslProtocols]::Ssl3
-                                ) | Get-EnumFlags
-                                ProtocolsDefault  = @(
-                                    [SChannelSslProtocols]::Tls,
-                                    [SChannelSslProtocols]::Tls11
-                                ) | Get-EnumFlags
+                                ProtocolsEnabled  = [System.String[]] @(
+                                    'Tls12',
+                                    'Tls13'
+                                )
+                                ProtocolsDisabled = [System.String[]] @(
+                                    'Ssl2',
+                                    'Ssl3'
+                                )
+                                ProtocolsDefault  = [System.String[]] @(
+                                    'Tls',
+                                    'Tls11'
+                                )
                             }
                         } -PassThru |
                         Add-Member -Force -MemberType 'ScriptMethod' -Name 'Assert' -Value {
@@ -162,12 +160,12 @@ Describe 'SChannelProtocolClient\Get()' -Tag 'Get' {
                     $script:mockInstance = [SChannelProtocolClient] @{
                         IsSingleInstance   = 'Yes'
                         ProtocolsEnabled   = @(
-                            [SChannelSslProtocols]::Tls12,
-                            [SChannelSslProtocols]::Tls13
+                            'Tls12',
+                            'Tls13'
                         )
                         ProtocolsDisabled  = @(
-                            [SChannelSslProtocols]::Ssl2,
-                            [SChannelSslProtocols]::Ssl3
+                            'Ssl2',
+                            'Ssl3'
                         )
                         RebootWhenRequired = $true
                     }
@@ -182,15 +180,15 @@ Describe 'SChannelProtocolClient\Get()' -Tag 'Get' {
                     $script:mockInstance |
                         Add-Member -Force -MemberType 'ScriptMethod' -Name 'GetCurrentState' -Value {
                             return @{
-                                ProtocolsEnabled  = [SChannelSslProtocols] @(
-                                    [SChannelSslProtocols]::Tls12,
-                                    [SChannelSslProtocols]::Tls13
-                                ) | Get-EnumFlags
-                                ProtocolsDisabled = [SChannelSslProtocols] @(
-                                    [SChannelSslProtocols]::Ssl2,
-                                    [SChannelSslProtocols]::Ssl3
-                                ) | Get-EnumFlags
-                                ProtocolsDefault  = [SChannelSslProtocols] @() | Get-EnumFlags
+                                ProtocolsEnabled  = [System.String[]] @(
+                                    'Tls12',
+                                    'Tls13'
+                                )
+                                ProtocolsDisabled = [System.String[]] @(
+                                    'Ssl2',
+                                    'Ssl3'
+                                )
+                                ProtocolsDefault  = [System.String[]] @()
                             }
                         } -PassThru |
                         Add-Member -Force -MemberType 'ScriptMethod' -Name 'Assert' -Value {
@@ -229,16 +227,16 @@ Describe 'SChannelProtocolClient\Get()' -Tag 'Get' {
                     $script:mockInstance = [SChannelProtocolClient] @{
                         IsSingleInstance   = 'Yes'
                         ProtocolsEnabled   = @(
-                            [SChannelSslProtocols]::Tls13
+                            'Tls13'
                         )
                         ProtocolsDisabled  = @(
-                            [SChannelSslProtocols]::Ssl2,
-                            [SChannelSslProtocols]::Ssl3
+                            'Ssl2',
+                            'Ssl3'
                         )
                         ProtocolsDefault   = @(
-                            [SChannelSslProtocols]::Tls,
-                            [SChannelSslProtocols]::Tls11,
-                            [SChannelSslProtocols]::Tls12
+                            'Tls',
+                            'Tls11',
+                            'Tls12'
                         )
                         RebootWhenRequired = $true
                     }
@@ -253,18 +251,18 @@ Describe 'SChannelProtocolClient\Get()' -Tag 'Get' {
                     $script:mockInstance |
                         Add-Member -Force -MemberType 'ScriptMethod' -Name 'GetCurrentState' -Value {
                             return @{
-                                ProtocolsEnabled  = @(
-                                    [SChannelSslProtocols]::Tls12,
-                                    [SChannelSslProtocols]::Tls13
-                                ) | Get-EnumFlags
-                                ProtocolsDisabled = @(
-                                    [SChannelSslProtocols]::Ssl2,
-                                    [SChannelSslProtocols]::Ssl3
-                                ) | Get-EnumFlags
-                                ProtocolsDefault  = @(
-                                    [SChannelSslProtocols]::Tls,
-                                    [SChannelSslProtocols]::Tls11
-                                ) | Get-EnumFlags
+                                ProtocolsEnabled  = [System.String[]] @(
+                                    'Tls12',
+                                    'Tls13'
+                                )
+                                ProtocolsDisabled = [System.String[]] @(
+                                    'Ssl2',
+                                    'Ssl3'
+                                )
+                                ProtocolsDefault  = [System.String[]] @(
+                                    'Tls',
+                                    'Tls11'
+                                )
                             }
                         } -PassThru |
                         Add-Member -Force -MemberType 'ScriptMethod' -Name 'Assert' -Value {
@@ -289,10 +287,10 @@ Describe 'SChannelProtocolClient\Get()' -Tag 'Get' {
                     $currentState.ProtocolsDefault | Should -HaveCount 2
 
                     $currentState.Reasons | Should -HaveCount 2
-                    $currentState.Reasons.Code | Should -Contain 'SChannelProtocolClient:SChannelProtocolClient:ProtocolsDefault'
-                    $currentState.Reasons.Phrase | Should -Contain 'The property ProtocolsDefault should be [3,4,5], but was [3,4]'
                     $currentState.Reasons.Code | Should -Contain 'SChannelProtocolClient:SChannelProtocolClient:ProtocolsEnabled'
-                    $currentState.Reasons.Phrase | Should -Contain 'The property ProtocolsEnabled should be 6, but was [5,6]'
+                    $currentState.Reasons.Phrase | Should -Contain 'The property ProtocolsEnabled should be "Tls13", but was ["Tls12","Tls13"]'
+                    $currentState.Reasons.Code | Should -Contain 'SChannelProtocolClient:SChannelProtocolClient:ProtocolsDefault'
+                    $currentState.Reasons.Phrase | Should -Contain 'The property ProtocolsDefault should be ["Tls","Tls11","Tls12"], but was ["Tls","Tls11"]'
                 }
             }
         }
@@ -305,13 +303,13 @@ Describe 'SChannelProtocolClient\Get()' -Tag 'Get' {
                     $script:mockInstance = [SChannelProtocolClient] @{
                         IsSingleInstance   = 'Yes'
                         ProtocolsEnabled   = @(
-                            [SChannelSslProtocols]::Tls12,
-                            [SChannelSslProtocols]::Tls13
+                            'Tls12',
+                            'Tls13'
                         )
                         ProtocolsDisabled  = @()
                         ProtocolsDefault   = @(
-                            [SChannelSslProtocols]::Tls,
-                            [SChannelSslProtocols]::Tls11
+                            'Tls',
+                            'Tls11'
                         )
                         RebootWhenRequired = $true
                     }
@@ -326,17 +324,17 @@ Describe 'SChannelProtocolClient\Get()' -Tag 'Get' {
                     $script:mockInstance |
                         Add-Member -Force -MemberType 'ScriptMethod' -Name 'GetCurrentState' -Value {
                             return @{
-                                ProtocolsEnabled  = @(
-                                    [SChannelSslProtocols]::Tls12,
-                                    [SChannelSslProtocols]::Tls13
-                                ) | Get-EnumFlags
-                                ProtocolsDisabled = @(
-                                    [SChannelSslProtocols]::Ssl3
-                                ) | Get-EnumFlags
-                                ProtocolsDefault  = @(
-                                    [SChannelSslProtocols]::Tls,
-                                    [SChannelSslProtocols]::Tls11
-                                ) | Get-EnumFlags
+                                ProtocolsEnabled  = [System.String[]] @(
+                                    'Tls12',
+                                    'Tls13'
+                                )
+                                ProtocolsDisabled = [System.String[]] @(
+                                    'Ssl3'
+                                )
+                                ProtocolsDefault  = [System.String[]] @(
+                                    'Tls',
+                                    'Tls11'
+                                )
                             }
                         } -PassThru |
                         Add-Member -Force -MemberType 'ScriptMethod' -Name 'Assert' -Value {
@@ -362,7 +360,7 @@ Describe 'SChannelProtocolClient\Get()' -Tag 'Get' {
 
                     $currentState.Reasons | Should -HaveCount 1
                     $currentState.Reasons.Code | Should -Contain 'SChannelProtocolClient:SChannelProtocolClient:ProtocolsDisabled'
-                    $currentState.Reasons.Phrase | Should -Contain 'The property ProtocolsDisabled should be , but was 2'
+                    $currentState.Reasons.Phrase | Should -Contain 'The property ProtocolsDisabled should be , but was "Ssl3"'
                 }
             }
         }
@@ -377,16 +375,16 @@ Describe 'SChannelProtocolClient\Set()' -Tag 'Set' {
             $script:mockInstance = [SChannelProtocolClient] @{
                 IsSingleInstance   = 'Yes'
                 ProtocolsEnabled   = @(
-                    [SChannelSslProtocols]::Tls12,
-                    [SChannelSslProtocols]::Tls13
+                    'Tls12',
+                    'Tls13'
                 )
                 ProtocolsDisabled  = @(
-                    [SChannelSslProtocols]::Ssl2,
-                    [SChannelSslProtocols]::Ssl3
+                    'Ssl2',
+                    'Ssl3'
                 )
                 ProtocolsDefault   = @(
-                    [SChannelSslProtocols]::Tls,
-                    [SChannelSslProtocols]::Tls11
+                    'Tls',
+                    'Tls11'
                 )
                 RebootWhenRequired = $true
             } |
@@ -448,11 +446,11 @@ Describe 'SChannelProtocolClient\Set()' -Tag 'Set' {
                     @{
                         Property      = 'ProtocolsDisabled'
                         ExpectedValue = @(
-                            [SChannelSslProtocols]::Ssl2,
-                            [SChannelSslProtocols]::Ssl3
+                            'Ssl2',
+                            'Ssl3'
                         )
                         ActualValue   = @(
-                            [SChannelSslProtocols]::Ssl3
+                            'Ssl3'
                         )
                     }
                 )
@@ -480,16 +478,16 @@ Describe 'SChannelProtocolClient\Test()' -Tag 'Test' {
             $script:mockInstance = [SChannelProtocolClient] @{
                 IsSingleInstance   = 'Yes'
                 ProtocolsEnabled   = @(
-                    [SChannelSslProtocols]::Tls12,
-                    [SChannelSslProtocols]::Tls13
+                    'Tls12',
+                    'Tls13'
                 )
                 ProtocolsDisabled  = @(
-                    [SChannelSslProtocols]::Ssl2,
-                    [SChannelSslProtocols]::Ssl3
+                    'Ssl2',
+                    'Ssl3'
                 )
                 ProtocolsDefault   = @(
-                    [SChannelSslProtocols]::Tls,
-                    [SChannelSslProtocols]::Tls11
+                    'Tls',
+                    'Tls11'
                 )
                 RebootWhenRequired = $true
             }
@@ -543,11 +541,11 @@ Describe 'SChannelProtocolClient\Test()' -Tag 'Test' {
                     @{
                         Property      = 'PropertiesEnabled'
                         ExpectedValue = @(
-                            [SChannelSslProtocols]::Tls12,
-                            [SChannelSslProtocols]::Tls13
+                            'Tls12',
+                            'Tls13'
                         )
                         ActualValue   = @(
-                            [SChannelSslProtocols]::Tls12
+                            'Tls12'
                         )
                     }
                 )

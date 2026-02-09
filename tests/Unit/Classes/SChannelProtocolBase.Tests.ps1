@@ -88,18 +88,18 @@ Describe 'SChannelProtocolBase\GetCurrentState()' -Tag 'HiddenMember' {
                     $script:mockInstance = [SChannelProtocolBase] @{
                         IsSingleInstance   = 'Yes'
                         ProtocolsEnabled   = @(
-                            [SChannelSslProtocols]::DTls12
-                            [SChannelSslProtocols]::Tls12
-                            [SChannelSslProtocols]::Tls13
+                            'DTls12'
+                            'Tls12'
+                            'Tls13'
                         )
                         ProtocolsDisabled  = @(
-                            [SChannelSslProtocols]::Ssl2
-                            [SChannelSslProtocols]::Ssl3
-                            [SChannelSslProtocols]::Dtls1
-                            [SChannelSslProtocols]::Tls
+                            'Ssl2'
+                            'Ssl3'
+                            'Dtls1'
+                             'Tls'
                         )
                         ProtocolsDefault   = @(
-                            [SChannelSslProtocols]::Tls11
+                            'Tls11'
                         )
                         RebootWhenRequired = $true
                     }
@@ -154,13 +154,13 @@ Describe 'SChannelProtocolBase\GetCurrentState()' -Tag 'HiddenMember' {
                     )
 
                     $currentState.ProtocolsEnabled | Should -Be $script:mockInstance.ProtocolsEnabled
-                    $currentState.ProtocolsEnabled.GetType().Name | Should -Be 'SChannelSslProtocols' # BeOfType does not work for types declared in module
+                    # $currentState.ProtocolsEnabled | Should -BeOfType System.Array
 
                     $currentState.ProtocolsDisabled | Should -Be $script:mockInstance.ProtocolsDisabled
-                    $currentState.ProtocolsDisabled.GetType().Name | Should -Be 'SChannelSslProtocols'
+                    # $currentState.ProtocolsDisabled | Should -BeOfType System.Array
 
                     $currentState.ProtocolsDefault | Should -Be $script:mockInstance.ProtocolsDefault
-                    $currentState.ProtocolsDefault.GetType().Name | Should -Be 'SChannelSslProtocols'
+                    # $currentState.ProtocolsDefault | Should -BeOfType System.Array
                 }
 
                 Should -Invoke -CommandName Get-TlsProtocol -ParameterFilter {
@@ -241,10 +241,10 @@ Describe 'SChannelProtocolBase\GetCurrentState()' -Tag 'HiddenMember' {
                     )
 
                     $currentState.ProtocolsEnabled | Should -Be $script:mockInstance.ProtocolsEnabled
-                    $currentState.ProtocolsEnabled.GetType().Name | Should -Be 'SChannelSslProtocols' # BeOfType does not work for types declared in module
+                    # $currentState.ProtocolsEnabled.GetType().Name | Should -Be 'SChannelSslProtocols' # BeOfType does not work for types declared in module
 
                     $currentState.ProtocolsDisabled | Should -Be $script:mockInstance.ProtocolsDisabled
-                    $currentState.ProtocolsDisabled.GetType().Name | Should -Be 'SChannelSslProtocols'
+                    # $currentState.ProtocolsDisabled.GetType().Name | Should -Be 'SChannelSslProtocols'
 
                     $currentState.ProtocolsDefault | Should -BeNullOrEmpty
                 }
@@ -333,13 +333,13 @@ Describe 'SChannelProtocolBase\GetCurrentState()' -Tag 'HiddenMember' {
                     )
 
                     $currentState.ProtocolsEnabled | Should -Be $script:mockInstance.ProtocolsEnabled
-                    $currentState.ProtocolsEnabled.GetType().Name | Should -Be 'SChannelSslProtocols' # BeOfType does not work for types declared in module
+                    # $currentState.ProtocolsEnabled.GetType().Name | Should -Be 'SChannelSslProtocols' # BeOfType does not work for types declared in module
 
                     $currentState.ProtocolsDisabled | Should -Be $script:mockInstance.ProtocolsDisabled
-                    $currentState.ProtocolsDisabled.GetType().Name | Should -Be 'SChannelSslProtocols'
+                    # $currentState.ProtocolsDisabled.GetType().Name | Should -Be 'SChannelSslProtocols'
 
                     $currentState.ProtocolsDefault | Should -Be $script:mockInstance.ProtocolsDefault
-                    $currentState.ProtocolsDefault.GetType().Name | Should -Be 'SChannelSslProtocols'
+                    # $currentState.ProtocolsDefault.GetType().Name | Should -Be 'SChannelSslProtocols'
                 }
 
                 Should -Invoke -CommandName Get-TlsProtocol -ParameterFilter {

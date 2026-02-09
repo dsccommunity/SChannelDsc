@@ -12,15 +12,18 @@ class SChannelProtocolBase : ResourceBase
     $IsSingleInstance
 
     [DscProperty()]
-    [SChannelSslProtocols]
+    [ValidateSet('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13', 'Dtls1', 'Dtls12')]
+    [System.String[]]
     $ProtocolsEnabled
 
     [DscProperty()]
-    [SChannelSslProtocols]
+    [ValidateSet('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13', 'Dtls1', 'Dtls12')]
+    [System.String[]]
     $ProtocolsDisabled
 
     [DscProperty()]
-    [SChannelSslProtocols]
+    [ValidateSet('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13', 'Dtls1', 'Dtls12')]
+    [System.String[]]
     $ProtocolsDefault
 
     [DscProperty()]
@@ -56,7 +59,7 @@ class SChannelProtocolBase : ResourceBase
 
         if ($enabled)
         {
-            $currentState.ProtocolsEnabled = [SChannelSslProtocols] $enabled
+            $currentState.ProtocolsEnabled = [System.String[]] $enabled
         }
 
         $disabled = $getCurrentStateResult.Where({
@@ -65,7 +68,7 @@ class SChannelProtocolBase : ResourceBase
 
         if ($disabled)
         {
-            $currentState.ProtocolsDisabled = [SChannelSslProtocols] $disabled
+            $currentState.ProtocolsDisabled = [System.String[]] $disabled
         }
 
         $default = $getCurrentStateResult.Where({
@@ -74,7 +77,7 @@ class SChannelProtocolBase : ResourceBase
 
         if ($default)
         {
-            $currentState.ProtocolsDefault = [SChannelSslProtocols] $default
+            $currentState.ProtocolsDefault = [System.String[]] $default
         }
 
         return $currentState
