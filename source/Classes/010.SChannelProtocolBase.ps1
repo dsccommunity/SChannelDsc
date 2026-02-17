@@ -161,7 +161,7 @@ class SChannelProtocolBase : ResourceBase
                 $properties[$_]
             }) | Group-Object -NoElement
 
-        if ($assignedPropertyValues.Count -gt 1)
+        if ($assignedPropertyValues.Where({ $_.Count -gt 1 }))
         {
             $errorMessage = $this.localizedData.DuplicateProtocolValues
 

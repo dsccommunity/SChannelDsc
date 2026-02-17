@@ -521,7 +521,7 @@ Describe 'SChannelProtocolBase\AssertProperties()' -Tag 'HiddenMember' {
                         ProtocolsDisabled = @(
                             'Tls12'
                         )
-                        ProtocolsDefault = @(
+                        ProtocolsDefault  = @(
                             'Tls12'
                         )
                     }
@@ -529,6 +529,22 @@ Describe 'SChannelProtocolBase\AssertProperties()' -Tag 'HiddenMember' {
                     $errorRecord = Get-InvalidArgumentRecord -Message $script:mockInstance.LocalizedData.DuplicateProtocolValues -ArgumentName ($properties.Keys -join ',')
 
                     { $script:mockInstance.AssertProperties($properties) } | Should -Throw -ExpectedMessage $errorRecord.Exception.Message
+                }
+            }
+        }
+
+        Context 'When a protocol is specified in one property' {
+            It 'Should not throw an error' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $properties = @{
+                        ProtocolsEnabled = @(
+                            'Tls12'
+                        )
+                    }
+
+                    $null = $script:mockInstance.AssertProperties($properties)
                 }
             }
         }
