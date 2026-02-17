@@ -203,7 +203,7 @@ stages:
             displayName: 'Run Integration Test'
             inputs:
               filePath: './build.ps1'
-              arguments: "-Tasks test -PesterScript 'tests/Integration/Resources/DSC_*.ps1' -CodeCoverageThreshold 0"
+              arguments: "-Tasks test -PesterScript 'tests/Integration/Resources/DSC_*.Integration.Tests.ps1' -CodeCoverageThreshold 0"
               pwsh: false
 
           - task: PublishTestResults@2
