@@ -3,7 +3,7 @@
 
 .VERSION 1.2.0
 
-.GUID 80d306fa-8bd4-4a8d-9f7a-bf40df95e661
+.GUID 89abcdef-0123-4567-89ab-cdef01234567
 
 .AUTHOR DSC Community
 
@@ -13,7 +13,7 @@
 
 .TAGS
 
-.LICENSEURI https://github.com/dsccommunity/SChannelDsc/blob/mainICENSE
+.LICENSEURI https://github.com/dsccommunity/SChannelDsc/blob/main/LICENSE
 
 .PROJECTURI https://github.com/dsccommunity/SChannelDsc
 

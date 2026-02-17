@@ -3,7 +3,7 @@
 
 .VERSION 1.2.0
 
-.GUID 80d306fa-8bd4-4a8d-9f7a-bf40df95e661
+.GUID a1b2c3d4-5e6f-7081-92a3-bcdef0123456
 
 .AUTHOR DSC Community
 
@@ -39,21 +39,21 @@ Updated author, copyright notice, and URLs.
 
 #>
 
-    Configuration Example
+Configuration Example
+{
+    param ()
+
+    Import-DscResource -ModuleName SChannelDsc
+
+    node localhost
     {
-        param ()
-
-        Import-DscResource -ModuleName SChannelDsc
-
-        node localhost
+        SChannelSettings 'ConfigureSChannel'
         {
-            SChannelSettings 'ConfigureSChannel'
-            {
-                IsSingleInstance                = 'Yes'
-                TLS12State                      = 'Enabled'
-                DiffieHellmanMinClientKeySize   = 4096
-                DiffieHellmanMinServerKeySize   = 4096
-                EnableFIPSAlgorithmPolicy       = $false
-            }
+            IsSingleInstance              = 'Yes'
+            TLS12State                    = 'Enabled'
+            DiffieHellmanMinClientKeySize = 4096
+            DiffieHellmanMinServerKeySize = 4096
+            EnableFIPSAlgorithmPolicy     = $false
         }
     }
+}

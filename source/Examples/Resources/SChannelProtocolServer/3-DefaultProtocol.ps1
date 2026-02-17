@@ -3,7 +3,7 @@
 
 .VERSION 1.2.0
 
-.GUID 80d306fa-8bd4-4a8d-9f7a-bf40df95e661
+.GUID d4e5f607-0819-2a3b-4c5d-ef0123456789
 
 .AUTHOR DSC Community
 
@@ -46,7 +46,7 @@ Configuration Example
     Import-DscResource -ModuleName SChannelDsc
 
     node localhost {
-        SChannelProtocolServer DisableSSLv3
+        SChannelProtocolServer ResetSSLv3
         {
             IsSingleInstance = 'Yes'
             ProtocolsDefault = 'Ssl3'
