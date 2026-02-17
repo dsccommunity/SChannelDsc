@@ -17,11 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Test-TlsProtocol
 - Enum
   - SChannelSslProtocols
-- BREAKING: Converted Protocol to class-based resource [#50](https://github.com/dsccommunity/SChannelDsc/issues/50).
+- BREAKING: Converted Protocol to class-based resource [issue #50](https://github.com/dsccommunity/SChannelDsc/issues/50).
   - This now consists of two resources
     - SChannelProtocolClient
     - SChannelProtocolServer
-  - Add DTLS support [#37](https://github.com/dsccommunity/SChannelDsc/issues/37).
+  - Add DTLS support [issue #37](https://github.com/dsccommunity/SChannelDsc/issues/37).
 
 ### Changed
 
