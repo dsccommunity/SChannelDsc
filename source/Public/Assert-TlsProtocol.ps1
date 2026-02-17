@@ -77,11 +77,11 @@ function Assert-TlsProtocol
     {
         if ($Disabled)
         {
-            $message = ($script:localizedData.Assert_TlsProtocol_NotDisabled -f ($Protocol -join ', '))
+            $message = ($script:localizedData.Assert_TlsProtocol_NotDisabled -f $Protocol)
         }
         else
         {
-            $message = ($script:localizedData.Assert_TlsProtocol_NotEnabled -f ($Protocol -join ', '))
+            $message = ($script:localizedData.Assert_TlsProtocol_NotEnabled -f $Protocol)
         }
 
         $exception = New-Exception -Message $message
