@@ -1,9 +1,7 @@
 <#
     .SYNOPSIS
         The localized resource strings in English (en-US) for the
-        resource SChannelProtocolBase. This file should only contain
-        localized strings for private functions, public command, and
-        classes (that are not a DSC resource).
+        resource SChannelProtocolBase.
 #>
 
 ConvertFrom-StringData @'
