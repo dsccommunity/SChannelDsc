@@ -84,7 +84,7 @@ Describe "$($script:dscResourceName)_Integration" {
         }
 
         AfterEach {
-            Wait-ForIdleLcm -Clear
+            Wait-ForIdleLcm
         }
 
         It 'Should compile and apply the MOF without throwing' {

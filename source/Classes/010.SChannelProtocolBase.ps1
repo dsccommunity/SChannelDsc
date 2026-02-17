@@ -53,31 +53,31 @@ class SChannelProtocolBase : ResourceBase
 
         $getCurrentStateResult = Get-TlsProtocol -Client:$this.ClientSide
 
-        $enabled = $getCurrentStateResult.Where({
+        $enabledProtocols = $getCurrentStateResult.Where({
                 $_.Enabled -eq 1
             }).Protocol
 
-        if ($enabled)
+        if ($enabledProtocols)
         {
-            $currentState.ProtocolsEnabled = [System.String[]] $enabled
+            $currentState.ProtocolsEnabled = [System.String[]] $enabledProtocols
         }
 
-        $disabled = $getCurrentStateResult.Where({
+        $disabledProtocols = $getCurrentStateResult.Where({
                 $_.Enabled -eq 0
             }).Protocol
 
-        if ($disabled)
+        if ($disabledProtocols)
         {
-            $currentState.ProtocolsDisabled = [System.String[]] $disabled
+            $currentState.ProtocolsDisabled = [System.String[]] $disabledProtocols
         }
 
-        $default = $getCurrentStateResult.Where({
+        $defaultProtocols = $getCurrentStateResult.Where({
                 $null -eq $_.Enabled
             }).Protocol
 
-        if ($default)
+        if ($defaultProtocols)
         {
-            $currentState.ProtocolsDefault = [System.String[]] $default
+            $currentState.ProtocolsDefault = [System.String[]] $defaultProtocols
         }
 
         return $currentState
