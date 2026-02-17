@@ -3,7 +3,7 @@
         Expands a [Flags] enum value into its individual flags.
 
     .DESCRIPTION
-        Accepts either an enum value returns the individual enum members that are set.
+        Accepts an enum value and returns the individual enum members that are set.
 
     .PARAMETER Value
         The enum value (or numeric value) to expand. Can be a pipeline input.
