@@ -119,7 +119,7 @@ Describe "$($script:dscResourceName)_Integration" {
             }
 
             $resourceCurrentState.IsSingleInstance | Should -Be 'Yes'
-            $Should
+            &$Should
             $resourceCurrentState.RebootWhenRequired | Should -BeFalse
         }
 
