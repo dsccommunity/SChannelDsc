@@ -1,4 +1,4 @@
-[System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', '')]
+[System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'Suppressing this rule because Script Analyzer does not understand Pester syntax.')]
 param ()
 
 BeforeDiscovery {
@@ -56,7 +56,7 @@ Describe 'SChannelReason' -Tag 'SChannelReason' {
         }
     }
 
-    Context 'When setting an reading values' {
+    Context 'When setting and reading values' {
         It 'Should be able to set value in instance' {
             $script:mockSChannelReasonInstance = InModuleScope -ScriptBlock {
                 $SChannelReasonInstance = [SChannelReason]::new()
@@ -70,7 +70,7 @@ Describe 'SChannelReason' -Tag 'SChannelReason' {
 
         It 'Should be able read the values from instance' {
             $mockSChannelReasonInstance.Code | Should -Be 'SChannelReason:SChannelReason:Ensure'
-            $mockSChannelReasonInstance.Phrase = 'The property Ensure should be "Present", but was "Absent"'
+            $mockSChannelReasonInstance.Phrase | Should -Be 'The property Ensure should be "Present", but was "Absent"'
         }
     }
 }

@@ -539,7 +539,7 @@ Describe 'SChannelProtocolClient\Test()' -Tag 'Test' {
 
                 $script:mockInstance.PropertiesNotInDesiredState = @(
                     @{
-                        Property      = 'PropertiesEnabled'
+                        Property      = 'ProtocolsEnabled'
                         ExpectedValue = @(
                             'Tls12',
                             'Tls13'
