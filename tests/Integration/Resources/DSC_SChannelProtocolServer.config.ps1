@@ -13,6 +13,12 @@ else
         AllNodes = @(
             @{
                 NodeName           = 'localhost'
+                ProtocolsEnabled   = @(
+                    'Tls12'
+                    'Tls13'
+                )
+                ProtocolsDisabled  = 'Tls11'
+                ProtocolsDefault   = 'Tls11', 'Tls13'
                 RebootWhenRequired = $false
             }
         )
@@ -28,10 +34,7 @@ Configuration DSC_SChannelProtocolServer_EnableTls12And13
         SChannelProtocolServer 'Integration_Test'
         {
             IsSingleInstance   = 'Yes'
-            ProtocolsEnabled   = @(
-                'Tls12'
-                'Tls13'
-            )
+            ProtocolsEnabled   = $Node.ProtocolsEnabled
             RebootWhenRequired = $Node.RebootWhenRequired
         }
     }
@@ -46,7 +49,7 @@ Configuration DSC_SChannelProtocolServer_DisableTls11
         SChannelProtocolServer 'Integration_Test'
         {
             IsSingleInstance   = 'Yes'
-            ProtocolsDisabled  = 'Tls11'
+            ProtocolsDisabled  = $Node.ProtocolsDisabled
             RebootWhenRequired = $Node.RebootWhenRequired
         }
     }
@@ -61,7 +64,7 @@ Configuration DSC_SChannelProtocolServer_ResetToDefault
         SChannelProtocolServer 'Integration_Test'
         {
             IsSingleInstance   = 'Yes'
-            ProtocolsDefault   = 'Tls11', 'Tls13'
+            ProtocolsDefault   = $Node.ProtocolsDefault
             RebootWhenRequired = $Node.RebootWhenRequired
         }
     }

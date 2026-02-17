@@ -72,7 +72,7 @@ Describe "$($script:dscResourceName)_Integration" {
             @{
                 Name   = "$($script:dscResourceName)_ResetToDefault"
                 Should = {
-                    $resourceCurrentState.ProtocolsDefault  | Should -Be $ConfigurationData.AllNodes.ProtocolsDefault
+                    $resourceCurrentState.ProtocolsDefault | Should -Be $ConfigurationData.AllNodes.ProtocolsDefault
                 }
             }
         )
