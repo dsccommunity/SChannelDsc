@@ -1,6 +1,26 @@
 <#
+    .SYNOPSIS
+        Base class for SChannel protocol resources.
 
-  .PARAMETER Reasons
+    .DESCRIPTION
+        Base class for SChannel protocol resources.
+
+    .PARAMETER IsSingleInstance
+        Specifies that the resource is a single instance resource.
+
+    .PARAMETER ProtocolsEnabled
+        The protocols that should be enabled.
+
+    .PARAMETER ProtocolsDisabled
+        The protocols that should be disabled.
+
+    .PARAMETER ProtocolsDefault
+        The protocols that should be in default state.
+
+    .PARAMETER RebootWhenRequired
+        Reboot the machine if required to apply the changes.
+
+    .PARAMETER Reasons
         Returns the reason a property is not in desired state.
 #>
 
