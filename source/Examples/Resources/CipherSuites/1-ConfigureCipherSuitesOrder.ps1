@@ -46,7 +46,8 @@ Configuration Example
 
     Import-DscResource -ModuleName SChannelDsc
 
-    node localhost {
+    node localhost
+    {
         CipherSuites ConfigureCipherSuites
         {
             IsSingleInstance  = 'Yes'

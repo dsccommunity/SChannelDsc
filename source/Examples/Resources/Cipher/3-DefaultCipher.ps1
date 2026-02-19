@@ -45,7 +45,8 @@ Configuration Example
 
     Import-DscResource -ModuleName SChannelDsc
 
-    node localhost {
+    node localhost
+    {
         Cipher DisableAES128
         {
             Cipher = 'AES 128/128'

@@ -45,7 +45,8 @@ Configuration Example
 
     Import-DscResource -ModuleName SChannelDsc
 
-    node localhost {
+    node localhost
+    {
         SChannelProtocolServer DisableSSLv3
         {
             IsSingleInstance  = 'Yes'
