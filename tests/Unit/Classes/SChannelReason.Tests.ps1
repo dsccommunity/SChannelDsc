@@ -26,7 +26,7 @@ BeforeDiscovery {
 BeforeAll {
     $script:dscModuleName = 'SChannelDsc'
 
-    Import-Module -Name $script:dscModuleName
+    Import-Module -Name $script:dscModuleName -ErrorAction 'Stop'
 
     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:dscModuleName
     $PSDefaultParameterValues['Mock:ModuleName'] = $script:dscModuleName
