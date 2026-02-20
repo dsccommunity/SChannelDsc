@@ -14,7 +14,13 @@
     ModuleBuilder                  = 'latest'
     ChangelogManagement            = 'latest'
     Sampler                        = 'latest'
-    'Sampler.GitHubTasks'          = 'latest'
+    'Sampler.GitHubTasks'          = @{
+        Version    = 'latest'
+        Parameters = @{
+            AllowPrerelease = $true
+        }
+    }
+    
     MarkdownLinkCheck              = 'latest'
     'DscResource.Test'             = 'latest'
     xDscResourceDesigner           = 'latest'
