@@ -111,37 +111,38 @@ class SChannelProtocolBase : ResourceBase
     {
         $protocolsUpdated = $false
 
-        if ($properties.ContainsKey('ProtocolsEnabled'))
+        # Modify needs to check if protocols are missing from Enabled/Disabled/Default, they are added via the correct command.
+        # If a protocol is incorrectly configured it needs to be removed via Disable or Default.
+
+        # $protocolsToEnable = Expected not in Actual
+        # $protocolsToDisable = Expected not in Actual
+        # $protocolsToDefault = Default Expected not in Actual + Enabled Actual not in Expected + Disabled Actual not in Expected
+
+        $protocolEnabledState = $this.PropertiesNotInDesiredState.Where({ $_.Property -eq 'ProtocolsEnabled' })
+        $protocolsToEnable = $protocolEnabledState.ExpectedValue.Where({ $_ -notin $protocolEnabledState.ActualValue })
+        if ($protocolsToEnable.Count -gt 0)
         {
-            $protocolsToEnable = $this.PropertiesNotInDesiredState.Where({ $_.Property -eq 'ProtocolsEnabled' })
-            $protocolsToUpdate = $protocolsToEnable.ExpectedValue.Where({ $_ -notin $protocolsToEnable.ActualValue })
-            if ($protocolsToUpdate.Count -gt 0)
-            {
-                Enable-TlsProtocol -Protocol $protocolsToUpdate -Client:$this.ClientSide
-                $protocolsUpdated = $true
-            }
+            Enable-TlsProtocol -Protocol $protocolsToEnable -Client:$this.ClientSide
+            $protocolsUpdated = $true
         }
 
-        if ($properties.ContainsKey('ProtocolsDisabled'))
+        $protocolDisabledState = $this.PropertiesNotInDesiredState.Where({ $_.Property -eq 'ProtocolsDisabled' })
+        $protocolsToDisable = $protocolDisabledState.ExpectedValue.Where({ $_ -notin $protocolDisabledState.ActualValue })
+        if ($protocolsToDisable.Count -gt 0)
         {
-            $protocolsToDisable = $this.PropertiesNotInDesiredState.Where({ $_.Property -eq 'ProtocolsDisabled' })
-            $protocolsToUpdate = $protocolsToDisable.ExpectedValue.Where({ $_ -notin $protocolsToDisable.ActualValue })
-            if ($protocolsToUpdate.Count -gt 0)
-            {
-                Disable-TlsProtocol -Protocol $protocolsToUpdate -Client:$this.ClientSide
-                $protocolsUpdated = $true
-            }
+            Disable-TlsProtocol -Protocol $protocolsToDisable -Client:$this.ClientSide
+            $protocolsUpdated = $true
         }
 
-        if ($properties.ContainsKey('ProtocolsDefault'))
+        $protocolDefaultState = $this.PropertiesNotInDesiredState.Where({ $_.Property -eq 'ProtocolsDefault' })
+        $protocolsToDefault = $protocolDefaultState.ExpectedValue.Where({ $_ -notin $protocolDefaultState.ActualValue })
+        $protocolsToDefault += $protocolEnabledState.ActualValue.Where({ $_ -notin $protocolEnabledState.ExpectedValue })
+        $protocolsToDefault += $protocolDisabledState.ActualValue.Where({ $_ -notin $protocolDisabledState.ExpectedValue })
+
+        if ($protocolsToDefault.Count -gt 0)
         {
-            $protocolsToDefault = $this.PropertiesNotInDesiredState.Where({ $_.Property -eq 'ProtocolsDefault' })
-            $protocolsToUpdate = $protocolsToDefault.ExpectedValue.Where({ $_ -notin $protocolsToDefault.ActualValue })
-            if ($protocolsToUpdate.Count -gt 0)
-            {
-                Reset-TlsProtocol -Protocol $protocolsToUpdate -Client:$this.ClientSide
-                $protocolsUpdated = $true
-            }
+            Reset-TlsProtocol -Protocol $protocolsToDefault -Client:$this.ClientSide
+            $protocolsUpdated = $true
         }
 
         if ($protocolsUpdated -and $this.RebootWhenRequired)
