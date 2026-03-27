@@ -32,17 +32,17 @@ class SChannelProtocolBase : ResourceBase
     $IsSingleInstance
 
     [DscProperty()]
-    [ValidateSet('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13', 'Dtls1', 'Dtls12')]
+    [ValidateSet('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13', 'DTls1', 'DTls12')]
     [System.String[]]
     $ProtocolsEnabled
 
     [DscProperty()]
-    [ValidateSet('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13', 'Dtls1', 'Dtls12')]
+    [ValidateSet('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13', 'DTls1', 'DTls12')]
     [System.String[]]
     $ProtocolsDisabled
 
     [DscProperty()]
-    [ValidateSet('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13', 'Dtls1', 'Dtls12')]
+    [ValidateSet('Ssl2', 'Ssl3', 'Tls', 'Tls11', 'Tls12', 'Tls13', 'DTls1', 'DTls12')]
     [System.String[]]
     $ProtocolsDefault
 
@@ -150,7 +150,7 @@ class SChannelProtocolBase : ResourceBase
         if ($properties.ContainsKey('ProtocolsDefault'))
         {
             $protocolDefaultState = $this.PropertiesNotInDesiredState.Where({ $_.Property -eq 'ProtocolsDefault' })
-            $protocolsToDefault = $protocolDefaultState.ExpectedValue.Where({ $_ -notin $protocolDefaultState.ActualValue })
+            $protocolsToDefault = $protocolDefaultState.ActualValue.Where({ $_ -notin $protocolDefaultState.ExpectedValue })
 
             if ($protocolsToDefault.Count -gt 0)
             {
