@@ -167,9 +167,57 @@ stages:
               bash <(curl -s https://codecov.io/bash) -f "./$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml"
             displayName: 'Publish Code Coverage to Codecov.io'
 
+  - stage: Integration_Test
+    displayName: 'Integration Test'
+    dependsOn: Build
+    jobs:
+      - job: Test_Integration
+        displayName: 'Integration'
+        strategy:
+          matrix:
+            Windows Server 2022:
+              vmImage: 'windows-2022'
+            Windows Server 2025:
+              vmImage: 'windows-2025'
+        pool:
+          vmImage: $(vmImage)
+        timeoutInMinutes: '0'
+        steps:
+          - task: DownloadPipelineArtifact@2
+            displayName: 'Download Pipeline Artifact'
+            inputs:
+              buildType: 'current'
+              artifactName: $(buildArtifactName)
+              targetPath: '$(Build.SourcesDirectory)/$(buildArtifactName)'
+
+          - task: PowerShell@2
+            name: configureWinRM
+            displayName: 'Configure WinRM'
+            inputs:
+              targetType: 'inline'
+              script: 'winrm quickconfig -quiet'
+              pwsh: false
+
+          - task: PowerShell@2
+            name: test
+            displayName: 'Run Integration Test'
+            inputs:
+              filePath: './build.ps1'
+              arguments: "-Tasks test -PesterScript 'tests/Integration/Resources/DSC_*.Integration.Tests.ps1' -CodeCoverageThreshold 0"
+              pwsh: false
+
+          - task: PublishTestResults@2
+            displayName: 'Publish Test Results'
+            inputs:
+              testResultsFormat: 'NUnit'
+              testResultsFiles: '$(buildFolderName)/$(testResultFolderName)/NUnit*.xml'
+              testRunTitle: 'Integration $(vmImage)'
+            condition: succeededOrFailed()
+
   - stage: Deploy
     dependsOn:
       - Quality_Test_and_Unit_Test
+      - Integration_Test
     condition: |
       and(
         succeeded(),

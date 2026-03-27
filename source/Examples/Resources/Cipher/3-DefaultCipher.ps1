@@ -3,7 +3,7 @@
 
 .VERSION 1.2.0
 
-.GUID 80d306fa-8bd4-4a8d-9f7a-bf40df95e661
+.GUID 1ccd4fa4-c808-4965-a48a-04c296d2d8a7
 
 .AUTHOR DSC Community
 
@@ -45,7 +45,8 @@ Configuration Example
 
     Import-DscResource -ModuleName SChannelDsc
 
-    node localhost {
+    node localhost
+    {
         Cipher DisableAES128
         {
             Cipher = 'AES 128/128'

@@ -14,13 +14,19 @@
     ModuleBuilder                  = 'latest'
     ChangelogManagement            = 'latest'
     Sampler                        = 'latest'
-    'Sampler.GitHubTasks'          = 'latest'
+    'Sampler.GitHubTasks'          = @{
+        Version    = 'latest'
+        Parameters = @{
+            AllowPrerelease = $true
+        }
+    }
     MarkdownLinkCheck              = 'latest'
     'DscResource.Test'             = 'latest'
     xDscResourceDesigner           = 'latest'
 
     # Build dependencies needed for using the module
     'DscResource.Common'           = 'latest'
+    'DscResource.Base'             = 'latest'
 
     # Analyzer rules
     'DscResource.AnalyzerRules'    = 'latest'

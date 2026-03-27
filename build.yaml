@@ -87,6 +87,11 @@ NestedModule:
     Path: ./output/RequiredModules/DscResource.Common
     AddToManifest: false
     Exclude: PSGetModuleInfo.xml
+  DscResource.Base:
+    CopyOnly: true
+    Path: ./output/RequiredModules/DscResource.Base
+    AddToManifest: false
+    Exclude: PSGetModuleInfo.xml
   SChannelDsc.Common:
     Prefix: prefix.ps1
     VersionedOutputDirectory: false
@@ -115,6 +120,7 @@ Pester:
       OutputEncoding: ascii
   ExcludeFromCodeCoverage:
     - Modules/DscResource.Common
+    - Modules/DscResource.Base
 
 ####################################################
 #           Code Coverage Configuration            #
@@ -148,6 +154,7 @@ DscTest:
       - output
     ExcludeModuleFile:
       - Modules/DscResource.Common
+      - Modules/DscResource.Base
       # Must exclude built module file because it should not be tested like MOF-based resources
       - SChannelDsc.psm1
     MainGitBranch: main

@@ -3,7 +3,7 @@
 
 .VERSION 1.2.0
 
-.GUID 80d306fa-8bd4-4a8d-9f7a-bf40df95e661
+.GUID 2a633b69-cac0-4c26-9940-501a6ed07728
 
 .AUTHOR DSC Community
 
@@ -13,7 +13,7 @@
 
 .TAGS
 
-.LICENSEURI https://github.com/dsccommunity/SChannelDsc/blob/mainICENSE
+.LICENSEURI https://github.com/dsccommunity/SChannelDsc/blob/main/LICENSE
 
 .PROJECTURI https://github.com/dsccommunity/SChannelDsc
 
@@ -45,11 +45,12 @@ Configuration Example
 
     Import-DscResource -ModuleName SChannelDsc
 
-    node localhost {
-        Protocol DisableSSLv3
+    node localhost
+    {
+        SChannelProtocolServer DisableSSLv3
         {
-            Protocol = 'SSL 3.0'
-            State    = 'Disabled'
+            IsSingleInstance  = 'Yes'
+            ProtocolsDisabled = 'Ssl3'
         }
     }
 }

@@ -3,7 +3,7 @@
 
 .VERSION 1.2.0
 
-.GUID 80d306fa-8bd4-4a8d-9f7a-bf40df95e661
+.GUID cd2f991d-7639-46fb-9746-410e334fed5f
 
 .AUTHOR DSC Community
 
@@ -35,8 +35,7 @@ Updated author, copyright notice, and URLs.
 <#
 
 .DESCRIPTION
- This example shows how to enable the SSL v3.0 protocol,
- including the client side configuration (outbound).
+ This example shows how to enable the SSL v3.0 protocol.
 
 #>
 
@@ -46,12 +45,12 @@ Configuration Example
 
     Import-DscResource -ModuleName SChannelDsc
 
-    node localhost {
-        Protocol EnableSSLv3
+    node localhost
+    {
+        SChannelProtocolClient EnableSSLv3
         {
-            Protocol          = 'SSL 3.0'
-            IncludeClientSide = $true
-            State             = 'Enabled'
+            IsSingleInstance = 'Yes'
+            ProtocolsEnabled = 'Ssl3'
         }
     }
 }

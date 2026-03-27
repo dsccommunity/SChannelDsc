@@ -66,7 +66,7 @@ function Enable-TlsProtocol
     param
     (
         [Parameter(Mandatory = $true)]
-        [SChannelSslProtocols[]]
+        [SChannelSslProtocols]
         $Protocol,
 
         [Parameter()]

@@ -3,7 +3,7 @@
 
 .VERSION 1.2.0
 
-.GUID 80d306fa-8bd4-4a8d-9f7a-bf40df95e661
+.GUID ff3180b6-a198-4180-8c5a-e4b2d78c4325
 
 .AUTHOR DSC Community
 
@@ -45,7 +45,8 @@ Configuration Example
 
     Import-DscResource -ModuleName SChannelDsc
 
-    node localhost {
+    node localhost
+    {
         KeyExchangeAlgorithm DisableECDH
         {
             KeyExchangeAlgorithm = 'ECDH'

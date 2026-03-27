@@ -43,7 +43,7 @@ Describe 'Disable-TlsProtocol' -Tag 'Public' {
     It 'Should have the correct parameters in parameter set <ExpectedParameterSetName>' -ForEach @(
         @{
             ExpectedParameterSetName = '__AllParameterSets'
-            ExpectedParameters       = '[-Protocol] <SChannelSslProtocols[]> [-Client] [-SetDisabledByDefault] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]'
+            ExpectedParameters       = '[-Protocol] <SChannelSslProtocols> [-Client] [-SetDisabledByDefault] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]'
         }
     ) {
         $result = (Get-Command -Name 'Disable-TlsProtocol').ParameterSets |
@@ -103,7 +103,6 @@ Describe 'Disable-TlsProtocol' -Tag 'Public' {
             ) -Force
 
             Should -Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {
-                $Protocol.Count -eq 2 -and
                 $Disable -eq $true
             } -Exactly -Times 1 -Scope It
         }
@@ -120,10 +119,10 @@ Describe 'Disable-TlsProtocol' -Tag 'Public' {
             $parameterInfo.Attributes.Mandatory | Should -BeTrue
         }
 
-        It 'Should have Protocol declared as an array type' {
+        It 'Should have Protocol declared as an enum type' {
             $parameterInfo = $commandInfo.Parameters['Protocol']
 
-            $parameterInfo.ParameterType.IsArray | Should -BeTrue
+            $parameterInfo.ParameterType.IsEnum | Should -BeTrue
         }
 
         It 'Should have Client as a non-mandatory parameter' {

@@ -64,7 +64,7 @@ function Test-TlsProtocol
     param
     (
         [Parameter(Mandatory = $true)]
-        [SChannelSslProtocols[]]
+        [SChannelSslProtocols]
         $Protocol,
 
         [Parameter()]
@@ -76,7 +76,7 @@ function Test-TlsProtocol
         $Disabled
     )
 
-    foreach ($currentProtocol in $Protocol)
+    foreach ($currentProtocol in $Protocol | Get-EnumFlags)
     {
         $regPath = Get-TlsProtocolRegistryPath -Protocol $currentProtocol -Client:$Client
         $protocolEnabled = Get-RegistryPropertyValue -Path $regPath -Name 'Enabled' -ErrorAction SilentlyContinue

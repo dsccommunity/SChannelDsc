@@ -3,7 +3,7 @@
 
 .VERSION 1.2.0
 
-.GUID 80d306fa-8bd4-4a8d-9f7a-bf40df95e661
+.GUID 257ca6f7-d225-4393-b6da-8c0f512ed224
 
 .AUTHOR DSC Community
 
@@ -45,7 +45,8 @@ Configuration Example
 
     Import-DscResource -ModuleName SChannelDsc
 
-    node localhost {
+    node localhost
+    {
         Hash DisableMD5
         {
             Hash  = 'MD5'

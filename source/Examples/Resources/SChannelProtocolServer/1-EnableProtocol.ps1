@@ -3,7 +3,7 @@
 
 .VERSION 1.2.0
 
-.GUID 80d306fa-8bd4-4a8d-9f7a-bf40df95e661
+.GUID 8479897f-a592-423d-82c9-e6f98a6407eb
 
 .AUTHOR DSC Community
 
@@ -45,11 +45,12 @@ Configuration Example
 
     Import-DscResource -ModuleName SChannelDsc
 
-    node localhost {
-        Protocol EnableSSLv3
+    node localhost
+    {
+        SChannelProtocolServer EnableSSLv3
         {
-            Protocol = 'SSL 3.0'
-            State    = 'Enabled'
+            IsSingleInstance = 'Yes'
+            ProtocolsEnabled = 'Ssl3'
         }
     }
 }

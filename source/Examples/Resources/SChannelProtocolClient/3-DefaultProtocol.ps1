@@ -3,7 +3,7 @@
 
 .VERSION 1.2.0
 
-.GUID f5b2f1b4-af90-401a-8bc6-495b489e035d
+.GUID 5e62b413-cece-4ef3-bc47-d3c9fd072f8a
 
 .AUTHOR DSC Community
 
@@ -35,7 +35,7 @@ Updated author, copyright notice, and URLs.
 <#
 
 .DESCRIPTION
- This example shows how to reset the MD5 hash to the OS default.
+ This example shows how to reset the SSL v3.0 protocol to the OS default.
 
 #>
 
@@ -47,10 +47,10 @@ Configuration Example
 
     node localhost
     {
-        Hash DisableMD5
+        SChannelProtocolClient ResetSSLv3
         {
-            Hash  = 'MD5'
-            State = 'Default'
+            IsSingleInstance = 'Yes'
+            ProtocolsDefault = 'Ssl3'
         }
     }
 }

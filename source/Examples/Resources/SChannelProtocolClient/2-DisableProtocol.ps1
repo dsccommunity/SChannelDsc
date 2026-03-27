@@ -3,7 +3,7 @@
 
 .VERSION 1.2.0
 
-.GUID 80d306fa-8bd4-4a8d-9f7a-bf40df95e661
+.GUID f52c4bf0-5e6f-4516-9055-920b7f0c5fbc
 
 .AUTHOR DSC Community
 
@@ -35,7 +35,7 @@ Updated author, copyright notice, and URLs.
 <#
 
 .DESCRIPTION
- This example shows how to reset the SSL v3.0 protocol to the OS default.
+ This example shows how to disable the SSL v3.0 protocol.
 
 #>
 
@@ -45,11 +45,12 @@ Configuration Example
 
     Import-DscResource -ModuleName SChannelDsc
 
-    node localhost {
-        Protocol DisableSSLv3
+    node localhost
+    {
+        SChannelProtocolClient DisableSSLv3
         {
-            Protocol = 'SSL 3.0'
-            State    = 'Default'
+            IsSingleInstance  = 'Yes'
+            ProtocolsDisabled = 'Ssl3'
         }
     }
 }
