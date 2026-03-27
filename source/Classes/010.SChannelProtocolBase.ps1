@@ -97,7 +97,9 @@ class SChannelProtocolBase : ResourceBase
 
         if ($defaultProtocols)
         {
-            $currentState.ProtocolsDefault = [System.String[]] $defaultProtocols
+            $currentState.ProtocolsDefault = [System.String[]] $defaultProtocols.Where({
+                $_.Protocol -in $this.ProtocolsDefault
+            })
         }
 
         return $currentState
