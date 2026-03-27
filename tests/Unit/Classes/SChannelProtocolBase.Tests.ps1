@@ -446,7 +446,7 @@ Describe 'SChannelProtocolBase\Modify()' -Tag 'HiddenMember' {
             }
         }
 
-        Context 'When additional protocols are in the actual state' {
+        Context 'When additional protocols are in the current state' {
             BeforeAll {
                 InModuleScope -ScriptBlock {
                     Set-StrictMode -Version 1.0
@@ -460,10 +460,9 @@ Describe 'SChannelProtocolBase\Modify()' -Tag 'HiddenMember' {
                         ProtocolsDisabled  = @(
                             [SChannelSslProtocols]::Ssl2
                             [SChannelSslProtocols]::Ssl3
-                            [SChannelSslProtocols]::Dtls1
-                            [SChannelSslProtocols]::Tls
                         )
                         ProtocolsDefault   = @(
+                            [SChannelSslProtocols]::Tls
                             [SChannelSslProtocols]::Tls11
                         )
                         RebootWhenRequired = $true
@@ -493,13 +492,43 @@ Describe 'SChannelProtocolBase\Modify()' -Tag 'HiddenMember' {
                                 [SChannelSslProtocols]::Tls13
                             )
                         }
+                        @{
+                            Property      = 'ProtocolsDisabled'
+                            ExpectedValue = @(
+                                [SChannelSslProtocols]::Ssl2
+                                [SChannelSslProtocols]::Ssl3
+                            )
+                            ActualValue   = @(
+                                [SChannelSslProtocols]::Ssl2
+                                [SChannelSslProtocols]::Ssl3
+                                [SChannelSslProtocols]::Tls
+                            )
+                        }
+                        @{
+                            Property      = 'ProtocolsDefault'
+                            ExpectedValue = @(
+                                [SChannelSslProtocols]::Tls
+                                [SChannelSslProtocols]::Tls11
+                            )
+                            ActualValue   = @(
+                                [SChannelSslProtocols]::Tls
+                            )
+                        }
                     )
 
                     # HT with expected values
                     $null = $script:mockInstance.Modify(@{
-                            ProtocolsEnabled = @(
+                            ProtocolsEnabled  = @(
                                 [SChannelSslProtocols]::Tls12
                                 [SChannelSslProtocols]::Tls13
+                            )
+                            ProtocolsDisabled = @(
+                                [SChannelSslProtocols]::Ssl2
+                                [SChannelSslProtocols]::Ssl3
+                            )
+                            ProtocolsDefault  = @(
+                                [SChannelSslProtocols]::Tls
+                                [SChannelSslProtocols]::Tls11
                             )
                         })
                 }
@@ -509,6 +538,16 @@ Describe 'SChannelProtocolBase\Modify()' -Tag 'HiddenMember' {
                 Should -Invoke -CommandName Reset-TlsProtocol -ParameterFilter {
                     $Client -eq $false -and
                     $Protocol -eq 'DTls12'
+                } -Exactly -Times 1 -Scope It
+
+                Should -Invoke -CommandName Reset-TlsProtocol -ParameterFilter {
+                    $Client -eq $false -and
+                    $Protocol -eq 'Tls11'
+                } -Exactly -Times 1 -Scope It
+
+                Should -Invoke -CommandName Reset-TlsProtocol -ParameterFilter {
+                    $Client -eq $false -and
+                    $Protocol -eq 'Tls'
                 } -Exactly -Times 1 -Scope It
 
                 Should -Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
