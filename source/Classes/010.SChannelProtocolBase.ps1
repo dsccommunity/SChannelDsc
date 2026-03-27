@@ -97,9 +97,11 @@ class SChannelProtocolBase : ResourceBase
 
         if ($defaultProtocols)
         {
+            # As this is the default state we only care about protocols explicitly provided.
+            # If one is missing, it should then be set.
             $currentState.ProtocolsDefault = [System.String[]] $defaultProtocols.Where({
-                $_ -in $this.ProtocolsDefault
-            })
+                    $_ -in $this.ProtocolsDefault
+                })
         }
 
         return $currentState
@@ -115,12 +117,10 @@ class SChannelProtocolBase : ResourceBase
 
         if ($properties.ContainsKey('ProtocolsEnabled'))
         {
-            Write-Verbose 'EnabledProtocols need active'
             $protocolEnabledState = $this.PropertiesNotInDesiredState.Where({ $_.Property -eq 'ProtocolsEnabled' })
             $protocolsToEnable = $protocolEnabledState.ExpectedValue.Where({ $_ -notin $protocolEnabledState.ActualValue })
             if ($protocolsToEnable.Count -gt 0)
             {
-                Write-Verbose "EnabledProtocols are being set $($protocolsToEnable -join ',')"
                 Enable-TlsProtocol -Protocol $protocolsToEnable -Client:$this.ClientSide
                 $protocolsUpdated = $true
             }
@@ -128,7 +128,6 @@ class SChannelProtocolBase : ResourceBase
             $protocolsToDefault = $protocolEnabledState.ActualValue.Where({ $_ -notin $protocolEnabledState.ExpectedValue })
             if ($protocolsToDefault.Count -gt 0)
             {
-                Write-Verbose "EnabledProtocols are being reset $($protocolsToDefault -join ',')"
                 Reset-TlsProtocol -Protocol $protocolsToDefault -Client:$this.ClientSide
                 $protocolsUpdated = $true
             }
@@ -136,12 +135,10 @@ class SChannelProtocolBase : ResourceBase
 
         if ($properties.ContainsKey('ProtocolsDisabled'))
         {
-            Write-Verbose 'DisabledProtocols need active'
             $protocolDisabledState = $this.PropertiesNotInDesiredState.Where({ $_.Property -eq 'ProtocolsDisabled' })
             $protocolsToDisable = $protocolDisabledState.ExpectedValue.Where({ $_ -notin $protocolDisabledState.ActualValue })
             if ($protocolsToDisable.Count -gt 0)
             {
-                Write-Verbose "DisabledProtocols are being set $($protocolsToDisable -join ',')"
                 Disable-TlsProtocol -Protocol $protocolsToDisable -Client:$this.ClientSide
                 $protocolsUpdated = $true
             }
@@ -149,7 +146,6 @@ class SChannelProtocolBase : ResourceBase
             $protocolsToDefault = $protocolDisabledState.ActualValue.Where({ $_ -notin $protocolDisabledState.ExpectedValue })
             if ($protocolsToDefault.Count -gt 0)
             {
-                Write-Verbose "DisabledProtocols are being reset $($protocolsToDefault -join ',')"
                 Reset-TlsProtocol -Protocol $protocolsToDefault -Client:$this.ClientSide
                 $protocolsUpdated = $true
             }
@@ -157,12 +153,10 @@ class SChannelProtocolBase : ResourceBase
 
         if ($properties.ContainsKey('ProtocolsDefault'))
         {
-            Write-Verbose 'DefaultProtocols need resetting'
             $protocolDefaultState = $this.PropertiesNotInDesiredState.Where({ $_.Property -eq 'ProtocolsDefault' })
             $protocolsToDefault = $protocolDefaultState.ExpectedValue.Where({ $_ -notin $protocolDefaultState.ActualValue })
             if ($protocolsToDefault.Count -gt 0)
             {
-                Write-Verbose "DefaultProtocols are being reset $($protocolsToDefault -join ',')"
                 Reset-TlsProtocol -Protocol $protocolsToDefault -Client:$this.ClientSide
                 $protocolsUpdated = $true
             }
