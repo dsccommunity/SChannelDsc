@@ -20,7 +20,6 @@
             AllowPrerelease = $true
         }
     }
-    
     MarkdownLinkCheck              = 'latest'
     'DscResource.Test'             = 'latest'
     xDscResourceDesigner           = 'latest'

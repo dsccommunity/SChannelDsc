@@ -16,6 +16,7 @@ class SChannelProtocolServer : SChannelProtocolBase
 {
     SChannelProtocolServer () : base ()
     {
+        $this.ClientSide = $false
     }
 
     [SChannelProtocolServer] Get()

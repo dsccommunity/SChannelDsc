@@ -67,7 +67,7 @@ class SChannelProtocolBase : ResourceBase
     }
 
     # Base method Get() call this method to get the current state as a Hashtable.
-    [System.Collections.Hashtable] GetCurrentState([System.Collections.Hashtable] $properties)
+    hidden [System.Collections.Hashtable] GetCurrentState([System.Collections.Hashtable] $properties)
     {
         $currentState = @{}
 
