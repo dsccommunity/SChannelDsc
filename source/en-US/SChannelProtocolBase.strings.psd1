@@ -9,5 +9,5 @@ ConvertFrom-StringData @'
     # None
 
     ## Strings directly used by the derived class SChannelProtocolBase.
-    DuplicateProtocolValues = Property values cannot be specified multiple times. Ensure that each protocol is only specified once across all protocol properties. (SCHPB0001)
+    SChannelProtocolBase_DuplicateProtocolValues = Property values cannot be specified multiple times. Ensure that each protocol is only specified once across all protocol properties. (SCHPB0001)
 '@
