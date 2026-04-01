@@ -20,10 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Add resource name prefix to localized string.
 - Fixed Changelog.
 
-### Removed
-
-- Protocol Resource - Replaced by class resources
-
 ## [1.6.0] - 2026-02-17
 
 ### Added
