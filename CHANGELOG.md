@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- SChannelProtocolBase
+- `SChannelProtocolBase`
   - Set `RebootWhenRequired` to a nullable type.
   - Add resource name prefix to localized string.
 - Fixed Changelog.
