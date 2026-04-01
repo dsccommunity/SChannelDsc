@@ -47,8 +47,8 @@ class SChannelProtocolBase : ResourceBase
     $ProtocolsDefault
 
     [DscProperty()]
-    [System.Boolean]
-    $RebootWhenRequired = $false
+    [System.Nullable[System.Boolean]]
+    $RebootWhenRequired
 
     [DscProperty(NotConfigurable)]
     [SChannelReason[]]
@@ -201,9 +201,7 @@ class SChannelProtocolBase : ResourceBase
 
         if ($assignedPropertyValues.Where({ $_.Count -gt 1 }))
         {
-            $errorMessage = $this.localizedData.DuplicateProtocolValues
-
-            New-ArgumentException -ArgumentName ($assignedProtocolProperty -join ',') -Message $errorMessage
+            New-ArgumentException -ArgumentName ($assignedProtocolProperty -join ',') -Message $this.localizedData.SChannelProtocolBase_DuplicateProtocolValues
         }
     }
 }

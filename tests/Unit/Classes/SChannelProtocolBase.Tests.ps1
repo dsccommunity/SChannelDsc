@@ -625,7 +625,7 @@ Describe 'SChannelProtocolBase\AssertProperties()' -Tag 'HiddenMember' {
                         )
                     }
 
-                    $errorRecord = Get-InvalidArgumentRecord -Message $script:mockInstance.LocalizedData.DuplicateProtocolValues -ArgumentName ($properties.Keys -join ',')
+                    $errorRecord = Get-InvalidArgumentRecord -Message $script:mockInstance.LocalizedData.SChannelProtocolBase_DuplicateProtocolValues -ArgumentName ($properties.Keys -join ',')
 
                     { $script:mockInstance.AssertProperties($properties) } | Should -Throw -ExpectedMessage $errorRecord.Exception.Message
                 }
