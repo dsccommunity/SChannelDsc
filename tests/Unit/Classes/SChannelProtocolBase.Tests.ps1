@@ -442,7 +442,7 @@ Describe 'SChannelProtocolBase\Modify()' -Tag 'HiddenMember' {
 
                 Should-Invoke -CommandName Disable-TlsProtocol -ParameterFilter {
                     $Client -eq $false -and
-                    $Protocol -contains @(
+                    $Protocol -in @(
                         'DTls1'
                     )
                 } -Exactly -Times 1 -Scope It
