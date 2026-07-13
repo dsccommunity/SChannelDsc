@@ -35,14 +35,10 @@ BeforeAll {
     Import-Module -Name $script:dscModuleName -ErrorAction 'Stop'
 
     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:dscModuleName
-    $PSDefaultParameterValues['Mock:ModuleName'] = $script:dscModuleName
-    $PSDefaultParameterValues['Should:ModuleName'] = $script:dscModuleName
 }
 
 AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
-    $PSDefaultParameterValues.Remove('Mock:ModuleName')
-    $PSDefaultParameterValues.Remove('Should:ModuleName')
 
     # Unload the module being tested so that it doesn't impact any other tests.
     Get-Module -Name $script:dscModuleName -All | Remove-Module -Force
@@ -54,7 +50,7 @@ Describe 'SChannelProtocolServer' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                { [SChannelProtocolServer]::new() } | Should -Not -Throw
+                $null = [SChannelProtocolServer]::new()
             }
         }
 
@@ -63,7 +59,7 @@ Describe 'SChannelProtocolServer' {
                 Set-StrictMode -Version 1.0
 
                 $instance = [SChannelProtocolServer]::new()
-                $instance | Should -Not -BeNullOrEmpty
+                $instance | Should-NotBeNull
             }
         }
 
@@ -72,7 +68,7 @@ Describe 'SChannelProtocolServer' {
                 Set-StrictMode -Version 1.0
 
                 $instance = [SChannelProtocolServer]::new()
-                $instance.GetType().Name | Should -Be 'SChannelProtocolServer'
+                $instance.GetType().Name | Should-Be 'SChannelProtocolServer'
             }
         }
     }
@@ -141,13 +137,13 @@ Describe 'SChannelProtocolServer\Get()' -Tag 'Get' {
 
                     $currentState = $script:mockInstance.Get()
 
-                    $currentState.IsSingleInstance | Should -Be 'Yes'
+                    $currentState.IsSingleInstance | Should-Be 'Yes'
 
-                    $currentState.ProtocolsEnabled | Should -HaveCount 2
-                    $currentState.ProtocolsDisabled | Should -HaveCount 2
-                    $currentState.ProtocolsDefault | Should -HaveCount 2
+                    $currentState.ProtocolsEnabled | Should-BeCollection -Count 2
+                    $currentState.ProtocolsDisabled | Should-BeCollection -Count 2
+                    $currentState.ProtocolsDefault | Should-BeCollection -Count 2
 
-                    $currentState.Reasons | Should -BeNullOrEmpty
+                    $currentState.Reasons | Should-BeNull
                 }
             }
         }
@@ -189,7 +185,7 @@ Describe 'SChannelProtocolServer\Get()' -Tag 'Get' {
                                     'Ssl2',
                                     'Ssl3'
                                 )
-                                ProtocolsDefault = $null
+                                ProtocolsDefault  = $null
                             }
                         } -PassThru |
                         Add-Member -Force -MemberType 'ScriptMethod' -Name 'Assert' -Value {
@@ -207,13 +203,13 @@ Describe 'SChannelProtocolServer\Get()' -Tag 'Get' {
 
                     $currentState = $script:mockInstance.Get()
 
-                    $currentState.IsSingleInstance | Should -Be 'Yes'
+                    $currentState.IsSingleInstance | Should-Be 'Yes'
 
-                    $currentState.ProtocolsEnabled | Should -HaveCount 2
-                    $currentState.ProtocolsDisabled | Should -HaveCount 2
-                    $currentState.ProtocolsDefault | Should -BeNullOrEmpty
+                    $currentState.ProtocolsEnabled | Should-BeCollection -Count 2
+                    $currentState.ProtocolsDisabled | Should-BeCollection -Count 2
+                    $currentState.ProtocolsDefault | Should-BeNull
 
-                    $currentState.Reasons | Should -BeNullOrEmpty
+                    $currentState.Reasons | Should-BeNull
                 }
             }
         }
@@ -281,17 +277,17 @@ Describe 'SChannelProtocolServer\Get()' -Tag 'Get' {
 
                     $currentState = $script:mockInstance.Get()
 
-                    $currentState.IsSingleInstance | Should -Be 'Yes'
+                    $currentState.IsSingleInstance | Should-Be 'Yes'
 
-                    $currentState.ProtocolsEnabled | Should -HaveCount 2
-                    $currentState.ProtocolsDisabled | Should -HaveCount 2
-                    $currentState.ProtocolsDefault | Should -HaveCount 2
+                    $currentState.ProtocolsEnabled | Should-BeCollection -Count 2
+                    $currentState.ProtocolsDisabled | Should-BeCollection -Count 2
+                    $currentState.ProtocolsDefault | Should-BeCollection -Count 2
 
-                    $currentState.Reasons | Should -HaveCount 2
-                    $currentState.Reasons.Code | Should -Contain 'SChannelProtocolServer:SChannelProtocolServer:ProtocolsDefault'
-                    $currentState.Reasons.Phrase | Should -Contain 'The property ProtocolsDefault should be ["Tls","Tls11","Tls12"], but was ["Tls","Tls11"]'
-                    $currentState.Reasons.Code | Should -Contain 'SChannelProtocolServer:SChannelProtocolServer:ProtocolsEnabled'
-                    $currentState.Reasons.Phrase | Should -Contain 'The property ProtocolsEnabled should be "Tls13", but was ["Tls12","Tls13"]'
+                    $currentState.Reasons | Should-BeCollection -Count 2
+                    $currentState.Reasons.Code | Should-ContainCollection 'SChannelProtocolServer:SChannelProtocolServer:ProtocolsDefault'
+                    $currentState.Reasons.Phrase | Should-ContainCollection 'The property ProtocolsDefault should be ["Tls","Tls11","Tls12"], but was ["Tls","Tls11"]'
+                    $currentState.Reasons.Code | Should-ContainCollection 'SChannelProtocolServer:SChannelProtocolServer:ProtocolsEnabled'
+                    $currentState.Reasons.Phrase | Should-ContainCollection 'The property ProtocolsEnabled should be "Tls13", but was ["Tls12","Tls13"]'
                 }
             }
         }
@@ -353,15 +349,15 @@ Describe 'SChannelProtocolServer\Get()' -Tag 'Get' {
 
                     $currentState = $script:mockInstance.Get()
 
-                    $currentState.IsSingleInstance | Should -Be 'Yes'
+                    $currentState.IsSingleInstance | Should-Be 'Yes'
 
-                    $currentState.ProtocolsEnabled | Should -HaveCount 2
-                    $currentState.ProtocolsDisabled | Should -HaveCount 1
-                    $currentState.ProtocolsDefault | Should -HaveCount 2
+                    $currentState.ProtocolsEnabled | Should-BeCollection -Count 2
+                    $currentState.ProtocolsDisabled | Should-BeCollection -Count 1
+                    $currentState.ProtocolsDefault | Should-BeCollection -Count 2
 
-                    $currentState.Reasons | Should -HaveCount 1
-                    $currentState.Reasons.Code | Should -Contain 'SChannelProtocolServer:SChannelProtocolServer:ProtocolsDisabled'
-                    $currentState.Reasons.Phrase | Should -Contain 'The property ProtocolsDisabled should be , but was "Ssl3"'
+                    $currentState.Reasons | Should-BeCollection -Count 1
+                    $currentState.Reasons.Code | Should-ContainCollection 'SChannelProtocolServer:SChannelProtocolServer:ProtocolsDisabled'
+                    $currentState.Reasons.Phrase | Should-ContainCollection 'The property ProtocolsDisabled should be , but was "Ssl3"'
                 }
             }
         }
@@ -425,8 +421,8 @@ Describe 'SChannelProtocolServer\Set()' -Tag 'Set' {
 
                 $null = $script:mockInstance.Set()
 
-                $script:mockMethodTestCallCount | Should -Be 1
-                $script:mockMethodModifyCallCount | Should -Be 0
+                $script:mockMethodTestCallCount | Should-Be 1
+                $script:mockMethodModifyCallCount | Should-Be 0
             }
         }
     }
@@ -464,8 +460,8 @@ Describe 'SChannelProtocolServer\Set()' -Tag 'Set' {
 
                 $null = $script:mockInstance.Set()
 
-                $script:mockMethodTestCallCount | Should -Be 1
-                $script:mockMethodModifyCallCount | Should -Be 1
+                $script:mockMethodTestCallCount | Should-Be 1
+                $script:mockMethodModifyCallCount | Should-Be 1
             }
         }
     }
@@ -520,9 +516,9 @@ Describe 'SChannelProtocolServer\Test()' -Tag 'Test' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                $script:mockInstance.Test() | Should -BeTrue
+                $script:mockInstance.Test() | Should-BeTrue
 
-                $script:mockGetMethodCallCount | Should -Be 1
+                $script:mockGetMethodCallCount | Should-Be 1
             }
         }
     }
@@ -557,9 +553,9 @@ Describe 'SChannelProtocolServer\Test()' -Tag 'Test' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                $script:mockInstance.Test() | Should -BeFalse
+                $script:mockInstance.Test() | Should-BeFalse
 
-                $script:mockGetMethodCallCount | Should -Be 1
+                $script:mockGetMethodCallCount | Should-Be 1
             }
         }
     }

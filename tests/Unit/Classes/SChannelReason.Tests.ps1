@@ -29,14 +29,10 @@ BeforeAll {
     Import-Module -Name $script:dscModuleName -ErrorAction 'Stop'
 
     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:dscModuleName
-    $PSDefaultParameterValues['Mock:ModuleName'] = $script:dscModuleName
-    $PSDefaultParameterValues['Should:ModuleName'] = $script:dscModuleName
 }
 
 AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
-    $PSDefaultParameterValues.Remove('Mock:ModuleName')
-    $PSDefaultParameterValues.Remove('Should:ModuleName')
 
     # Unload the module being tested so that it doesn't impact any other tests.
     Get-Module -Name $script:dscModuleName -All | Remove-Module -Force
@@ -51,8 +47,8 @@ Describe 'SChannelReason' -Tag 'SChannelReason' {
         }
 
         It 'Should be of the correct type' {
-            $mockSChannelReasonInstance | Should -Not -BeNullOrEmpty
-            $mockSChannelReasonInstance.GetType().Name | Should -Be 'SChannelReason'
+            $mockSChannelReasonInstance | Should-NotBeNull
+            $mockSChannelReasonInstance.GetType().Name | Should-Be 'SChannelReason'
         }
     }
 
@@ -69,8 +65,8 @@ Describe 'SChannelReason' -Tag 'SChannelReason' {
         }
 
         It 'Should be able read the values from instance' {
-            $mockSChannelReasonInstance.Code | Should -Be 'SChannelReason:SChannelReason:Ensure'
-            $mockSChannelReasonInstance.Phrase | Should -Be 'The property Ensure should be "Present", but was "Absent"'
+            $mockSChannelReasonInstance.Code | Should-Be 'SChannelReason:SChannelReason:Ensure'
+            $mockSChannelReasonInstance.Phrase | Should-Be 'The property Ensure should be "Present", but was "Absent"'
         }
     }
 }
