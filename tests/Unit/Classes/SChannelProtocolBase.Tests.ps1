@@ -36,13 +36,13 @@ BeforeAll {
 
     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:dscModuleName
     $PSDefaultParameterValues['Mock:ModuleName'] = $script:dscModuleName
-    $PSDefaultParameterValues['Should:ModuleName'] = $script:dscModuleName
+    $PSDefaultParameterValues['Should-Invoke:ModuleName'] = $script:dscModuleName
 }
 
 AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
-    $PSDefaultParameterValues.Remove('Should:ModuleName')
+    $PSDefaultParameterValues.Remove('Should-Invoke:ModuleName')
 
     # Unload the module being tested so that it doesn't impact any other tests.
     Get-Module -Name $script:dscModuleName -All | Remove-Module -Force
@@ -54,7 +54,7 @@ Describe 'SChannelProtocolBase' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                { [SChannelProtocolBase]::new() } | Should -Not -Throw
+                $null = [SChannelProtocolBase]::new()
             }
         }
 
@@ -63,7 +63,7 @@ Describe 'SChannelProtocolBase' {
                 Set-StrictMode -Version 1.0
 
                 $instance = [SChannelProtocolBase]::new()
-                $instance | Should -Not -BeNullOrEmpty
+                $instance | Should-NotBeNull
             }
         }
 
@@ -72,7 +72,7 @@ Describe 'SChannelProtocolBase' {
                 Set-StrictMode -Version 1.0
 
                 $instance = [SChannelProtocolBase]::new()
-                $instance.GetType().Name | Should -Be 'SChannelProtocolBase'
+                $instance.GetType().Name | Should-Be 'SChannelProtocolBase'
             }
         }
     }
@@ -153,17 +153,17 @@ Describe 'SChannelProtocolBase\GetCurrentState()' -Tag 'HiddenMember' {
                         }
                     )
 
-                    $currentState.ProtocolsEnabled | Should -Be $script:mockInstance.ProtocolsEnabled
-                    # $currentState.ProtocolsEnabled | Should -BeOfType 'String[]'
+                    $currentState.ProtocolsEnabled | Should-BeCollection $script:mockInstance.ProtocolsEnabled
+                    Should-HaveType -Actual $currentState.ProtocolsEnabled -Expected ([String[]])
 
-                    $currentState.ProtocolsDisabled | Should -Be $script:mockInstance.ProtocolsDisabled
-                    # $currentState.ProtocolsDisabled | Should -BeOfType 'String[]'
+                    $currentState.ProtocolsDisabled | Should-BeCollection $script:mockInstance.ProtocolsDisabled
+                    Should-HaveType -Actual $currentState.ProtocolsDisabled -Expected ([String[]])
 
-                    $currentState.ProtocolsDefault | Should -Be $script:mockInstance.ProtocolsDefault
-                    # $currentState.ProtocolsDefault | Should -BeOfType 'String[]'
+                    $currentState.ProtocolsDefault | Should-BeCollection $script:mockInstance.ProtocolsDefault
+                    Should-HaveType -Actual $currentState.ProtocolsDefault -Expected ([String[]])
                 }
 
-                Should -Invoke -CommandName Get-TlsProtocol -ParameterFilter {
+                Should-Invoke -CommandName Get-TlsProtocol -ParameterFilter {
                     $Client -eq $false
                 } -Exactly -Times 1 -Scope It
             }
@@ -240,12 +240,16 @@ Describe 'SChannelProtocolBase\GetCurrentState()' -Tag 'HiddenMember' {
                         }
                     )
 
-                    $currentState.ProtocolsEnabled | Should -Be $script:mockInstance.ProtocolsEnabled
-                    $currentState.ProtocolsDisabled | Should -Be $script:mockInstance.ProtocolsDisabled
-                    $currentState.ProtocolsDefault | Should -BeNullOrEmpty
+                    $currentState.ProtocolsEnabled | Should-BeCollection $script:mockInstance.ProtocolsEnabled
+                    Should-HaveType -Actual $currentState.ProtocolsEnabled -Expected ([String[]])
+
+                    $currentState.ProtocolsDisabled | Should-BeCollection $script:mockInstance.ProtocolsDisabled
+                    Should-HaveType -Actual $currentState.ProtocolsDisabled -Expected ([String[]])
+
+                    $currentState.ProtocolsDefault | Should-BeNull
                 }
 
-                Should -Invoke -CommandName Get-TlsProtocol -ParameterFilter {
+                Should-Invoke -CommandName Get-TlsProtocol -ParameterFilter {
                     $Client -eq $false
                 } -Exactly -Times 1 -Scope It
             }
@@ -328,12 +332,18 @@ Describe 'SChannelProtocolBase\GetCurrentState()' -Tag 'HiddenMember' {
                         }
                     )
 
-                    $currentState.ProtocolsEnabled | Should -Be $script:mockInstance.ProtocolsEnabled
-                    $currentState.ProtocolsDisabled | Should -Be $script:mockInstance.ProtocolsDisabled
-                    $currentState.ProtocolsDefault | Should -Be $script:mockInstance.ProtocolsDefault
+                    $currentState.ProtocolsEnabled | Should-BeCollection $script:mockInstance.ProtocolsEnabled
+                    Should-HaveType -Actual $currentState.ProtocolsEnabled -Expected ([String[]])
+
+                    $currentState.ProtocolsDisabled | Should-BeCollection $script:mockInstance.ProtocolsDisabled
+                    Should-HaveType -Actual $currentState.ProtocolsDisabled -Expected ([String[]])
+
+                    $currentState.ProtocolsDefault | Should-BeCollection $script:mockInstance.ProtocolsDefault
+                    Should-HaveType -Actual $currentState.ProtocolsDefault -Expected ([String[]])
+
                 }
 
-                Should -Invoke -CommandName Get-TlsProtocol -ParameterFilter {
+                Should-Invoke -CommandName Get-TlsProtocol -ParameterFilter {
                     $Client -eq $true
                 } -Exactly -Times 1 -Scope It
             }
@@ -425,24 +435,24 @@ Describe 'SChannelProtocolBase\Modify()' -Tag 'HiddenMember' {
                     $null = $script:mockInstance.Modify($propertiesToModify)
                 }
 
-                Should -Invoke -CommandName Enable-TlsProtocol -ParameterFilter {
+                Should-Invoke -CommandName Enable-TlsProtocol -ParameterFilter {
                     $Client -eq $false -and
                     $Protocol -eq 'DTls12'
                 } -Exactly -Times 1 -Scope It
 
-                Should -Invoke -CommandName Disable-TlsProtocol -ParameterFilter {
+                Should-Invoke -CommandName Disable-TlsProtocol -ParameterFilter {
                     $Client -eq $false -and
-                    $Protocol -contains @(
+                    $Protocol -in @(
                         'DTls1'
                     )
                 } -Exactly -Times 1 -Scope It
 
-                Should -Invoke -CommandName Reset-TlsProtocol -ParameterFilter {
+                Should-Invoke -CommandName Reset-TlsProtocol -ParameterFilter {
                     $Client -eq $false -and
                     $Protocol -eq 'Tls11'
                 } -Exactly -Times 1 -Scope It
 
-                Should -Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
+                Should-Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
             }
         }
 
@@ -533,24 +543,24 @@ Describe 'SChannelProtocolBase\Modify()' -Tag 'HiddenMember' {
                         })
                 }
 
-                Should -Invoke -CommandName Enable-TlsProtocol -Exactly -Times 0 -Scope It
-                Should -Invoke -CommandName Disable-TlsProtocol -Exactly -Times 0 -Scope It
-                Should -Invoke -CommandName Reset-TlsProtocol -ParameterFilter {
+                Should-Invoke -CommandName Enable-TlsProtocol -Exactly -Times 0 -Scope It
+                Should-Invoke -CommandName Disable-TlsProtocol -Exactly -Times 0 -Scope It
+                Should-Invoke -CommandName Reset-TlsProtocol -ParameterFilter {
                     $Client -eq $false -and
                     $Protocol -eq 'DTls12'
                 } -Exactly -Times 1 -Scope It
 
-                Should -Invoke -CommandName Reset-TlsProtocol -ParameterFilter {
+                Should-Invoke -CommandName Reset-TlsProtocol -ParameterFilter {
                     $Client -eq $false -and
                     $Protocol -eq 'Tls11'
                 } -Exactly -Times 1 -Scope It
 
-                Should -Invoke -CommandName Reset-TlsProtocol -ParameterFilter {
+                Should-Invoke -CommandName Reset-TlsProtocol -ParameterFilter {
                     $Client -eq $false -and
                     $Protocol -eq 'Tls'
                 } -Exactly -Times 1 -Scope It
 
-                Should -Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
+                Should-Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
             }
         }
     }
@@ -591,7 +601,7 @@ Describe 'SChannelProtocolBase\AssertProperties()' -Tag 'HiddenMember' {
                     RebootWhenRequired = $true
                 }
 
-                { $script:mockInstance.AssertProperties($properties) } | Should -Throw -ExpectedMessage '*DRC0050*'
+                { $script:mockInstance.AssertProperties($properties) } | Should-Throw -ExceptionMessage '*DRC0050*'
             }
         }
     }
@@ -627,7 +637,7 @@ Describe 'SChannelProtocolBase\AssertProperties()' -Tag 'HiddenMember' {
 
                     $errorRecord = Get-InvalidArgumentRecord -Message $script:mockInstance.LocalizedData.SChannelProtocolBase_DuplicateProtocolValues -ArgumentName ($properties.Keys -join ',')
 
-                    { $script:mockInstance.AssertProperties($properties) } | Should -Throw -ExpectedMessage $errorRecord.Exception.Message
+                    { $script:mockInstance.AssertProperties($properties) } | Should-Throw -ExceptionMessage $errorRecord.Exception.Message
                 }
             }
         }

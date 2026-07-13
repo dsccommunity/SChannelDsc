@@ -19,6 +19,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Set `RebootWhenRequired` to a nullable type.
   - Add resource name prefix to localized string.
 - Fixed Changelog.
+- `Resolve-Dependency.psd1`
+  - Disabled ModuleFast as it is not picking up Pester 6.0.0.
+- Migrated tests to Pester 6 format [#79](https://github.com/dsccommunity/SChannelDsc/issues/79).
+  - `SChannelProtocolClient`
+  - `SChannelProtocolServer`
+  - `SChannelReason`
+  - `SChannelProtocolBase`
 
 ## [1.6.0] - 2026-02-17
 
