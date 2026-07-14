@@ -120,11 +120,11 @@ Describe "$($script:dscResourceName)_Integration" {
 
             $resourceCurrentState.IsSingleInstance | Should-Be 'Yes'
             & $Should
-            $resourceCurrentState.RebootWhenRequired | Should-BeFalse
+            $resourceCurrentState.RebootWhenRequired | Should-BeFalsy
         }
 
         It 'Should return $true when Test-DscConfiguration is run' {
-            Test-DscConfiguration -Verbose -ErrorAction 'Stop' | Should-BeTrue
+            Test-DscConfiguration -Verbose -ErrorAction 'Stop' | Should-Be 'True'
         }
     }
 }
