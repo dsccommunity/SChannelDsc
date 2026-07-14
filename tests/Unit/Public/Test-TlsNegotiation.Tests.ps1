@@ -27,13 +27,11 @@ BeforeAll {
 
     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:moduleName
     $PSDefaultParameterValues['Mock:ModuleName'] = $script:moduleName
-    $PSDefaultParameterValues['Should:ModuleName'] = $script:moduleName
 }
 
 AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
-    $PSDefaultParameterValues.Remove('Should:ModuleName')
 
     # Unload the module being tested so that it doesn't impact any other tests.
     Get-Module -Name $script:moduleName -All | Remove-Module -Force
@@ -53,21 +51,21 @@ Describe 'Test-TlsNegotiation' {
                 @{ Name = 'ParameterListAsString'; Expression = { $_.ToString() } }
             )
 
-        $result.ParameterSetName | Should -Be $ExpectedParameterSetName
-        $result.ParameterListAsString | Should -Be $ExpectedParameters
+        $result.ParameterSetName | Should-Be $ExpectedParameterSetName
+        $result.ParameterListAsString | Should-Be $ExpectedParameters
     }
 
     Context 'When testing against a real public host' {
         It 'Should return at least one successful TLS protocol (Tls12 expected)' {
             $results = Test-TlsNegotiation -HostName 'www.google.se' -Port 443 -Protocol ([System.Security.Authentication.SslProtocols]::Tls12) -TimeoutSeconds 10
 
-            $results | Should -Not -BeNullOrEmpty
+            $results | Should-NotBeNull
 
             $single = $results | Where-Object { $_.AttemptedProtocol -eq [System.Security.Authentication.SslProtocols]::Tls12 }
-            $single | Should -Not -BeNullOrEmpty
-            $single.Success | Should -BeTrue
-            $single.NegotiatedProtocol | Should -Be 'Tls12'
-            $single.NegotiatedCipherSuite | Should -Not -BeNullOrEmpty
+            $single | Should-NotBeNull
+            $single.Success | Should-BeTrue
+            $single.NegotiatedProtocol | Should-Be 'Tls12'
+            $single.NegotiatedCipherSuite | Should-NotBeNull
         }
 
         It 'Should return result objects for multiple protocols' {
@@ -83,7 +81,7 @@ Describe 'Test-TlsNegotiation' {
             $results = Test-TlsNegotiation -HostName 'www.google.se' -Port 443 -Protocol $protocols -TimeoutSeconds 10
 
             # At least one should be successful (Tls/Tls11/Tls12 commonly)
-            ($results | Where-Object { $_.Success } | Measure-Object).Count | Should -BeGreaterThan 0
+            ($results | Where-Object { $_.Success } | Measure-Object).Count | Should-BeGreaterThan 0
         }
 
         BeforeDiscovery {
@@ -106,8 +104,8 @@ Describe 'Test-TlsNegotiation' {
 
             $result = $results | Where-Object { $_.AttemptedProtocol -eq $Protocol }
 
-            $result | Should -Not -BeNullOrEmpty
-            $result | Should -BeOfType PSCustomObject
+            $result | Should-NotBeNull
+            Should-HaveType -Actual $result -Expected ([Object])
         }
 
         BeforeDiscovery {
@@ -119,16 +117,16 @@ Describe 'Test-TlsNegotiation' {
         It 'Should return a result object for specific protocol <Protocol>' -ForEach $multiProtocols {
             $result = Test-TlsNegotiation -HostName 'www.google.se' -Port 443 -Protocol $Protocol -TimeoutSeconds 10
 
-            $result | Should -Not -BeNullOrEmpty
-            $result | Should -BeOfType PSCustomObject
-            $result | Should -HaveCount $Protocol.Count
+            $result | Should-NotBeNull
+            Should-HaveType -Actual $result -Expected ([Object[]])
+            $result | Should-BeCollection -Count $Protocol.Count
         }
 
         It 'Should return results when Protocol parameter is not provided (uses defaults)' {
             $results = Test-TlsNegotiation -HostName 'www.google.se' -Port 443 -TimeoutSeconds 10
 
-            $results | Should -Not -BeNullOrEmpty
-            ($results | Where-Object { $_.Success } | Measure-Object).Count | Should -BeGreaterThan 0
+            $results | Should-NotBeNull
+            ($results | Where-Object { $_.Success } | Measure-Object).Count | Should-BeGreaterThan 0
         }
     }
 
@@ -140,31 +138,31 @@ Describe 'Test-TlsNegotiation' {
         It 'Should have HostName as a non-mandatory parameter' {
             $parameterInfo = $commandInfo.Parameters['HostName']
 
-            $parameterInfo.Attributes.Mandatory | Should -BeFalse
+            $parameterInfo.Attributes.Mandatory | Should-BeFalse
         }
 
         It 'Should have Port as a non-mandatory parameter' {
             $parameterInfo = $commandInfo.Parameters['Port']
 
-            $parameterInfo.Attributes.Mandatory | Should -BeFalse
+            $parameterInfo.Attributes.Mandatory | Should-BeFalse
         }
 
         It 'Should have Protocol as a non-mandatory parameter' {
             $parameterInfo = $commandInfo.Parameters['Protocol']
 
-            $parameterInfo.Attributes.Mandatory | Should -BeFalse
+            $parameterInfo.Attributes.Mandatory | Should-BeFalse
         }
 
         It 'Should have Protocol declared as an array type' {
             $parameterInfo = $commandInfo.Parameters['Protocol']
 
-            $parameterInfo.ParameterType.IsArray | Should -BeTrue
+            $parameterInfo.ParameterType.IsArray | Should-BeTrue
         }
 
         It 'Should have TimeoutSeconds as a non-mandatory parameter' {
             $parameterInfo = $commandInfo.Parameters['TimeoutSeconds']
 
-            $parameterInfo.Attributes.Mandatory | Should -BeFalse
+            $parameterInfo.Attributes.Mandatory | Should-BeFalse
         }
     }
 }

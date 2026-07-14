@@ -27,13 +27,11 @@ BeforeAll {
 
     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:moduleName
     $PSDefaultParameterValues['Mock:ModuleName'] = $script:moduleName
-    $PSDefaultParameterValues['Should:ModuleName'] = $script:moduleName
 }
 
 AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
-    $PSDefaultParameterValues.Remove('Should:ModuleName')
 
     # Unload the module being tested so that it doesn't impact any other tests.
     Get-Module -Name $script:moduleName -All | Remove-Module -Force
@@ -45,7 +43,7 @@ Describe 'Get-TlsProtocolTargetRegistryName' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                (Get-TlsProtocolTargetRegistryName -Client) | Should -Be 'Client'
+                (Get-TlsProtocolTargetRegistryName -Client) | Should-Be 'Client'
             }
         }
     }
@@ -55,7 +53,7 @@ Describe 'Get-TlsProtocolTargetRegistryName' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                (Get-TlsProtocolTargetRegistryName) | Should -Be 'Server'
+                (Get-TlsProtocolTargetRegistryName) | Should-Be 'Server'
             }
         }
     }

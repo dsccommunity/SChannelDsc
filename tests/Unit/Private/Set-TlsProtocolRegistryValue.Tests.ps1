@@ -27,13 +27,15 @@ BeforeAll {
 
     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:moduleName
     $PSDefaultParameterValues['Mock:ModuleName'] = $script:moduleName
-    $PSDefaultParameterValues['Should:ModuleName'] = $script:moduleName
+    $PSDefaultParameterValues['Should-Invoke:ModuleName'] = $script:moduleName
+    $PSDefaultParameterValues['Should-NotInvoke:ModuleName'] = $script:moduleName
 }
 
 AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
-    $PSDefaultParameterValues.Remove('Should:ModuleName')
+    $PSDefaultParameterValues.Remove('Should-Invoke:ModuleName')
+    $PSDefaultParameterValues.Remove('Should-NotInvoke:ModuleName')
 
     # Unload the module being tested so that it doesn't impact any other tests.
     Get-Module -Name $script:moduleName -All | Remove-Module -Force
@@ -53,8 +55,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 $null = Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Enable -Force
             }
 
-            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\TLS 1.2\Server' } -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\TLS 1.2\Server' } -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 1 -Scope It
         }
     }
 
@@ -71,8 +73,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 $null = Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Enable -Client -Force
             }
 
-            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\TLS 1.2\Client' } -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\TLS 1.2\Client' } -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 1 -Scope It
         }
     }
 
@@ -89,8 +91,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 $null = Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Enable -SetDisabledByDefault -Force
             }
 
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 0 } -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 0 } -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 1 -Scope It
         }
     }
 
@@ -107,7 +109,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 $null = Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Enable -Force
             }
 
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' } -Exactly -Times 0 -Scope It
+            Should-NotInvoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' } -Scope It
         }
     }
 
@@ -124,8 +126,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 $null = Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Ssl3) -Disable -Force
             }
 
-            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\SSL 3.0\Server' } -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\SSL 3.0\Server' } -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 1 -Scope It
         }
     }
 
@@ -142,8 +144,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 $null = Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Ssl3) -Disable -Client -Force
             }
 
-            Should -Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\SSL 3.0\Client' } -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName New-Item -ParameterFilter { $Path -like '*\SSL 3.0\Client' } -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 1 -Scope It
         }
     }
 
@@ -160,8 +162,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 $null = Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Ssl3) -Disable -SetDisabledByDefault -Force
             }
 
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 1 } -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' -and $Value -eq 1 } -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 1 -Scope It
         }
     }
 
@@ -178,7 +180,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 $null = Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Ssl3) -Disable -Force
             }
 
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' } -Exactly -Times 0 -Scope It
+            Should-NotInvoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'DisabledByDefault' } -Scope It
         }
     }
 
@@ -198,8 +200,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 ) -Enable -Force
             }
 
-            Should -Invoke -CommandName New-Item -Exactly -Times 2 -Scope It
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 2 -Scope It
+            Should-Invoke -CommandName New-Item -Exactly -Times 2 -Scope It
+            Should-Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 1 } -Exactly -Times 2 -Scope It
         }
     }
 
@@ -219,8 +221,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 ) -Disable -Force
             }
 
-            Should -Invoke -CommandName New-Item -Exactly -Times 2 -Scope It
-            Should -Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 2 -Scope It
+            Should-Invoke -CommandName New-Item -Exactly -Times 2 -Scope It
+            Should-Invoke -CommandName New-ItemProperty -ParameterFilter { $Name -eq 'Enabled' -and $Value -eq 0 } -Exactly -Times 2 -Scope It
         }
     }
 
@@ -234,7 +236,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                { Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Enable -Force } | Should -Throw -ErrorId 'STPRV0001,Set-TlsProtocolRegistryValue'
+                { Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Enable -Force } | Should-Throw -FullyQualifiedErrorId 'STPRV0001,Set-TlsProtocolRegistryValue'
             }
         }
 
@@ -242,7 +244,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                { Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Disable -Force } | Should -Throw -ErrorId 'STPRV0002,Set-TlsProtocolRegistryValue'
+                { Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Disable -Force } | Should-Throw -FullyQualifiedErrorId 'STPRV0002,Set-TlsProtocolRegistryValue'
             }
         }
     }
@@ -257,7 +259,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                { Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Enable -Force } | Should -Throw -ErrorId 'STPRV0001,Set-TlsProtocolRegistryValue'
+                { Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Enable -Force } | Should-Throw -FullyQualifiedErrorId 'STPRV0001,Set-TlsProtocolRegistryValue'
             }
         }
 
@@ -265,7 +267,7 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
 
-                { Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Disable -Force } | Should -Throw -ErrorId 'STPRV0002,Set-TlsProtocolRegistryValue'
+                { Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Disable -Force } | Should-Throw -FullyQualifiedErrorId 'STPRV0002,Set-TlsProtocolRegistryValue'
             }
         }
     }
@@ -283,8 +285,8 @@ Describe 'Set-TlsProtocolRegistryValue' -Tag 'Private' {
                 $null = Set-TlsProtocolRegistryValue -Protocol ([SChannelSslProtocols]::Tls12) -Enable -WhatIf
             }
 
-            Should -Invoke -CommandName New-Item -Exactly -Times 0 -Scope It
-            Should -Invoke -CommandName New-ItemProperty -Exactly -Times 0 -Scope It
+            Should-NotInvoke -CommandName New-Item -Scope It
+            Should-NotInvoke -CommandName New-ItemProperty -Scope It
         }
     }
 }
