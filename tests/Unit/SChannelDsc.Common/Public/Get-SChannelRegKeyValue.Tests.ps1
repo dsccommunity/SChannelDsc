@@ -61,7 +61,7 @@ Describe 'SChannelDsc.Common\Get-SChannelRegKeyValue' {
         }
 
         It 'Should return $null' {
-            Get-SChannelRegKeyValue -Key 'MockRegistryPath' -Name 'Enabled' | Should -BeNullOrEmpty
+            Get-SChannelRegKeyValue -Key 'MockRegistryPath' -Name 'Enabled' | Should-BeNull
         }
     }
 
@@ -73,7 +73,7 @@ Describe 'SChannelDsc.Common\Get-SChannelRegKeyValue' {
 
 
         It 'Should return the correct value' {
-            Get-SChannelRegKeyValue -Key 'MockRegistryPath' -Name 'Enabled' | Should -Be 'MockValue'
+            Get-SChannelRegKeyValue -Key 'MockRegistryPath' -Name 'Enabled' | Should-Be 'MockValue'
         }
     }
 }

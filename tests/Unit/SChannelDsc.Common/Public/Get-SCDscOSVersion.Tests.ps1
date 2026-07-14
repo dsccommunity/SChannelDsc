@@ -60,6 +60,6 @@ Describe 'SChannelDsc.Common\Get-SCDscOSVersion' {
     }
 
     It 'Should return the correct result' {
-        Get-SCDscOSVersion | Should -Be $currentOS
+        Get-SCDscOSVersion | Should-Be $currentOS
     }
 }

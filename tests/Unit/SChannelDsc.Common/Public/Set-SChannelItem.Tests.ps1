@@ -72,7 +72,7 @@ Describe 'SChannelDsc.Common\Set-SChannelItem' {
 
                 $null = Set-SChannelItem @mockParams
 
-                (Get-Item -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -ErrorAction SilentlyContinue) | Should -BeNullOrEmpty
+                (Get-Item -Path 'TestRegistry:\SCHANNEL\Protocols\SSL 3.0' -ErrorAction SilentlyContinue) | Should-BeNull
             }
         }
 
@@ -93,7 +93,7 @@ Describe 'SChannelDsc.Common\Set-SChannelItem' {
 
                 $null = Set-SChannelItem @mockParams
 
-                (Get-ItemPropertyValue -Path 'TestRegistry:\SChannel\Protocols\SSL 3.0' -Name 'Enabled') | Should -Be 1
+                (Get-ItemPropertyValue -Path 'TestRegistry:\SChannel\Protocols\SSL 3.0' -Name 'Enabled') | Should-Be 1
             }
         }
 
@@ -113,7 +113,7 @@ Describe 'SChannelDsc.Common\Set-SChannelItem' {
 
                 $null = Set-SChannelItem @mockParams
 
-                (Get-ItemPropertyValue -Path 'TestRegistry:\SChannel\Protocols\SSL 3.0' -Name 'Enabled') | Should -Be 0
+                (Get-ItemPropertyValue -Path 'TestRegistry:\SChannel\Protocols\SSL 3.0' -Name 'Enabled') | Should-Be 0
             }
         }
     }
@@ -134,7 +134,7 @@ Describe 'SChannelDsc.Common\Set-SChannelItem' {
 
                 $null = Set-SChannelItem @mockParams
 
-                (Get-Item -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -ErrorAction SilentlyContinue) | Should -BeNullOrEmpty
+                (Get-Item -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -ErrorAction SilentlyContinue) | Should-BeNull
             }
         }
 
@@ -153,7 +153,7 @@ Describe 'SChannelDsc.Common\Set-SChannelItem' {
 
                 $null = Set-SChannelItem @mockParams
 
-                (Get-ItemPropertyValue -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -Name 'Enabled') | Should -Be 4294967295
+                (Get-ItemPropertyValue -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -Name 'Enabled') | Should-Be 4294967295
             }
         }
 
@@ -173,7 +173,7 @@ Describe 'SChannelDsc.Common\Set-SChannelItem' {
 
                 $null = Set-SChannelItem @mockParams
 
-                (Get-ItemPropertyValue -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -Name 'Enabled') | Should -Be 0
+                (Get-ItemPropertyValue -Path 'TestRegistry:\SCHANNEL\Ciphers\AES128' -Name 'Enabled') | Should-Be 0
             }
         }
     }
