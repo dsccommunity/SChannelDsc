@@ -83,7 +83,7 @@ Describe 'SChannelDsc.Common\Get-SChannelItem' {
         }
 
         It 'Should return ''<ExpectedResult>''' {
-            Get-SChannelItem -ItemKey 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols' | Should -Be $ExpectedResult
+            Get-SChannelItem -ItemKey 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols' | Should-Be $ExpectedResult
         }
     }
 
@@ -93,7 +93,7 @@ Describe 'SChannelDsc.Common\Get-SChannelItem' {
         }
 
         It 'Should return Default from this method' {
-            Get-SChannelItem -ItemKey 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols' | Should -Be 'Default'
+            Get-SChannelItem -ItemKey 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols' | Should-Be 'Default'
         }
     }
 }
