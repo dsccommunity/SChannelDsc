@@ -41,13 +41,13 @@ BeforeAll {
 
     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:dscResourceName
     $PSDefaultParameterValues['Mock:ModuleName'] = $script:dscResourceName
-    $PSDefaultParameterValues['Should:ModuleName'] = $script:dscResourceName
+    $PSDefaultParameterValues['Should-Invoke:ModuleName'] = $script:dscResourceName
 }
 
 AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
-    $PSDefaultParameterValues.Remove('Should:ModuleName')
+    $PSDefaultParameterValues.Remove('Should-Invoke:ModuleName')
 
     Restore-TestEnvironment -TestEnvironment $script:testEnvironment
 
@@ -82,8 +82,8 @@ Describe 'DSC_CipherSuites\Get-TargetResource' -Tag 'Get' {
 
                 $result = Get-TargetResource @mockParams
 
-                $result.Ensure | Should -Be 'Present'
-                $result.CipherSuitesOrder | Should -Be @(
+                $result.Ensure | Should-Be 'Present'
+                $result.CipherSuitesOrder | Should-BeCollection @(
                     'TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384',
                     'TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256',
                     'TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384',
@@ -92,8 +92,8 @@ Describe 'DSC_CipherSuites\Get-TargetResource' -Tag 'Get' {
                 )
             }
 
-            Should -Invoke -CommandName Get-ItemProperty -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName Get-ItemPropertyValue -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-ItemProperty -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-ItemPropertyValue -Exactly -Times 1 -Scope It
         }
     }
 
@@ -120,11 +120,11 @@ Describe 'DSC_CipherSuites\Get-TargetResource' -Tag 'Get' {
 
                 $result = Get-TargetResource @mockParams
 
-                $result.Ensure | Should -Be 'Absent'
-                $result.CipherSuitesOrder | Should -BeNullOrEmpty
+                $result.Ensure | Should-Be 'Absent'
+                $result.CipherSuitesOrder | Should-BeNull
             }
 
-            Should -Invoke -CommandName Get-ItemProperty -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-ItemProperty -Exactly -Times 1 -Scope It
         }
     }
 }
@@ -163,10 +163,10 @@ Describe 'DSC_CipherSuites\Test-TargetResource' -Tag 'Test' {
                     RebootWhenRequired = $false
                 }
 
-                Test-TargetResource @mockParams | Should -BeTrue
+                Test-TargetResource @mockParams | Should-BeTrue
             }
 
-            Should -Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
         }
     }
 
@@ -203,10 +203,10 @@ Describe 'DSC_CipherSuites\Test-TargetResource' -Tag 'Test' {
                     RebootWhenRequired = $false
                 }
 
-                Test-TargetResource @mockParams | Should -BeFalse
+                Test-TargetResource @mockParams | Should-BeFalse
             }
 
-            Should -Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
         }
     }
 }
@@ -239,9 +239,9 @@ Describe 'DSC_CipherSuites\Set-TargetResource' -Tag 'Set' {
                 $null = Set-TargetResource @mockParams
             }
 
-            Should -Invoke -CommandName New-Item -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName New-ItemProperty -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName New-Item -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName New-ItemProperty -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
         }
     }
 
@@ -264,8 +264,8 @@ Describe 'DSC_CipherSuites\Set-TargetResource' -Tag 'Set' {
                 $null = Set-TargetResource @mockParams
             }
 
-            Should -Invoke -CommandName Remove-ItemProperty -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Remove-ItemProperty -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
         }
     }
 }

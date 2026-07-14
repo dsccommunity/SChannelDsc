@@ -41,13 +41,13 @@ BeforeAll {
 
     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:dscResourceName
     $PSDefaultParameterValues['Mock:ModuleName'] = $script:dscResourceName
-    $PSDefaultParameterValues['Should:ModuleName'] = $script:dscResourceName
+    $PSDefaultParameterValues['Should-Invoke:ModuleName'] = $script:dscResourceName
 }
 
 AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
-    $PSDefaultParameterValues.Remove('Should:ModuleName')
+    $PSDefaultParameterValues.Remove('Should-Invoke:ModuleName')
 
     Restore-TestEnvironment -TestEnvironment $script:testEnvironment
 
@@ -74,11 +74,11 @@ Describe 'DSC_Hash\Get-TargetResource' -Tag 'Get' {
 
                 $result = Get-TargetResource @testParams
 
-                $result.Hash | Should -Be 'MD5'
-                $result.State | Should -Be 'Enabled'
+                $result.Hash | Should-Be 'MD5'
+                $result.State | Should-Be 'Enabled'
             }
 
-            Should -Invoke Get-SChannelItem -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-SChannelItem -Exactly -Times 1 -Scope It
         }
     }
 }
@@ -103,10 +103,10 @@ Describe 'DSC_Hash\Test-TargetResource' -Tag 'Test' {
                     State = 'Enabled'
                 }
 
-                Test-TargetResource @testParams | Should -BeTrue
+                Test-TargetResource @testParams | Should-BeTrue
             }
 
-            Should -Invoke Get-TargetResource -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
         }
     }
 }
@@ -148,12 +148,12 @@ Describe 'DSC_Hash\Set-TargetResource' -Tag 'Set' {
                 $null = Set-TargetResource @testParams
             }
 
-            Should -Invoke Set-SChannelItem -Exactly -Times 1 -Scope It -ParameterFilter {
+            Should-Invoke -CommandName Set-SChannelItem -Exactly -Times 1 -Scope It -ParameterFilter {
                 $ItemSubKey -eq $MockHash -and
                 $State -eq $MockState
             }
 
-            Should -Invoke Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
         }
     }
 }

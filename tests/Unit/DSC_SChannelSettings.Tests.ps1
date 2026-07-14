@@ -41,13 +41,13 @@ BeforeAll {
 
     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:dscResourceName
     $PSDefaultParameterValues['Mock:ModuleName'] = $script:dscResourceName
-    $PSDefaultParameterValues['Should:ModuleName'] = $script:dscResourceName
+    $PSDefaultParameterValues['Should-Invoke:ModuleName'] = $script:dscResourceName
 }
 
 AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
-    $PSDefaultParameterValues.Remove('Should:ModuleName')
+    $PSDefaultParameterValues.Remove('Should-Invoke:ModuleName')
 
     Restore-TestEnvironment -TestEnvironment $script:testEnvironment
 
@@ -199,15 +199,13 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                     $result = Get-TargetResource @mockParams
 
-                    $result.TLS12State                      | Should -Be $mockParams.TLS12State
-                    $result.DiffieHellmanMinClientKeySize   | Should -Be $mockParams.DiffieHellmanMinClientKeySize
-                    $result.DiffieHellmanMinServerKeySize   | Should -Be $mockParams.DiffieHellmanMinServerKeySize
-                    $result.KerberosSupportedEncryptionType | Should -Be $mockParams.KerberosSupportedEncryptionType
-                    $result.KerberosSupportedEncryptionType.Count | Should -Be $mockParams.KerberosSupportedEncryptionType.Count
+                    $result.TLS12State                      | Should-Be $mockParams.TLS12State
+                    $result.DiffieHellmanMinClientKeySize   | Should-Be $mockParams.DiffieHellmanMinClientKeySize
+                    $result.DiffieHellmanMinServerKeySize   | Should-Be $mockParams.DiffieHellmanMinServerKeySize
+                    $result.KerberosSupportedEncryptionType | Should-BeCollection $mockParams.KerberosSupportedEncryptionType
                     # BUG: Does not work on 32bit systems as the 32 bit and 64 bit values will always be different when 32 bit exists
-                    # $result.WinHttpDefaultSecureProtocols | Should -Be $mockParams.WinHttpDefaultSecureProtocols
-                    # $result.WinHttpDefaultSecureProtocols.Count | Should -Be $mockParams.WinHttpDefaultSecureProtocols.Count
-                    $result.EnableFIPSAlgorithmPolicy       | Should -Be $mockParams.EnableFIPSAlgorithmPolicy
+                    # $result.WinHttpDefaultSecureProtocols | Should-BeCollection $mockParams.WinHttpDefaultSecureProtocols
+                    $result.EnableFIPSAlgorithmPolicy       | Should-Be $mockParams.EnableFIPSAlgorithmPolicy
                 }
             }
         }
@@ -360,15 +358,13 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                     $result = Get-TargetResource @mockParams
 
-                    $result.TLS12State                      | Should -Be $mockParams.TLS12State
-                    $result.DiffieHellmanMinClientKeySize   | Should -Be $mockParams.DiffieHellmanMinClientKeySize
-                    $result.DiffieHellmanMinServerKeySize   | Should -Be $mockParams.DiffieHellmanMinServerKeySize
-                    $result.KerberosSupportedEncryptionType | Should -Be $mockParams.KerberosSupportedEncryptionType
-                    $result.KerberosSupportedEncryptionType.Count | Should -Be $mockParams.KerberosSupportedEncryptionType.Count
+                    $result.TLS12State                      | Should-Be $mockParams.TLS12State
+                    $result.DiffieHellmanMinClientKeySize   | Should-Be $mockParams.DiffieHellmanMinClientKeySize
+                    $result.DiffieHellmanMinServerKeySize   | Should-Be $mockParams.DiffieHellmanMinServerKeySize
+                    $result.KerberosSupportedEncryptionType | Should-BeCollection $mockParams.KerberosSupportedEncryptionType
                     # BUG: Does not work on 32bit systems as the 32 bit and 64 bit values will always be different when 32 bit exists
-                    # $result.WinHttpDefaultSecureProtocols | Should -Be $mockParams.WinHttpDefaultSecureProtocols
-                    # $result.WinHttpDefaultSecureProtocols.Count | Should -Be $mockParams.WinHttpDefaultSecureProtocols.Count
-                    $result.EnableFIPSAlgorithmPolicy       | Should -Be $mockParams.EnableFIPSAlgorithmPolicy
+                    # $result.WinHttpDefaultSecureProtocols | Should-BeCollection $mockParams.WinHttpDefaultSecureProtocols
+                    $result.EnableFIPSAlgorithmPolicy       | Should-Be $mockParams.EnableFIPSAlgorithmPolicy
                 }
             }
         }
@@ -521,15 +517,13 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                     $result = Get-TargetResource @mockParams
 
-                    $result.TLS12State                      | Should -Be $mockParams.TLS12State
-                    $result.DiffieHellmanMinClientKeySize   | Should -Be $mockParams.DiffieHellmanMinClientKeySize
-                    $result.DiffieHellmanMinServerKeySize   | Should -Be $mockParams.DiffieHellmanMinServerKeySize
-                    $result.KerberosSupportedEncryptionType | Should -Be $mockParams.KerberosSupportedEncryptionType
-                    $result.KerberosSupportedEncryptionType.Count | Should -Be $mockParams.KerberosSupportedEncryptionType.Count
+                    $result.TLS12State                      | Should-Be $mockParams.TLS12State
+                    $result.DiffieHellmanMinClientKeySize   | Should-Be $mockParams.DiffieHellmanMinClientKeySize
+                    $result.DiffieHellmanMinServerKeySize   | Should-Be $mockParams.DiffieHellmanMinServerKeySize
+                    $result.KerberosSupportedEncryptionType | Should-BeCollection $mockParams.KerberosSupportedEncryptionType
                     # BUG: Does not work on 32bit systems as the 32 bit and 64 bit values will always be different when 32 bit exists
-                    # $result.WinHttpDefaultSecureProtocols | Should -Be $mockParams.WinHttpDefaultSecureProtocols
-                    # $result.WinHttpDefaultSecureProtocols.Count | Should -Be $mockParams.WinHttpDefaultSecureProtocols.Count
-                    $result.EnableFIPSAlgorithmPolicy       | Should -Be $mockParams.EnableFIPSAlgorithmPolicy
+                    # $result.WinHttpDefaultSecureProtocols | Should-BeCollection $mockParams.WinHttpDefaultSecureProtocols
+                    $result.EnableFIPSAlgorithmPolicy       | Should-Be $mockParams.EnableFIPSAlgorithmPolicy
                 }
             }
         }
@@ -696,14 +690,12 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                     $result = Get-TargetResource @mockParams
 
-                    $result.TLS12State                      | Should -Be $mockParams.TLS12State
-                    $result.DiffieHellmanMinClientKeySize   | Should -Be $mockParams.DiffieHellmanMinClientKeySize
-                    $result.DiffieHellmanMinServerKeySize   | Should -Be $mockParams.DiffieHellmanMinServerKeySize
-                    $result.KerberosSupportedEncryptionType | Should -Be $mockParams.KerberosSupportedEncryptionType
-                    $result.KerberosSupportedEncryptionType.Count | Should -Be $mockParams.KerberosSupportedEncryptionType.Count
-                    $result.WinHttpDefaultSecureProtocols | Should -Be $mockParams.WinHttpDefaultSecureProtocols
-                    $result.WinHttpDefaultSecureProtocols.Count | Should -Be $mockParams.WinHttpDefaultSecureProtocols.Count
-                    $result.EnableFIPSAlgorithmPolicy       | Should -Be $mockParams.EnableFIPSAlgorithmPolicy
+                    $result.TLS12State                      | Should-Be $mockParams.TLS12State
+                    $result.DiffieHellmanMinClientKeySize   | Should-Be $mockParams.DiffieHellmanMinClientKeySize
+                    $result.DiffieHellmanMinServerKeySize   | Should-Be $mockParams.DiffieHellmanMinServerKeySize
+                    $result.KerberosSupportedEncryptionType | Should-BeCollection $mockParams.KerberosSupportedEncryptionType
+                    $result.WinHttpDefaultSecureProtocols | Should-BeCollection $mockParams.WinHttpDefaultSecureProtocols
+                    $result.EnableFIPSAlgorithmPolicy       | Should-Be $mockParams.EnableFIPSAlgorithmPolicy
                 }
             }
         }
@@ -874,14 +866,12 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                     $result = Get-TargetResource @mockParams
 
-                    $result.TLS12State                      | Should -Be $mockParams.TLS12State
-                    $result.DiffieHellmanMinClientKeySize   | Should -Be $mockParams.DiffieHellmanMinClientKeySize
-                    $result.DiffieHellmanMinServerKeySize   | Should -Be $mockParams.DiffieHellmanMinServerKeySize
-                    $result.KerberosSupportedEncryptionType | Should -Be $mockParams.KerberosSupportedEncryptionType
-                    $result.KerberosSupportedEncryptionType.Count | Should -Be $mockParams.KerberosSupportedEncryptionType.Count
-                    $result.WinHttpDefaultSecureProtocols | Should -Be $mockParams.WinHttpDefaultSecureProtocols
-                    $result.WinHttpDefaultSecureProtocols.Count | Should -Be $mockParams.WinHttpDefaultSecureProtocols.Count
-                    $result.EnableFIPSAlgorithmPolicy       | Should -Be $mockParams.EnableFIPSAlgorithmPolicy
+                    $result.TLS12State                      | Should-Be $mockParams.TLS12State
+                    $result.DiffieHellmanMinClientKeySize   | Should-Be $mockParams.DiffieHellmanMinClientKeySize
+                    $result.DiffieHellmanMinServerKeySize   | Should-Be $mockParams.DiffieHellmanMinServerKeySize
+                    $result.KerberosSupportedEncryptionType | Should-BeCollection $mockParams.KerberosSupportedEncryptionType
+                    $result.WinHttpDefaultSecureProtocols | Should-BeCollection $mockParams.WinHttpDefaultSecureProtocols
+                    $result.EnableFIPSAlgorithmPolicy       | Should-Be $mockParams.EnableFIPSAlgorithmPolicy
                 }
             }
         }
@@ -1052,14 +1042,12 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                     $result = Get-TargetResource @mockParams
 
-                    $result.TLS12State                      | Should -Be $mockParams.TLS12State
-                    $result.DiffieHellmanMinClientKeySize   | Should -Be $mockParams.DiffieHellmanMinClientKeySize
-                    $result.DiffieHellmanMinServerKeySize   | Should -Be $mockParams.DiffieHellmanMinServerKeySize
-                    $result.KerberosSupportedEncryptionType | Should -Be $mockParams.KerberosSupportedEncryptionType
-                    $result.KerberosSupportedEncryptionType.Count | Should -Be $mockParams.KerberosSupportedEncryptionType.Count
-                    $result.WinHttpDefaultSecureProtocols | Should -Be $mockParams.WinHttpDefaultSecureProtocols
-                    $result.WinHttpDefaultSecureProtocols.Count | Should -Be $mockParams.WinHttpDefaultSecureProtocols.Count
-                    $result.EnableFIPSAlgorithmPolicy       | Should -Be $mockParams.EnableFIPSAlgorithmPolicy
+                    $result.TLS12State                      | Should-Be $mockParams.TLS12State
+                    $result.DiffieHellmanMinClientKeySize   | Should-Be $mockParams.DiffieHellmanMinClientKeySize
+                    $result.DiffieHellmanMinServerKeySize   | Should-Be $mockParams.DiffieHellmanMinServerKeySize
+                    $result.KerberosSupportedEncryptionType | Should-BeCollection $mockParams.KerberosSupportedEncryptionType
+                    $result.WinHttpDefaultSecureProtocols | Should-BeCollection $mockParams.WinHttpDefaultSecureProtocols
+                    $result.EnableFIPSAlgorithmPolicy       | Should-Be $mockParams.EnableFIPSAlgorithmPolicy
                 }
             }
         }
@@ -1224,14 +1212,12 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                     $result = Get-TargetResource @mockParams
 
-                    $result.TLS12State                      | Should -Be $mockParams.TLS12State
-                    $result.DiffieHellmanMinClientKeySize   | Should -Be $mockParams.DiffieHellmanMinClientKeySize
-                    $result.DiffieHellmanMinServerKeySize   | Should -Be $mockParams.DiffieHellmanMinServerKeySize
-                    $result.KerberosSupportedEncryptionType | Should -Be $mockParams.KerberosSupportedEncryptionType
-                    $result.KerberosSupportedEncryptionType.Count | Should -Be $mockParams.KerberosSupportedEncryptionType.Count
-                    $result.WinHttpDefaultSecureProtocols | Should -Be $mockParams.WinHttpDefaultSecureProtocols
-                    $result.WinHttpDefaultSecureProtocols.Count | Should -Be $mockParams.WinHttpDefaultSecureProtocols.Count
-                    $result.EnableFIPSAlgorithmPolicy       | Should -Be $mockParams.EnableFIPSAlgorithmPolicy
+                    $result.TLS12State                      | Should-Be $mockParams.TLS12State
+                    $result.DiffieHellmanMinClientKeySize   | Should-Be $mockParams.DiffieHellmanMinClientKeySize
+                    $result.DiffieHellmanMinServerKeySize   | Should-Be $mockParams.DiffieHellmanMinServerKeySize
+                    $result.KerberosSupportedEncryptionType | Should-BeCollection $mockParams.KerberosSupportedEncryptionType
+                    $result.WinHttpDefaultSecureProtocols | Should-BeCollection $mockParams.WinHttpDefaultSecureProtocols
+                    $result.EnableFIPSAlgorithmPolicy       | Should-Be $mockParams.EnableFIPSAlgorithmPolicy
                 }
             }
         }
@@ -1394,14 +1380,12 @@ Describe 'DSC_SChannelSettings\Get-TargetResource' -Tag 'Get' {
 
                     $result = Get-TargetResource @mockParams
 
-                    $result.TLS12State                      | Should -Be $mockParams.TLS12State
-                    $result.DiffieHellmanMinClientKeySize   | Should -Be $mockParams.DiffieHellmanMinClientKeySize
-                    $result.DiffieHellmanMinServerKeySize   | Should -Be $mockParams.DiffieHellmanMinServerKeySize
-                    $result.KerberosSupportedEncryptionType | Should -Be $mockParams.KerberosSupportedEncryptionType
-                    $result.KerberosSupportedEncryptionType.Count | Should -Be $mockParams.KerberosSupportedEncryptionType.Count
-                    $result.WinHttpDefaultSecureProtocols | Should -Be $mockParams.WinHttpDefaultSecureProtocols
-                    $result.WinHttpDefaultSecureProtocols.Count | Should -Be $mockParams.WinHttpDefaultSecureProtocols.Count
-                    $result.EnableFIPSAlgorithmPolicy       | Should -Be $mockParams.EnableFIPSAlgorithmPolicy
+                    $result.TLS12State                      | Should-Be $mockParams.TLS12State
+                    $result.DiffieHellmanMinClientKeySize   | Should-Be $mockParams.DiffieHellmanMinClientKeySize
+                    $result.DiffieHellmanMinServerKeySize   | Should-Be $mockParams.DiffieHellmanMinServerKeySize
+                    $result.KerberosSupportedEncryptionType | Should-BeCollection $mockParams.KerberosSupportedEncryptionType
+                    $result.WinHttpDefaultSecureProtocols | Should-BeCollection $mockParams.WinHttpDefaultSecureProtocols
+                    $result.EnableFIPSAlgorithmPolicy       | Should-Be $mockParams.EnableFIPSAlgorithmPolicy
                 }
             }
         }
@@ -1438,10 +1422,10 @@ Describe 'DSC_SChannelSettings\Test-TargetResource' -Tag 'Test' {
                     EnableFIPSAlgorithmPolicy       = $false
                 }
 
-                Test-TargetResource @mockParams | Should -BeTrue
+                Test-TargetResource @mockParams | Should-BeTrue
             }
 
-            Should -Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
         }
     }
 
@@ -1474,10 +1458,10 @@ Describe 'DSC_SChannelSettings\Test-TargetResource' -Tag 'Test' {
                     EnableFIPSAlgorithmPolicy       = $true
                 }
 
-                Test-TargetResource @mockParams | Should -BeFalse
+                Test-TargetResource @mockParams | Should-BeFalse
             }
 
-            Should -Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
         }
     }
 }
@@ -1532,10 +1516,10 @@ Describe 'DSC_SChannelSettings\Set-TargetResource' -Tag 'Set' {
                 $null = Set-TargetResource @mockParams
             }
 
-            Should -Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName Set-SChannelRegKeyValue -Exactly -Times 14 -Scope It
-            Should -Invoke -CommandName Get-SCDscOSVersion -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Set-SChannelRegKeyValue -Exactly -Times 14 -Scope It
+            Should-Invoke -CommandName Get-SCDscOSVersion -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
         }
     }
 
@@ -1584,10 +1568,10 @@ Describe 'DSC_SChannelSettings\Set-TargetResource' -Tag 'Set' {
                 $null = Set-TargetResource @mockParams
             }
 
-            Should -Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName Set-SChannelRegKeyValue -Exactly -Times 14 -Scope It
-            Should -Invoke -CommandName Get-SCDscOSVersion -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Set-SChannelRegKeyValue -Exactly -Times 14 -Scope It
+            Should-Invoke -CommandName Get-SCDscOSVersion -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
         }
     }
 
@@ -1636,10 +1620,10 @@ Describe 'DSC_SChannelSettings\Set-TargetResource' -Tag 'Set' {
                 $null = Set-TargetResource @mockParams
             }
 
-            Should -Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName Set-SChannelRegKeyValue -Exactly -Times 14 -Scope It
-            Should -Invoke -CommandName Get-SCDscOSVersion -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Set-SChannelRegKeyValue -Exactly -Times 14 -Scope It
+            Should-Invoke -CommandName Get-SCDscOSVersion -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
         }
     }
 
@@ -1687,11 +1671,11 @@ Describe 'DSC_SChannelSettings\Set-TargetResource' -Tag 'Set' {
                 $null = Set-TargetResource @mockParams
             }
 
-            Should -Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName Set-SChannelRegKeyValue -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName Remove-ItemProperty -Exactly -Times 3 -Scope It
-            Should -Invoke -CommandName Get-SCDscOSVersion -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Set-SChannelRegKeyValue -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Remove-ItemProperty -Exactly -Times 3 -Scope It
+            Should-Invoke -CommandName Get-SCDscOSVersion -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
         }
     }
 
@@ -1736,7 +1720,7 @@ Describe 'DSC_SChannelSettings\Set-TargetResource' -Tag 'Set' {
                 $mockErrorMessage = 'Hotfix KB3140245 is not installed. Setting these registry keys will not do anything. ' + `
                     'Please install the hotfix first!'
 
-                { Set-TargetResource @mockParams } | Should -Throw -ExpectedMessage $mockErrorMessage
+                { Set-TargetResource @mockParams } | Should-Throw -ExceptionMessage $mockErrorMessage
             }
         }
     }
