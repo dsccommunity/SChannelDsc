@@ -66,7 +66,7 @@ Describe "$($script:dscResourceName)_Integration" {
             @{
                 Name   = "$($script:dscResourceName)_DisableTls11"
                 Should = {
-                    $resourceCurrentState.ProtocolsDisabled | Should-BeCollection $ConfigurationData.AllNodes.ProtocolsDisabled
+                    $resourceCurrentState.ProtocolsDisabled | Should-Be $ConfigurationData.AllNodes.ProtocolsDisabled
                 }
             }
             @{
