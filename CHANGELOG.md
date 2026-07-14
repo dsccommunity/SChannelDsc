@@ -21,16 +21,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed Changelog.
 - `Resolve-Dependency.psd1`
   - Disabled ModuleFast as it is not picking up Pester 6.0.0.
-- Migrated tests to Pester 6 format [#79](https://github.com/dsccommunity/SChannelDsc/issues/79).
+- Migrated tests to Pester 6 format [issue #79](https://github.com/dsccommunity/SChannelDsc/issues/79).
   - `SChannelProtocolClient`
   - `SChannelProtocolServer`
   - `SChannelReason`
   - `SChannelProtocolBase`
-- Migrated Public function tests to Pester 6 format [#81](https://github.com/dsccommunity/SChannelDsc/issues/81).
-- Migrated Private function tests to Pester 6 format [#80](https://github.com/dsccommunity/SChannelDsc/issues/80).
-- Migrated SChannelDsc.Common unit tests to Pester 6 format [#82](https://github.com/dsccommunity/SChannelDsc/issues/82).
-- Migrated script-based resource unit tests to Pester 6 format [#87](https://github.com/dsccommunity/SChannelDsc/issues/87).
-- Migrated Integration tests to Pester 6 format [#88](https://github.com/dsccommunity/SChannelDsc/issues/88).
+- Migrated Public function tests to Pester 6 format [issue #81](https://github.com/dsccommunity/SChannelDsc/issues/81).
+- Migrated Private function tests to Pester 6 format [issue #80](https://github.com/dsccommunity/SChannelDsc/issues/80).
+- Migrated SChannelDsc.Common unit tests to Pester 6 format [issue #82](https://github.com/dsccommunity/SChannelDsc/issues/82).
+- Migrated script-based resource unit tests to Pester 6 format [issue #87](https://github.com/dsccommunity/SChannelDsc/issues/87).
+- Migrated Integration tests to Pester 6 format [issue #88](https://github.com/dsccommunity/SChannelDsc/issues/88).
+- Enforce Pester 6 syntax [issue #83](https://github.com/dsccommunity/SChannelDsc/issues/83).
 
 ## [1.6.0] - 2026-02-17
 

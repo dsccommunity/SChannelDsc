@@ -98,6 +98,7 @@ function Test-TlsProtocol
         {
             $null
         }
+
         if ($Disabled.IsPresent)
         {
             # Missing keys imply the protocol is enabled by default, so -Disabled should fail
