@@ -60,19 +60,19 @@ Describe "$($script:dscResourceName)_Integration" {
             @{
                 Name   = "$($script:dscResourceName)_EnableTls12And13"
                 Should = {
-                    $resourceCurrentState.ProtocolsEnabled | Should -Be $ConfigurationData.AllNodes.ProtocolsEnabled
+                    $resourceCurrentState.ProtocolsEnabled | Should-BeCollection $ConfigurationData.AllNodes.ProtocolsEnabled
                 }
             }
             @{
                 Name   = "$($script:dscResourceName)_DisableTls11"
                 Should = {
-                    $resourceCurrentState.ProtocolsDisabled | Should -Be $ConfigurationData.AllNodes.ProtocolsDisabled
+                    $resourceCurrentState.ProtocolsDisabled | Should-BeCollection $ConfigurationData.AllNodes.ProtocolsDisabled
                 }
             }
             @{
                 Name   = "$($script:dscResourceName)_ResetToDefault"
                 Should = {
-                    $resourceCurrentState.ProtocolsDefault | Should -Be $ConfigurationData.AllNodes.ProtocolsDefault
+                    $resourceCurrentState.ProtocolsDefault | Should-BeCollection $ConfigurationData.AllNodes.ProtocolsDefault
                 }
             }
         )
@@ -118,13 +118,13 @@ Describe "$($script:dscResourceName)_Integration" {
                     -and $_.ResourceId -eq $resourceId
             }
 
-            $resourceCurrentState.IsSingleInstance | Should -Be 'Yes'
+            $resourceCurrentState.IsSingleInstance | Should-Be 'Yes'
             & $Should
-            $resourceCurrentState.RebootWhenRequired | Should -BeFalse
+            $resourceCurrentState.RebootWhenRequired | Should-BeFalse
         }
 
         It 'Should return $true when Test-DscConfiguration is run' {
-            Test-DscConfiguration -Verbose -ErrorAction 'Stop' | Should -BeTrue
+            Test-DscConfiguration -Verbose -ErrorAction 'Stop' | Should-BeTrue
         }
     }
 }
