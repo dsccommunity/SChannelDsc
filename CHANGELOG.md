@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrated Private function tests to Pester 6 format [#80](https://github.com/dsccommunity/SChannelDsc/issues/80).
 - Migrated SChannelDsc.Common unit tests to Pester 6 format [#82](https://github.com/dsccommunity/SChannelDsc/issues/82).
 - Migrated script-based resource unit tests to Pester 6 format [#87](https://github.com/dsccommunity/SChannelDsc/issues/87).
+- Migrated Integration tests to Pester 6 format [#88](https://github.com/dsccommunity/SChannelDsc/issues/88).
 
 ## [1.6.0] - 2026-02-17
 
