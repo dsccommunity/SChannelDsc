@@ -27,13 +27,13 @@ BeforeAll {
 
     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:moduleName
     $PSDefaultParameterValues['Mock:ModuleName'] = $script:moduleName
-    $PSDefaultParameterValues['Should:ModuleName'] = $script:moduleName
+    $PSDefaultParameterValues['Should-Invoke:ModuleName'] = $script:moduleName
 }
 
 AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
-    $PSDefaultParameterValues.Remove('Should:ModuleName')
+    $PSDefaultParameterValues.Remove('Should-Invoke:ModuleName')
 
     # Unload the module being tested so that it doesn't impact any other tests.
     Get-Module -Name $script:moduleName -All | Remove-Module -Force
@@ -53,8 +53,8 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
                 @{ Name = 'ParameterListAsString'; Expression = { $_.ToString() } }
             )
 
-        $result.ParameterSetName | Should -Be $ExpectedParameterSetName
-        $result.ParameterListAsString | Should -Be $ExpectedParameters
+        $result.ParameterSetName | Should-Be $ExpectedParameterSetName
+        $result.ParameterListAsString | Should-Be $ExpectedParameters
     }
 
     Context 'When registry has Enabled=1 and DisabledByDefault=0' {
@@ -85,12 +85,12 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
         It 'Should return object with expected properties and values' {
             $result = Get-TlsProtocol -Protocol Tls12
 
-            $result | Should -Not -BeNull
-            $result.Protocol | Should -Be 'Tls12'
-            $result.Target | Should -Be 'Server'
-            $result.Enabled | Should -Be 1
-            $result.DisabledByDefault | Should -Be 0
-            $result.RegistryPath | Should -Be 'HKLM:\Software\Test\Tls12\Server'
+            $result | Should-NotBeNull
+            $result.Protocol | Should-Be 'Tls12'
+            $result.Target | Should-Be 'Server'
+            $result.Enabled | Should-Be 1
+            $result.DisabledByDefault | Should-Be 0
+            $result.RegistryPath | Should-Be 'HKLM:\Software\Test\Tls12\Server'
         }
     }
 
@@ -107,8 +107,8 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
         It 'Should return null for Enabled and DisabledByDefault' {
             $result = Get-TlsProtocol -Protocol Tls12
 
-            $result.Enabled | Should -BeNull
-            $result.DisabledByDefault | Should -BeNull
+            $result.Enabled | Should-BeNull
+            $result.DisabledByDefault | Should-BeNull
         }
     }
 
@@ -140,10 +140,10 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
         It 'Should cast string numeric values to integer types' {
             $result = Get-TlsProtocol -Protocol Tls12
 
-            $result.Enabled | Should -Be 1
-            $result.Enabled | Should -BeOfType 'System.UInt32'
-            $result.DisabledByDefault | Should -Be 0
-            $result.DisabledByDefault | Should -BeOfType 'System.UInt32'
+            $result.Enabled | Should-Be 1
+            $result.Enabled | Should-HaveType ([System.UInt32])
+            $result.DisabledByDefault | Should-Be 0
+            $result.DisabledByDefault | Should-HaveType ([System.UInt32])
         }
     }
 
@@ -175,15 +175,15 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
         It 'Should check Client registry keys and return Client target' {
             $result = Get-TlsProtocol -Protocol Tls12 -Client
 
-            $result.Target | Should -Be 'Client'
-            $result.Enabled | Should -Be 1
-            $result.DisabledByDefault | Should -Be 0
+            $result.Target | Should-Be 'Client'
+            $result.Enabled | Should-Be 1
+            $result.DisabledByDefault | Should-Be 0
 
-            Should -Invoke -CommandName Get-TlsProtocolRegistryPath -ParameterFilter {
+            Should-Invoke -CommandName Get-TlsProtocolRegistryPath -ParameterFilter {
                 $Protocol -eq 'Tls12' -and $Client
             } -Exactly -Times 1 -Scope It
 
-            Should -Invoke -CommandName Get-TlsProtocolTargetRegistryName -ParameterFilter {
+            Should-Invoke -CommandName Get-TlsProtocolTargetRegistryName -ParameterFilter {
                 $Client
             } -Exactly -Times 1 -Scope It
         }
@@ -218,9 +218,9 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
         It 'Should return entries for all supported protocols' {
             $result = Get-TlsProtocol
 
-            $result | Should -Not -BeNull
-            $result.Count | Should -Be 8
-            $result.Target | Should -Not -Contain $null
+            $result | Should-NotBeNull
+            $result.Count | Should-Be 8
+            $result.Target | Should-NotBeNull
         }
     }
 
@@ -232,25 +232,25 @@ Describe 'Get-TlsProtocol' -Tag 'Public' {
         It 'Should have Protocol as a non-mandatory parameter' {
             $parameterInfo = $commandInfo.Parameters['Protocol']
 
-            $parameterInfo.Attributes.Mandatory | Should -BeFalse
+            $parameterInfo.Attributes.Mandatory | Should-BeFalse
         }
 
         It 'Should have Protocol declared as an Enum type' {
             $parameterInfo = $commandInfo.Parameters['Protocol']
 
-            $parameterInfo.ParameterType.IsEnum | Should -BeTrue
+            $parameterInfo.ParameterType.IsEnum | Should-BeTrue
         }
 
         It 'Should have Client as a non-mandatory parameter' {
             $parameterInfo = $commandInfo.Parameters['Client']
 
-            $parameterInfo.Attributes.Mandatory | Should -BeFalse
+            $parameterInfo.Attributes.Mandatory | Should-BeFalse
         }
 
         It 'Should have Client defined as a switch parameter' {
             $parameterInfo = $commandInfo.Parameters['Client']
 
-            $parameterInfo.ParameterType.Name | Should -Be 'SwitchParameter'
+            $parameterInfo.ParameterType.Name | Should-Be 'SwitchParameter'
         }
     }
 }

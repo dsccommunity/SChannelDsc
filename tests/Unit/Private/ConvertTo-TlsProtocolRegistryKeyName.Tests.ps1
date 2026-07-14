@@ -26,14 +26,10 @@ BeforeAll {
     Import-Module -Name $script:moduleName -ErrorAction 'Stop'
 
     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:moduleName
-    $PSDefaultParameterValues['Mock:ModuleName'] = $script:moduleName
-    $PSDefaultParameterValues['Should:ModuleName'] = $script:moduleName
 }
 
 AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
-    $PSDefaultParameterValues.Remove('Mock:ModuleName')
-    $PSDefaultParameterValues.Remove('Should:ModuleName')
 
     # Unload the module being tested so that it doesn't impact any other tests.
     Get-Module -Name $script:moduleName -All | Remove-Module -Force
@@ -86,7 +82,7 @@ Describe 'ConvertTo-TlsProtocolRegistryKeyName' -Tag 'Private' {
 
                 $result = ConvertTo-TlsProtocolRegistryKeyName -Protocol $Protocol
 
-                $result | Should -Be $Expected
+                $result | Should-Be $Expected
             }
         }
     }

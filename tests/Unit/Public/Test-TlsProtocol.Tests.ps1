@@ -27,13 +27,13 @@ BeforeAll {
 
     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:moduleName
     $PSDefaultParameterValues['Mock:ModuleName'] = $script:moduleName
-    $PSDefaultParameterValues['Should:ModuleName'] = $script:moduleName
+    $PSDefaultParameterValues['Should-Invoke:ModuleName'] = $script:moduleName
 }
 
 AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
-    $PSDefaultParameterValues.Remove('Should:ModuleName')
+    $PSDefaultParameterValues.Remove('Should-Invoke:ModuleName')
 
     # Unload the module being tested so that it doesn't impact any other tests.
     Get-Module -Name $script:moduleName -All | Remove-Module -Force
@@ -53,8 +53,8 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
                 @{ Name = 'ParameterListAsString'; Expression = { $_.ToString() } }
             )
 
-        $result.ParameterSetName | Should -Be $ExpectedParameterSetName
-        $result.ParameterListAsString | Should -Be $ExpectedParameters
+        $result.ParameterSetName | Should-Be $ExpectedParameterSetName
+        $result.ParameterListAsString | Should-Be $ExpectedParameters
     }
 
     Context 'When protocol is enabled in registry' {
@@ -71,7 +71,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         It 'Should return $true' {
             $result = Test-TlsProtocol -Protocol Tls12
 
-            $result | Should -BeTrue
+            $result | Should-BeTrue
         }
     }
 
@@ -83,7 +83,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         It 'Should return $true' {
             $result = Test-TlsProtocol -Protocol Tls12
 
-            $result | Should -BeTrue
+            $result | Should-BeTrue
         }
     }
 
@@ -101,7 +101,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         It 'Should return false' {
             $result = Test-TlsProtocol -Protocol Tls12
 
-            $result | Should -BeFalse
+            $result | Should-BeFalse
         }
     }
 
@@ -119,13 +119,13 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         It 'Should check the Client registry key' {
             $result = Test-TlsProtocol -Protocol Tls12 -Client
 
-            $result | Should -BeTrue
+            $result | Should-BeTrue
 
-            Should -Invoke -CommandName Get-RegistryPropertyValue -ParameterFilter {
+            Should-Invoke -CommandName Get-RegistryPropertyValue -ParameterFilter {
                 $Path -like '*\Client' -and $Name -eq 'Enabled'
             } -Exactly -Times 1 -Scope It
 
-            Should -Invoke -CommandName Get-RegistryPropertyValue -ParameterFilter {
+            Should-Invoke -CommandName Get-RegistryPropertyValue -ParameterFilter {
                 $Path -like '*\Client' -and $Name -eq 'DisabledByDefault'
             } -Exactly -Times 1 -Scope It
         }
@@ -146,7 +146,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
             It 'Should return true' {
                 $result = Test-TlsProtocol -Protocol Tls12 -Disabled
 
-                $result | Should -BeTrue
+                $result | Should-BeTrue
             }
         }
 
@@ -164,7 +164,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
             It 'Should return false' {
                 $result = Test-TlsProtocol -Protocol Tls12 -Disabled
 
-                $result | Should -BeFalse
+                $result | Should-BeFalse
             }
         }
 
@@ -176,7 +176,7 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
             It 'Should return false' {
                 $result = Test-TlsProtocol -Protocol Tls12 -Disabled
 
-                $result | Should -BeFalse
+                $result | Should-BeFalse
             }
         }
     }
@@ -189,31 +189,31 @@ Describe 'Test-TlsProtocol' -Tag 'Public' {
         It 'Should have Protocol as a mandatory parameter' {
             $parameterInfo = $commandInfo.Parameters['Protocol']
 
-            $parameterInfo.Attributes.Mandatory | Should -BeTrue
+            $parameterInfo.Attributes.Mandatory | Should-BeTrue
         }
 
         It 'Should have Protocol declared as an enum type' {
             $parameterInfo = $commandInfo.Parameters['Protocol']
 
-            $parameterInfo.ParameterType.IsEnum | Should -BeTrue
+            $parameterInfo.ParameterType.IsEnum | Should-BeTrue
         }
 
         It 'Should have Client as a non-mandatory parameter' {
             $parameterInfo = $commandInfo.Parameters['Client']
 
-            $parameterInfo.Attributes.Mandatory | Should -BeFalse
+            $parameterInfo.Attributes.Mandatory | Should-BeFalse
         }
 
         It 'Should have Client defined as a switch parameter' {
             $parameterInfo = $commandInfo.Parameters['Client']
 
-            $parameterInfo.ParameterType.Name | Should -Be 'SwitchParameter'
+            $parameterInfo.ParameterType.Name | Should-Be 'SwitchParameter'
         }
 
         It 'Should have Disabled defined as a switch parameter' {
             $parameterInfo = $commandInfo.Parameters['Disabled']
 
-            $parameterInfo.ParameterType.Name | Should -Be 'SwitchParameter'
+            $parameterInfo.ParameterType.Name | Should-Be 'SwitchParameter'
         }
     }
 }

@@ -27,13 +27,13 @@ BeforeAll {
 
     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:moduleName
     $PSDefaultParameterValues['Mock:ModuleName'] = $script:moduleName
-    $PSDefaultParameterValues['Should:ModuleName'] = $script:moduleName
+    $PSDefaultParameterValues['Should-Invoke:ModuleName'] = $script:moduleName
 }
 
 AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
-    $PSDefaultParameterValues.Remove('Should:ModuleName')
+    $PSDefaultParameterValues.Remove('Should-Invoke:ModuleName')
 
     # Unload the module being tested so that it doesn't impact any other tests.
     Get-Module -Name $script:moduleName -All | Remove-Module -Force
@@ -53,8 +53,8 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
                 @{ Name = 'ParameterListAsString'; Expression = { $_.ToString() } }
             )
 
-        $result.ParameterSetName | Should -Be $ExpectedParameterSetName
-        $result.ParameterListAsString | Should -Be $ExpectedParameters
+        $result.ParameterSetName | Should-Be $ExpectedParameterSetName
+        $result.ParameterListAsString | Should-Be $ExpectedParameters
     }
 
     Context 'When enabling a protocol' {
@@ -65,7 +65,7 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
         It 'Should call Set-TlsProtocolRegistryValue with Enable switch' {
             $null = Enable-TlsProtocol -Protocol Tls12 -Force
 
-            Should -Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {
+            Should-Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {
                 $Protocol -contains 'Tls12' -and
                 $Enable -eq $true -and
                 $Force -eq $true
@@ -81,7 +81,7 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
         It 'Should pass Client and SetDisabledByDefault to Set-TlsProtocolRegistryValue' {
             $null = Enable-TlsProtocol -Protocol Tls12 -Client -SetDisabledByDefault -Force
 
-            Should -Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {
+            Should-Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {
                 $Protocol -contains 'Tls12' -and
                 $Enable -eq $true -and
                 $Client -eq $true -and
@@ -102,7 +102,7 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
                 'Tls13'
             ) -Force
 
-            Should -Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {
+            Should-Invoke -CommandName Set-TlsProtocolRegistryValue -ParameterFilter {
                 $Enable -eq $true
             } -Exactly -Times 1 -Scope It
         }
@@ -116,37 +116,37 @@ Describe 'Enable-TlsProtocol' -Tag 'Public' {
         It 'Should have Protocol as a mandatory parameter' {
             $parameterInfo = $commandInfo.Parameters['Protocol']
 
-            $parameterInfo.Attributes.Mandatory | Should -BeTrue
+            $parameterInfo.Attributes.Mandatory | Should-BeTrue
         }
 
         It 'Should have Protocol declared as an enum type' {
             $parameterInfo = $commandInfo.Parameters['Protocol']
 
-            $parameterInfo.ParameterType.IsEnum | Should -BeTrue
+            $parameterInfo.ParameterType.IsEnum | Should-BeTrue
         }
 
         It 'Should have Client as a non-mandatory parameter' {
             $parameterInfo = $commandInfo.Parameters['Client']
 
-            $parameterInfo.Attributes.Mandatory | Should -BeFalse
+            $parameterInfo.Attributes.Mandatory | Should-BeFalse
         }
 
         It 'Should have Client defined as a switch parameter' {
             $parameterInfo = $commandInfo.Parameters['Client']
 
-            $parameterInfo.ParameterType.Name | Should -Be 'SwitchParameter'
+            $parameterInfo.ParameterType.Name | Should-Be 'SwitchParameter'
         }
 
         It 'Should have SetDisabledByDefault defined as a switch parameter' {
             $parameterInfo = $commandInfo.Parameters['SetDisabledByDefault']
 
-            $parameterInfo.ParameterType.Name | Should -Be 'SwitchParameter'
+            $parameterInfo.ParameterType.Name | Should-Be 'SwitchParameter'
         }
 
         It 'Should have Force defined as a switch parameter' {
             $parameterInfo = $commandInfo.Parameters['Force']
 
-            $parameterInfo.ParameterType.Name | Should -Be 'SwitchParameter'
+            $parameterInfo.ParameterType.Name | Should-Be 'SwitchParameter'
         }
     }
 }
