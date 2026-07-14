@@ -41,13 +41,13 @@ BeforeAll {
 
     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:dscResourceName
     $PSDefaultParameterValues['Mock:ModuleName'] = $script:dscResourceName
-    $PSDefaultParameterValues['Should:ModuleName'] = $script:dscResourceName
+    $PSDefaultParameterValues['Should-Invoke:ModuleName'] = $script:dscResourceName
 }
 
 AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
-    $PSDefaultParameterValues.Remove('Should:ModuleName')
+    $PSDefaultParameterValues.Remove('Should-Invoke:ModuleName')
 
     Restore-TestEnvironment -TestEnvironment $script:testEnvironment
 
@@ -74,11 +74,11 @@ Describe 'DSC_KeyExchangeAlgorithm\Get-TargetResource' -Tag 'Get' {
 
                 $result = Get-TargetResource @mockParams
 
-                $result.KeyExchangeAlgorithm | Should -Be 'Diffie-Hellman'
-                $result.State                | Should -Be 'Enabled'
+                $result.KeyExchangeAlgorithm | Should-Be 'Diffie-Hellman'
+                $result.State                | Should-Be 'Enabled'
             }
 
-            Should -Invoke -CommandName Get-SChannelItem -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-SChannelItem -Exactly -Times 1 -Scope It
         }
     }
 }
@@ -103,10 +103,10 @@ Describe 'DSC_KeyExchangeAlgorithm\Test-TargetResource' -Tag 'Test' {
                     State                = 'Enabled'
                 }
 
-                Test-TargetResource @mockParams | Should -BeTrue
+                Test-TargetResource @mockParams | Should-BeTrue
             }
 
-            Should -Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
         }
     }
 
@@ -129,10 +129,10 @@ Describe 'DSC_KeyExchangeAlgorithm\Test-TargetResource' -Tag 'Test' {
                     State                = 'Enabled'
                 }
 
-                Test-TargetResource @mockParams | Should -BeFalse
+                Test-TargetResource @mockParams | Should-BeFalse
             }
 
-            Should -Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
         }
     }
 }
@@ -174,8 +174,8 @@ Describe 'DSC_KeyExchangeAlgorithm\Set-TargetResource' -Tag 'Set' {
                 $null = Set-TargetResource @mockParams
             }
 
-            Should -Invoke -CommandName Set-SChannelItem -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Set-SChannelItem -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
         }
     }
 }

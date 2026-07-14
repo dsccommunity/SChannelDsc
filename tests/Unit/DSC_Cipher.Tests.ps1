@@ -41,13 +41,13 @@ BeforeAll {
 
     $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:dscResourceName
     $PSDefaultParameterValues['Mock:ModuleName'] = $script:dscResourceName
-    $PSDefaultParameterValues['Should:ModuleName'] = $script:dscResourceName
+    $PSDefaultParameterValues['Should-Invoke:ModuleName'] = $script:dscResourceName
 }
 
 AfterAll {
     $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
     $PSDefaultParameterValues.Remove('Mock:ModuleName')
-    $PSDefaultParameterValues.Remove('Should:ModuleName')
+    $PSDefaultParameterValues.Remove('Should-Invoke:ModuleName')
 
     Restore-TestEnvironment -TestEnvironment $script:testEnvironment
 
@@ -74,9 +74,9 @@ Describe 'DSC_Cipher\Get-TargetResource' -Tag 'Get' {
 
                 $result = Get-TargetResource @testParams
 
-                $result | Should -BeOfType 'System.Collections.Hashtable'
-                $result.Cipher | Should -Be $testParams.Cipher
-                $result.State | Should -Be 'Enabled'
+                $result | Should-HaveType ([System.Collections.Hashtable])
+                $result.Cipher | Should-Be $testParams.Cipher
+                $result.State | Should-Be 'Enabled'
             }
         }
     }
@@ -102,10 +102,10 @@ Describe 'DSC_Cipher\Test-TargetResource' -Tag 'Test' {
                     State  = 'Enabled'
                 }
 
-                Test-TargetResource @testParams | Should -BeTrue
+                Test-TargetResource @testParams | Should-BeTrue
             }
 
-            Should -Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
         }
     }
 
@@ -128,10 +128,10 @@ Describe 'DSC_Cipher\Test-TargetResource' -Tag 'Test' {
                     State  = 'Enabled'
                 }
 
-                Test-TargetResource @testParams | Should -BeFalse
+                Test-TargetResource @testParams | Should-BeFalse
             }
 
-            Should -Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Get-TargetResource -Exactly -Times 1 -Scope It
         }
     }
 }
@@ -170,8 +170,8 @@ Describe 'DSC_Cipher\Set-TargetResource' -Tag 'Set' {
                 $null = Set-TargetResource @testParams
             }
 
-            Should -Invoke -CommandName Set-SChannelItem -Exactly -Times 1 -Scope It
-            Should -Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Set-SChannelItem -Exactly -Times 1 -Scope It
+            Should-Invoke -CommandName Set-DscMachineRebootRequired -Exactly -Times 1 -Scope It
         }
     }
 }
